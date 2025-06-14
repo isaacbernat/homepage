@@ -1,0 +1,71 @@
+body, html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: #f8efe2; /* A light background color */
+}
+
+/* --- Layout: Using Flexbox to center the content --- */
+body {
+    display: flex;
+    flex-direction: column; /* Stack header and main content vertically */
+}
+
+/* --- Header & Navigation Tabs --- */
+header {
+    width: 100%;
+    padding: 1rem 0;
+    display: flex;
+    justify-content: center; /* Center the nav menu */
+    position: absolute; /* Position it on top of the main content */
+    top: 0;
+    left: 0;
+    z-index: 10;
+}
+
+nav ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    gap: 2rem; /* Space between tabs */
+    background-color: rgba(255, 255, 255, 0.1); /* Subtle background for readability */
+    backdrop-filter: blur(5px); /* Frosted glass effect */
+    padding: 0.75rem 1.5rem;
+    border-radius: 99px; /* Pill shape */
+}
+
+nav a {
+    text-decoration: none;
+    color: #333;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+nav a:hover {
+    color: #000;
+}
+
+
+/* --- Main Content & Image Styling --- */
+main {
+    flex-grow: 1; /* Allows main to fill the remaining vertical space */
+    display: flex;
+    justify-content: center; /* Center the image horizontally */
+    align-items: center;   /* Center the image vertically */
+    overflow: hidden; /* Prevents scrollbars if image is slightly too large during loading */
+}
+
+.main-image {
+    width: 100%;     /* Stretch the image to 100% of the container's width */
+    height: auto;    /* Maintain the aspect ratio */
+    display: block;  /* Removes tiny space below the image */
+    transition: filter 0.1s ease-in-out; /* Smooth transition for the blur effect */
+}
+
+/* This is the magic for the low-res version */
+.main-image.lazy-load {
+    filter: blur(2px);  /* Make the low-res image blurry to hide artifacts */
+    /* transform: scale(1.05);     /* Optional: scale it up slightly to ensure blur covers edges */
+}
