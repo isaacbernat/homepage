@@ -18,12 +18,17 @@
         </nav>
     </header>
 
-    <main>
-        <img 
-            src="keyboard-480.webp"
-            data-src="keyboard-3840.webp"
+<main>
+    <picture>
+        <source 
+            type="image/webp"
+            srcset="">
+        <img
+            src="images/keyboard-480.webp"
             alt="Computer keyboard keycaps spelling out ISAAC and BERNAT in two rows. Each row uses different keycaps, the first one and the enter key are beige from an IBM model M and the second black with white letters, including the Euro symbol beneath the E"
-            class="main-image lazy-load">
+            class="main-image lazy-load"
+            data-srcset="images/keyboard-1920.webp 1x, images/keyboard-3840.webp 2x">
+    </picture>
     </main>
     <!-- Loaded at the end to avoid blocking the page rendering -->
     <script src="script.js"></script>
