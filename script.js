@@ -1,4 +1,4 @@
-document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", function() {  // Lazy loads the main image
     const lazyImage = document.querySelector('.main-image.lazy-load');
     if (!lazyImage || !lazyImage.dataset.srcset) {
         return;
@@ -21,4 +21,19 @@ document.addEventListener("DOMContentLoaded", function() {
     if (lazyImage.complete) {  // Handle cached images: fire the 'load' event
         onImageLoad();
     }
+});
+
+
+document.addEventListener("DOMContentLoaded", function() {  // Dark theme
+    const themeToggleButton = document.querySelector('.theme-toggle');
+    if (!themeToggleButton) {
+        return;
+    }
+
+    themeToggleButton.addEventListener('click', function() {
+        const currentTheme = document.documentElement.getAttribute('data-theme');  // Get the current theme from the <html> tag
+        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';  // Toggle the theme
+        document.documentElement.setAttribute('data-theme', newTheme);  // Set the new theme on the <html> tag
+        localStorage.setItem('theme', newTheme);  // Save the user's preference to localStorage
+    });
 });

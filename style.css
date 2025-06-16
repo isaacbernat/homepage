@@ -1,9 +1,28 @@
+:root {  /* Light mode Palette */
+    --color-background: #f0f2f5;
+    --color-text: #333;
+    --color-text-strong: #000;
+    --nav-background: rgba(255, 255, 255, 0.1);
+
+    --theme-transition: color 0.3s ease, background-color 0.3s ease;  /* Smooth transition for color changes */
+}
+
+html[data-theme="dark"] {  /* Dark mode Palette */
+    --color-background: #18191a;
+    --color-text: #e4e6eb;
+    --color-text-strong: #fff;
+    --nav-background: rgba(0, 0, 0, 0.2);
+}
+
 body, html {
     margin: 0;
     padding: 0;
     height: 100%;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    background-color: #f8efe2; /* A light background color */
+
+    background-color: var(--color-background);
+    color: var(--color-text);
+    transition: var(--theme-transition);
 }
 
 /* --- Layout: Using Flexbox to center the content --- */
@@ -30,7 +49,8 @@ nav ul {
     list-style: none;
     display: flex;
     gap: 2rem; /* Space between tabs */
-    background-color: rgba(255, 255, 255, 0.1); /* Subtle background for readability */
+    background-color: var(--nav-background);
+    transition: var(--theme-transition);
     backdrop-filter: blur(5px); /* Frosted glass effect */
     padding: 0.75rem 1.5rem;
     border-radius: 99px; /* Pill shape */
@@ -38,15 +58,14 @@ nav ul {
 
 nav a {
     text-decoration: none;
-    color: #333;
+    color: var(--color-text);
     font-weight: 500;
     transition: color 0.3s ease;
 }
 
 nav a:hover {
-    color: #000;
+    color: var(--color-text-strong);
 }
-
 
 /* --- Main Content & Image Styling --- */
 main {
@@ -69,8 +88,43 @@ main > picture {
     aspect-ratio: 2.88;  /* 3840 / 1334; */
 }
 
-/* This is the magic for the low-res version */
 .main-image.lazy-load {
     filter: blur(2px);  /* Make the low-res image blurry to hide artifacts */
-    /* transform: scale(1.05);     /* Optional: scale it up slightly to ensure blur covers edges */
+}
+
+
+/* --- Style the new Theme Toggle Button --- */
+.theme-toggle {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.5rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: fixed;
+    top: 1rem;
+    right: 2rem;
+    z-index: 20;
+}
+
+.theme-toggle:hover {
+    background-color: var(--nav-background);
+}
+
+.theme-toggle .icon {
+    width: 24px;
+    height: 24px;
+    stroke: var(--color-text-strong);
+}
+
+/* Logic to show/hide the correct icon */
+.icon-moon,
+html[data-theme="dark"] .icon-sun {
+    display: none;
+}
+
+html[data-theme="dark"] .icon-moon {
+    display: block;
 }
