@@ -1,5 +1,7 @@
 :root {  /* Light mode Palette */
-    --color-background: #f0f2f5;
+    --gradient-top: #fdf8ee;
+    --gradient-bottom: #fbf1e6;
+
     --color-text: #333;
     --color-text-strong: #000;
     --nav-background: rgba(255, 255, 255, 0.1);
@@ -8,7 +10,9 @@
 }
 
 html[data-theme="dark"] {  /* Dark mode Palette */
-    --color-background: #18191a;
+    --gradient-top: #292423;
+    --gradient-bottom: #292423;
+
     --color-text: #e4e6eb;
     --color-text-strong: #fff;
     --nav-background: rgba(0, 0, 0, 0.2);
@@ -19,10 +23,18 @@ body, html {
     padding: 0;
     height: 100%;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-
-    background-color: var(--color-background);
     color: var(--color-text);
-    transition: var(--theme-transition);
+
+    background-image: linear-gradient(
+        to bottom,
+        var(--gradient-top) 0%,      /* Start with top color */
+        var(--gradient-top) calc(50% - 15vw),     /* Keep top color until upper third of image */
+        var(--gradient-bottom) calc(50% + 15vw),  /* Start blending to bottom color at lower third of image */
+        var(--gradient-bottom) 100%  /* Finish with bottom color */
+    );
+    background-repeat: no-repeat;
+    background-attachment: fixed; /* Keeps gradient stationary during scroll */
+    transition: color 0.3s ease;
 }
 
 /* --- Layout: Using Flexbox to center the content --- */
@@ -86,12 +98,43 @@ main > picture {
     display: block;  /* Removes tiny space below the image */
     transition: filter 2s ease-in-out; /* Smooth transition for the blur effect */
     aspect-ratio: 2.88;  /* 3840 / 1334; */
+
+    mask-image: linear-gradient(
+        to bottom,
+        transparent,
+        black 4vw, /* Fade-in height is 2% of the screen width */
+        black calc(100% - 3vw), /* Stay solid until 3vw from the bottom */
+        transparent
+    ),
+    linear-gradient(
+        to right,
+        transparent,
+        black 1.5vw,
+        black calc(100% - 2vw),
+        transparent
+    );
+
+    -webkit-mask-image: linear-gradient(  /* A vendor prefix for older WebKit browsers (like older Safari) */
+        to bottom,
+        transparent,
+        black 4vw,
+        black calc(100% - 3vw),
+        transparent
+    ),
+    linear-gradient(
+        to right,
+        transparent,
+        black 1.5vw,
+        black calc(100% - 2vw),
+        transparent
+    );
+    -webkit-mask-composite: source-in;
+    mask-composite: intersect;
 }
 
 .main-image.lazy-load {
     filter: blur(2px);  /* Make the low-res image blurry to hide artifacts */
 }
-
 
 /* --- Style the new Theme Toggle Button --- */
 .theme-toggle {
