@@ -10,8 +10,8 @@
 }
 
 html[data-theme="dark"] {  /* Dark mode Palette */
-    --gradient-top: #292423;
-    --gradient-bottom: #292423;
+    --gradient-top: #0c0700;
+    --gradient-bottom: #150d02;
 
     --color-text: #e4e6eb;
     --color-text-strong: #fff;
@@ -170,4 +170,8 @@ html[data-theme="dark"] .icon-sun {
 
 html[data-theme="dark"] .icon-moon {
     display: block;
+}
+
+html[data-theme="dark"] .main-image {
+    filter: saturate(0.5);
 }
