@@ -21,10 +21,16 @@ html[data-theme="dark"] {  /* Dark mode Palette */
 body, html {
     margin: 0;
     padding: 0;
-    height: 100%;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    color: var(--color-text);
+}
 
+/* --- Layout: Using Flexbox to center the content --- */
+body {
+    display: flex;
+    flex-direction: column; /* Stack header and main content vertically */
+    min-height: 100vh;
+
+    color: var(--color-text);
     background-image: linear-gradient(
         to bottom,
         var(--gradient-top) 0%,      /* Start with top color */
@@ -35,12 +41,6 @@ body, html {
     background-repeat: no-repeat;
     background-attachment: fixed; /* Keeps gradient stationary during scroll */
     transition: color 0.3s ease;
-}
-
-/* --- Layout: Using Flexbox to center the content --- */
-body {
-    display: flex;
-    flex-direction: column; /* Stack header and main content vertically */
 }
 
 /* --- Header & Navigation Tabs --- */
@@ -81,10 +81,9 @@ nav a:hover {
 
 /* --- Main Content & Image Styling --- */
 main {
-    flex-grow: 1; /* Allows main to fill the remaining vertical space */
-    display: flex;
-    justify-content: center; /* Center the image horizontally */
-    align-items: center;   /* Center the image vertically */
+    flex-grow: 1;
+    display: grid;
+    place-items: center;
     overflow: hidden; /* Prevents scrollbars if image is slightly too large during loading */
 }
 
@@ -174,4 +173,16 @@ html[data-theme="dark"] .icon-moon {
 
 html[data-theme="dark"] .main-image {
     filter: saturate(0.5);
+}
+
+noscript .main-image {
+    position: absolute;  /* Image to position itself relative to the <main> container. */
+    /* Move the top-left corner of the image to the exact center of the container. */
+    top: 50%;
+    left: 50%;
+
+    /* This is the key: Shift the image back up by half of its own height,
+       and back left by half of its own width. This perfectly aligns its center
+       with the container's center. */
+    transform: translate(-50%, -50%);
 }
