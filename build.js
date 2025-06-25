@@ -1,6 +1,7 @@
 const fs = require('fs-extra');
 const path = require('path');
-const { execSync } = require('child_process');
+const Terser = require('terser');
+const CleanCSS = require('clean-css');
 const { minify } = require('html-minifier');
 
 // --- Configuration ---
@@ -22,17 +23,28 @@ async function build() {
         // --- 2. Minify JavaScript with Terser ---
         const jsSrcPath = path.join(SRC_DIR, JS_FILE);
         const jsDistPath = path.join(DIST_DIR, JS_FILE.replace('.js', '.min.js'));
-        const jsMapPath = `${jsDistPath}.map`;
-        const terserCommand = `npx terser ${jsSrcPath} --compress --mangle --output ${jsDistPath} --source-map "url='${path.basename(jsMapPath)}'"`;
+        const jsMapPath = `${path.basename(jsDistPath)}.map`;
         console.log('Minifying JavaScript...');
-        execSync(terserCommand);
+        const jsCode = await fs.readFile(jsSrcPath, 'utf8');
+        const terserResult = await Terser.minify(jsCode, {
+            sourceMap: {
+                filename: path.basename(jsDistPath),
+                url: jsMapPath
+            }
+        });
+        await fs.writeFile(jsDistPath, terserResult.code);
+        await fs.writeFile(`${jsDistPath}.map`, terserResult.map);
+        console.log('JavaScript minified successfully.');
 
         // --- 3. Minify CSS with clean-css-cli ---
         const cssSrcPath = path.join(SRC_DIR, CSS_FILE);
         const cssDistPath = path.join(DIST_DIR, CSS_FILE.replace('.css', '.min.css'));
-        const cleanCssCommand = `npx cleancss --format breaksWith=lf --output ${cssDistPath} --source-map ${cssSrcPath}`;
         console.log('Minifying CSS...');
-        execSync(cleanCssCommand);
+        const cssCode = await fs.readFile(cssSrcPath, 'utf8');
+        const cleanCssResult = new CleanCSS({ sourceMap: true }).minify({ [CSS_FILE]: { styles: cssCode } });
+        await fs.writeFile(cssDistPath, cleanCssResult.styles);
+        await fs.writeFile(`${cssDistPath}.map`, cleanCssResult.sourceMap.toString());
+        console.log('CSS minified successfully.');
         
         // --- 4. Copy from Images Directory ---
         const srcImages = path.join(SRC_DIR, 'images');
@@ -62,10 +74,9 @@ async function build() {
             minifyCSS: true,
             minifyJS: true,
         });
-
         const htmlDistPath = path.join(DIST_DIR, HTML_FILE);
         await fs.writeFile(htmlDistPath, minifiedHtml, 'utf-8');
-        
+
         console.log('\n--- Build Complete! ---');
         console.log(`Production-ready files are in the '${DIST_DIR}' directory.`);
 
