@@ -15,12 +15,12 @@ console.log('--- Starting Build Process ---');
 
 async function build() {
     try {
-        // --- 1. Clean and Create Destination Directory ---
+        // --- Clean and Create Destination Directory ---
         console.log(`Cleaning old '${DIST_DIR}' directory...`);
         await fs.emptyDir(DIST_DIR);
         console.log(`Created new '${DIST_DIR}' directory.`);
 
-        // --- 2. Minify JavaScript with Terser ---
+        // --- Minify JavaScript with Terser ---
         const jsSrcPath = path.join(SRC_DIR, JS_FILE);
         const jsDistPath = path.join(DIST_DIR, JS_FILE.replace('.js', '.min.js'));
         const jsMapPath = `${path.basename(jsDistPath)}.map`;
@@ -36,7 +36,7 @@ async function build() {
         await fs.writeFile(`${jsDistPath}.map`, terserResult.map);
         console.log('JavaScript minified successfully.');
 
-        // --- 3. Minify CSS with clean-css-cli ---
+        // --- Minify CSS with clean-css-cli ---
         const cssSrcPath = path.join(SRC_DIR, CSS_FILE);
         const cssDistPath = path.join(DIST_DIR, CSS_FILE.replace('.css', '.min.css'));
         console.log('Minifying CSS...');
@@ -46,7 +46,7 @@ async function build() {
         await fs.writeFile(`${cssDistPath}.map`, cleanCssResult.sourceMap.toString());
         console.log('CSS minified successfully.');
         
-        // --- 4. Copy from Images Directory ---
+        // --- Copy from Images Directory ---
         const srcImages = path.join(SRC_DIR, 'images');
         const distImages = path.join(DIST_DIR, 'images');
         if (await fs.pathExists(srcImages)) {
@@ -58,7 +58,19 @@ async function build() {
             await fs.copy(srcImages, distImages, { filter: filterWebP });
         }
 
-        // --- 5. Minify HTML and Update Links ---
+        // --- Copy Static Root Files ---
+        console.log('Copying root static files...');
+        const rootFilesToCopy = ['robots.txt', 'sitemap.xml']; // Add any other root files e.g.  'site.webmanifest', 'favicon.ico', 'apple-touch-icon.png', 'favicon.svg'
+        for (const file of rootFilesToCopy) {
+            const srcFile = path.join(SRC_DIR, file);
+            const distFile = path.join(DIST_DIR, file);
+            if (await fs.pathExists(srcFile)) {
+                await fs.copy(srcFile, distFile);
+                console.log(`Copied ${file} to ${DIST_DIR}.`);
+            }
+        }
+
+        // --- Minify HTML and Update Links ---
         console.log('Processing HTML...');
         const htmlSrcPath = path.join(SRC_DIR, HTML_FILE);
         let htmlContent = await fs.readFile(htmlSrcPath, 'utf-8');
