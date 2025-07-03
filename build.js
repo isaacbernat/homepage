@@ -3,6 +3,7 @@ const path = require('path');
 const Terser = require('terser');
 const CleanCSS = require('clean-css');
 const { minify } = require('html-minifier');
+const svgo = require('svgo');
 
 // --- Configuration ---
 const SRC_DIR = 'src';
@@ -10,6 +11,7 @@ const DIST_DIR = 'dist';
 const JS_FILE = 'script.js';
 const CSS_FILE = 'style.css';
 const HTML_FILE = 'index.html';
+const SVG_FAVICON = 'favicon.svg';
 
 console.log('--- Starting Build Process ---');
 
@@ -45,7 +47,20 @@ async function build() {
         await fs.writeFile(cssDistPath, cleanCssResult.styles);
         await fs.writeFile(`${cssDistPath}.map`, cleanCssResult.sourceMap.toString());
         console.log('CSS minified successfully.');
-        
+
+        // --- Optimize SVG Favicon with SVGO ---
+        const svgSrcPath = path.join(SRC_DIR, SVG_FAVICON);
+        const svgDistPath = path.join(DIST_DIR, SVG_FAVICON);
+        if (await fs.pathExists(svgSrcPath)) {
+            console.log('Optimizing SVG favicon...');
+            const svgCode = await fs.readFile(svgSrcPath, 'utf8');
+            const result = svgo.optimize(svgCode, {
+                path: svgSrcPath,
+            });
+            await fs.writeFile(svgDistPath, result.data);
+            console.log('SVG favicon optimized successfully.');
+        }
+
         // --- Copy from Images Directory ---
         const srcImages = path.join(SRC_DIR, 'images');
         const distImages = path.join(DIST_DIR, 'images');
@@ -60,7 +75,7 @@ async function build() {
 
         // --- Copy Static Root Files ---
         console.log('Copying root static files...');
-        const rootFilesToCopy = ['robots.txt', 'sitemap.xml']; // Add any other root files e.g.  'site.webmanifest', 'favicon.ico', 'apple-touch-icon.png', 'favicon.svg'
+        const rootFilesToCopy = ['robots.txt', 'sitemap.xml']; // Add any other root files e.g.  'site.webmanifest', 'favicon.ico', 'apple-touch-icon.png', 
         for (const file of rootFilesToCopy) {
             const srcFile = path.join(SRC_DIR, file);
             const distFile = path.join(DIST_DIR, file);
