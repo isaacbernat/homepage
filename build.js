@@ -76,14 +76,16 @@ async function build() {
         // --- Copy Static Root Files ---
         console.log('Copying root static files...');
         const rootFilesToCopy = ['robots.txt', 'sitemap.xml']; // Add any other root files e.g.  'site.webmanifest', 'favicon.ico', 'apple-touch-icon.png', 
-        for (const file of rootFilesToCopy) {
-            const srcFile = path.join(SRC_DIR, file);
-            const distFile = path.join(DIST_DIR, file);
-            if (await fs.pathExists(srcFile)) {
-                await fs.copy(srcFile, distFile);
-                console.log(`Copied ${file} to ${DIST_DIR}.`);
-            }
-        }
+await Promise.all(
+  rootFilesToCopy.map(async (file) => {
+    const srcFile = path.join(SRC_DIR, file);
+    const distFile = path.join(DIST_DIR, file);
+    if (await fs.pathExists(srcFile)) {
+      await fs.copy(srcFile, distFile);
+      console.log(`Copied ${file} to ${DIST_DIR}.`);
+    }
+  })
+);
 
         // --- Minify HTML and Update Links ---
         console.log('Processing HTML...');
