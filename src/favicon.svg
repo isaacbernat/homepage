@@ -1,0 +1,49 @@
+<svg width="100" height="100" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+  <!--
+    Final Black Keycap with Letter "B" - v3
+    - No texture filter for a clean look.
+    - Lateral surfaces are larger to accentuate depth.
+  -->
+  <defs>
+    <!-- Gradient for the bright highlight on the wider right side -->
+    <linearGradient id="highlightGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#3C3C3C" />
+      <stop offset="85%" stop-color="#4C4C4C" />
+      <stop offset="100%" stop-color="#D0D0D0" />
+    </linearGradient>
+  </defs>
+
+  <g id="keycap-B-final-v3">
+    <!-- Main keycap body. The overall shape is wider (5 to 95) -->
+    <path d="M 5 15 
+             C 5 8, 5 5, 12 5 
+             L 88 5 
+             C 95 5, 95 8, 95 15 
+             L 95 85 
+             C 95 92, 95 95, 88 95 
+             L 12 95 
+             C 5 95, 5 92, 5 85 Z"
+          fill="#1A1A1A"/>
+    
+    <!-- Top surface. The bottom edge is now higher (at 80) to show more of the front face. -->
+    <path d="M 18 12 
+             C 18 10, 18 9, 20 9 
+             L 80 9
+             C 82 9, 82 10, 82 12 
+             L 82 80
+             L 18 80 Z" 
+          fill="#2C2C2C" />
+          
+    <!-- Right-side highlight (now wider) -->
+    <path d="M 82 12 L 82 80 L 95 85 L 95 15 Z" fill="url(#highlightGradient)" />
+
+    <!-- Letter 'B' (centered on the new top surface) -->
+    <text x="50" y="48"
+          font-family="Helvetica, Arial, sans-serif"
+          font-size="52"
+          font-weight="bold"
+          fill="#F0F0F0"
+          text-anchor="middle"
+          dominant-baseline="central">B</text>
+  </g>
+</svg>
