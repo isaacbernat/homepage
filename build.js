@@ -4,6 +4,8 @@ const Terser = require('terser');
 const CleanCSS = require('clean-css');
 const { minify } = require('html-minifier');
 const svgo = require('svgo');
+const sharp = require('sharp');
+const toIco = require('to-ico');
 
 // --- Configuration ---
 const SRC_DIR = 'src';
@@ -12,6 +14,29 @@ const JS_FILE = 'script.js';
 const CSS_FILE = 'style.css';
 const HTML_FILE = 'index.html';
 const SVG_FAVICON = 'favicon.svg';
+
+async function generateIcoFromSvg(srcPath, distPath) {
+    if (!await fs.pathExists(srcPath)) return;
+
+    console.log('Generating favicon.ico from SVG...');
+    const svgBuffer = await fs.readFile(srcPath);
+
+    // Create PNG buffers of standard ICO sizes
+    const sizes = [16, 32, 48];
+    const pngBuffers = await Promise.all(
+        sizes.map(size =>
+            sharp(svgBuffer)
+                .resize(size)
+                .png()
+                .toBuffer()
+        )
+    );
+
+    // Bundle the PNGs into a single .ico file
+    const icoBuffer = await toIco(pngBuffers);
+    await fs.writeFile(distPath, icoBuffer);
+    console.log('favicon.ico generated successfully.');
+}
 
 console.log('--- Starting Build Process ---');
 
@@ -60,6 +85,9 @@ async function build() {
             await fs.writeFile(svgDistPath, result.data);
             console.log('SVG favicon optimized successfully.');
         }
+        // --- Generate Fallback Favicon ---
+        const icoDistPath = path.join(DIST_DIR, 'favicon.ico');
+        await generateIcoFromSvg(svgSrcPath, icoDistPath);
 
         // --- Copy from Images Directory ---
         const srcImages = path.join(SRC_DIR, 'images');
