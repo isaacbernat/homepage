@@ -14,6 +14,7 @@ const JS_FILE = 'script.js';
 const CSS_FILE = 'style.css';
 const HTML_FILE = 'index.html';
 const SVG_FAVICON = 'favicon.svg';
+const SITEMAP_FILE = 'sitemap.xml';
 
 async function generateIcoFromSvg(srcPath, distPath) {
     if (!await fs.pathExists(srcPath)) return;
@@ -101,19 +102,44 @@ async function build() {
             await fs.copy(srcImages, distImages, { filter: filterWebP });
         }
 
+        // --- Process Sitemap and update lastmod date
+        console.log('Processing sitemap...');
+        const sitemapSrcPath = path.join(SRC_DIR, SITEMAP_FILE);
+        const sitemapDistPath = path.join(DIST_DIR, SITEMAP_FILE);
+
+        if (await fs.pathExists(sitemapSrcPath)) {
+            // Get today's date in YYYY-MM-DD format
+            const today = new Date();
+            const year = today.getFullYear();
+            const month = String(today.getMonth() + 1).padStart(2, '0'); // Months are 0-indexed
+            const day = String(today.getDate()).padStart(2, '0');
+            const formattedDate = `${year}-${month}-${day}`;
+            
+            let sitemapContent = await fs.readFile(sitemapSrcPath, 'utf8');
+            
+            // Use a regular expression to replace the content of all <lastmod> tags
+            // The 'g' flag ensures all occurrences are replaced if you have multiple URLs
+            sitemapContent = sitemapContent.replace(/<lastmod>.*<\/lastmod>/g, `<lastmod>${formattedDate}</lastmod>`);
+            
+            await fs.writeFile(sitemapDistPath, sitemapContent, 'utf8');
+            console.log(`Sitemap processed with lastmod date: ${formattedDate}`);
+        } else {
+            console.log('Sitemap not found in src directory, skipping.');
+        }
+
         // --- Copy Static Root Files ---
         console.log('Copying root static files...');
-        const rootFilesToCopy = ['robots.txt', 'sitemap.xml']; // Add any other root files e.g.  'site.webmanifest', 'favicon.ico', 'apple-touch-icon.png', 
-await Promise.all(
-  rootFilesToCopy.map(async (file) => {
-    const srcFile = path.join(SRC_DIR, file);
-    const distFile = path.join(DIST_DIR, file);
-    if (await fs.pathExists(srcFile)) {
-      await fs.copy(srcFile, distFile);
-      console.log(`Copied ${file} to ${DIST_DIR}.`);
-    }
-  })
-);
+        const rootFilesToCopy = ['robots.txt']; // Add any other root files e.g.  'site.webmanifest', 'apple-touch-icon.png', 
+        await Promise.all(
+        rootFilesToCopy.map(async (file) => {
+            const srcFile = path.join(SRC_DIR, file);
+            const distFile = path.join(DIST_DIR, file);
+            if (await fs.pathExists(srcFile)) {
+            await fs.copy(srcFile, distFile);
+            console.log(`Copied ${file} to ${DIST_DIR}.`);
+            }
+        })
+        );
 
         // --- Minify HTML and Update Links ---
         console.log('Processing HTML...');
