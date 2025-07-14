@@ -12,9 +12,9 @@ const SRC_DIR = 'src';
 const DIST_DIR = 'dist';
 const JS_FILE = 'script.js';
 const CSS_FILE = 'style.css';
-const HTML_FILE = 'index.html';
 const SVG_FAVICON = 'favicon.svg';
 const SITEMAP_FILE = 'sitemap.xml';
+
 
 async function generateIcoFromSvg(srcPath, distPath) {
     if (!await fs.pathExists(srcPath)) return;
@@ -38,6 +38,34 @@ async function generateIcoFromSvg(srcPath, distPath) {
     await fs.writeFile(distPath, icoBuffer);
     console.log('favicon.ico generated successfully.');
 }
+
+
+async function processHtml(htmlFileName) {
+    const htmlSrcPath = path.join(SRC_DIR, htmlFileName);
+    if (!(await fs.pathExists(htmlSrcPath))) {
+        console.log(`Skipping ${htmlFileName} as it does not exist in src.`);
+        return;
+    }
+    
+    let htmlContent = await fs.readFile(htmlSrcPath, 'utf-8');
+    
+    // Replace links
+    htmlContent = htmlContent.replace(new RegExp(JS_FILE, 'g'), JS_FILE.replace('.js', '.min.js'));
+    htmlContent = htmlContent.replace(new RegExp(CSS_FILE, 'g'), CSS_FILE.replace('.css', '.min.css'));
+    
+    const minifiedHtml = minify(htmlContent, {
+        removeAttributeQuotes: true,
+        collapseWhitespace: true,
+        removeComments: true,
+        minifyCSS: true,
+        minifyJS: true,
+    });
+    
+    const htmlDistPath = path.join(DIST_DIR, htmlFileName);
+    await fs.writeFile(htmlDistPath, minifiedHtml, 'utf-8');
+    console.log(`Processed and minified ${htmlFileName}.`);
+}
+
 
 console.log('--- Starting Build Process ---');
 
@@ -140,25 +168,10 @@ async function build() {
             }
         })
         );
-
         // --- Minify HTML and Update Links ---
         console.log('Processing HTML...');
-        const htmlSrcPath = path.join(SRC_DIR, HTML_FILE);
-        let htmlContent = await fs.readFile(htmlSrcPath, 'utf-8');
-        
-        // Replace links
-        htmlContent = htmlContent.replace(new RegExp(JS_FILE, 'g'), JS_FILE.replace('.js', '.min.js'));
-        htmlContent = htmlContent.replace(new RegExp(CSS_FILE, 'g'), CSS_FILE.replace('.css', '.min.css'));
-        
-        const minifiedHtml = minify(htmlContent, {
-            removeAttributeQuotes: true,
-            collapseWhitespace: true,
-            removeComments: true,
-            minifyCSS: true,
-            minifyJS: true,
-        });
-        const htmlDistPath = path.join(DIST_DIR, HTML_FILE);
-        await fs.writeFile(htmlDistPath, minifiedHtml, 'utf-8');
+        await processHtml('index.html');
+        await processHtml('404.html');
 
         console.log('\n--- Build Complete! ---');
         console.log(`Production-ready files are in the '${DIST_DIR}' directory.`);
