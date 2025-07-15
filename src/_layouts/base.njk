@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- The title is a variable passed from the page -->
+    <title>{{ title }}</title>
+    <link rel="stylesheet" href="style.min.css">
+    <script src="script.min.js" defer></script>
+    <script>  // No-Flicker Theme Script (here for performance)
+        (function() {
+            function setTheme(theme) { document.documentElement.setAttribute('data-theme', theme); }
+            let preferredTheme = localStorage.getItem('theme');
+            if (preferredTheme) { setTheme(preferredTheme); }
+            else { const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches; setTheme(prefersDark ? 'dark' : 'light'); }
+        })();
+    </script>
+    <!-- Inject extra head content if needed -->
+    {% block head %}{% endblock %}
+</head>
+<body>
+    {% include "../_partials/header.njk" %}
+
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+</body>
+</html>

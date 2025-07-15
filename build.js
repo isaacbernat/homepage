@@ -6,6 +6,7 @@ const { minify } = require('html-minifier');
 const svgo = require('svgo');
 const sharp = require('sharp');
 const toIco = require('to-ico');
+const nunjucks = require('nunjucks');
 
 // --- Configuration ---
 const SRC_DIR = 'src';
@@ -37,33 +38,6 @@ async function generateIcoFromSvg(srcPath, distPath) {
     const icoBuffer = await toIco(pngBuffers);
     await fs.writeFile(distPath, icoBuffer);
     console.log('favicon.ico generated successfully.');
-}
-
-
-async function processHtml(htmlFileName) {
-    const htmlSrcPath = path.join(SRC_DIR, htmlFileName);
-    if (!(await fs.pathExists(htmlSrcPath))) {
-        console.log(`Skipping ${htmlFileName} as it does not exist in src.`);
-        return;
-    }
-    
-    let htmlContent = await fs.readFile(htmlSrcPath, 'utf-8');
-    
-    // Replace links
-    htmlContent = htmlContent.replace(new RegExp(JS_FILE, 'g'), JS_FILE.replace('.js', '.min.js'));
-    htmlContent = htmlContent.replace(new RegExp(CSS_FILE, 'g'), CSS_FILE.replace('.css', '.min.css'));
-    
-    const minifiedHtml = minify(htmlContent, {
-        removeAttributeQuotes: true,
-        collapseWhitespace: true,
-        removeComments: true,
-        minifyCSS: true,
-        minifyJS: true,
-    });
-    
-    const htmlDistPath = path.join(DIST_DIR, htmlFileName);
-    await fs.writeFile(htmlDistPath, minifiedHtml, 'utf-8');
-    console.log(`Processed and minified ${htmlFileName}.`);
 }
 
 
@@ -168,10 +142,40 @@ async function build() {
             }
         })
         );
-        // --- Minify HTML and Update Links ---
-        console.log('Processing HTML...');
-        await processHtml('index.html');
-        await processHtml('404.html');
+
+        // --- Compile, Process, Minify HTML and update links from Nunjucks Templates ---
+        console.log('Compiling Nunjucks templates to HTML...');
+
+        nunjucks.configure(path.join(SRC_DIR), { autoescape: true });
+        const pageData = {
+            'index.njk': { title: 'Isaac Bernat | Senior Software Engineer' },
+            '404.njk': { title: '404: Page Not Found @ IsaacBernat.com' }
+        };
+        const pagesDir = path.join(SRC_DIR, 'pages');
+        const pageFiles = await fs.readdir(pagesDir);
+
+        for (const pageFile of pageFiles) {
+            if (path.extname(pageFile) !== '.njk') {
+                continue;
+            }
+            const pageTemplatePath = path.join('pages', pageFile);
+            let renderedHtml = nunjucks.render(pageTemplatePath, pageData[pageFile] || {});
+            renderedHtml = renderedHtml.replace(new RegExp(CSS_FILE, 'g'), CSS_FILE.replace('.css', '.min.css'));
+            renderedHtml = renderedHtml.replace(new RegExp(JS_FILE, 'g'), JS_FILE.replace('.js', '.min.js'));
+
+            const minifiedHtml = minify(renderedHtml, {
+                removeAttributeQuotes: true,
+                collapseWhitespace: true,
+                removeComments: true,
+                minifyCSS: true,
+                minifyJS: true,
+            });
+
+            const outputFileName = pageFile.replace('.njk', '.html');
+            const outputPath = path.join(DIST_DIR, outputFileName);
+            await fs.writeFile(outputPath, minifiedHtml, 'utf-8');
+            console.log(`Successfully compiled and minified ${pageFile} to ${outputFileName}`);
+        }
 
         console.log('\n--- Build Complete! ---');
         console.log(`Production-ready files are in the '${DIST_DIR}' directory.`);
