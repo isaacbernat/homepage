@@ -20,21 +20,21 @@
     <!-- Fallback for older browsers  below  -->
     <link rel="icon" href="favicon.ico" type="image/x-icon">
 
-    <meta name="description" content="Isaac Bernat, Senior Software Engineer. Find my CV, projects and presentations here.">
+    <meta name="description" content="{{ siteDescription }}">
     <meta name="author" content="Isaac Bernat">
     <!-- Open Graph / Facebook / LinkedIn -->
     <meta property="og:title" content="{{ title }}">
-    <meta property="og:description" content="Isaac Bernat, Senior Software Engineer. Find my CV, projects and presentations here.">
-    <meta property="og:image" content="https://isaacbernat.com/images/social-preview.webp">
+    <meta property="og:description" content="{{ siteDescription }}">
+    <meta property="og:image" content="{{ siteUrl }}images/social-preview.webp">
     <meta property="og:image:width" content="1920">
     <meta property="og:image:height" content="1005">
-    <meta property="og:url" content="https://isaacbernat.com/">
+    <meta property="og:url" content="{{ siteUrl }}">
     <meta property="og:type" content="website">
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="{{ title }}">
-    <meta name="twitter:description" content="Isaac Bernat, Senior Software Engineer. Find my CV, projects and presentations here.">
-    <meta name="twitter:image" content="https://isaacbernat.com/images/social-preview.webp">
+    <meta name="twitter:description" content="{{ siteDescription }}">
+    <meta name="twitter:image" content="{{ siteUrl }}images/social-preview.webp">
 
     <!-- Inject extra head content if needed -->
     {% block head %}{% endblock %}

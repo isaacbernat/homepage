@@ -147,6 +147,11 @@ async function build() {
         console.log('Compiling Nunjucks templates to HTML...');
 
         nunjucks.configure(path.join(SRC_DIR), { autoescape: true });
+        const siteData = {
+            siteDescription: 'Isaac Bernat, Senior Software Engineer. Find my CV, projects and presentations here.',
+            siteUrl: 'https://www.isaacbernat.com/'
+        };
+
         const pageData = {
             'index.njk': { title: 'Isaac Bernat | Senior Software Engineer' },
             '404.njk': { title: '404: Page Not Found @ IsaacBernat.com' }
@@ -155,11 +160,15 @@ async function build() {
         const pageFiles = await fs.readdir(pagesDir);
 
         for (const pageFile of pageFiles) {
-            if (path.extname(pageFile) !== '.njk') {
-                continue;
-            }
+            if (path.extname(pageFile) !== '.njk') continue;
+
             const pageTemplatePath = path.join('pages', pageFile);
-            let renderedHtml = nunjucks.render(pageTemplatePath, pageData[pageFile] || {});
+            const dataForPage = {
+                ...siteData,
+                ...(pageData[pageFile] || {}) // Page-specific data comes second and can override globals if needed
+            };
+
+            let renderedHtml = nunjucks.render(pageTemplatePath, dataForPage);
             renderedHtml = renderedHtml.replace(new RegExp(CSS_FILE, 'g'), CSS_FILE.replace('.css', '.min.css'));
             renderedHtml = renderedHtml.replace(new RegExp(JS_FILE, 'g'), JS_FILE.replace('.js', '.min.js'));
 
