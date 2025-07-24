@@ -12,11 +12,11 @@ This repository contains the source code for my personal homepage, available at 
 1.  [Project Overview](#1-project-overview)
 2.  [Guiding Principles](#2-guiding-principles)
 3.  [Key Features & Best Practices](#3-key-features--best-practices)
-5.  [Tech Stack & Tooling](#5-tech-stack--tooling)
-6.  [Build & Deployment](#6-build--deployment)
-7.  [Local Development](#7-local-development)
-8.  [Technical Decisions & Roadmap](#8-technical-decisions--roadmap)
-9.  [License](#9-license)
+4.  [Tech Stack & Tooling](#4-tech-stack--tooling)
+5.  [Build & Deployment](#5-build--deployment)
+6.  [Local Development](#6-local-development)
+7.  [Technical Decisions & Roadmap](#7-technical-decisions--roadmap)
+8.  [License](#8-license)
 
 ---
 

@@ -110,13 +110,7 @@ async function build() {
         const sitemapDistPath = path.join(DIST_DIR, SITEMAP_FILE);
 
         if (await fs.pathExists(sitemapSrcPath)) {
-            // Get today's date in YYYY-MM-DD format
-            const today = new Date();
-            const year = today.getFullYear();
-            const month = String(today.getMonth() + 1).padStart(2, '0'); // Months are 0-indexed
-            const day = String(today.getDate()).padStart(2, '0');
-            const formattedDate = `${year}-${month}-${day}`;
-            
+            const formattedDate = new Date().toISOString().slice(0, 10);
             let sitemapContent = await fs.readFile(sitemapSrcPath, 'utf8');
             
             // Use a regular expression to replace the content of all <lastmod> tags
