@@ -34,13 +34,15 @@ document.addEventListener("DOMContentLoaded", function() {  // Light/dark theme 
     if (!themeToggleButton) return;
 
     themeToggleButton.addEventListener('click', function() {
-        const lazyImage = document.querySelector('.main-image');
-        const sourceElement = lazyImage.previousElementSibling;
-
         const currentTheme = document.documentElement.getAttribute('data-theme');  // Get the current theme from the <html> tag
         const newTheme = currentTheme === 'dark' ? 'light' : 'dark';  // Toggle the theme
         document.documentElement.setAttribute('data-theme', newTheme);  // Set the new theme on the <html> tag
         localStorage.setItem('theme', newTheme);  // Save the user's preference to localStorage
+
+        // specific code to update the homepage's image
+        const lazyImage = document.querySelector('.main-image');
+        const picture = lazyImage ? lazyImage.closest('picture') : null;
+        const sourceElement = picture ? picture.querySelector('source') : null;
         updateImageSource(newTheme, lazyImage, sourceElement);  // Load appropriate image
     });
 });

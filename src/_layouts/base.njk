@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ title }}</title>
+
+    <script src="script.min.js" defer></script>
+    <script>  // No-Flicker Theme Script (here for performance)
+        (function() {
+            function setTheme(theme) { document.documentElement.setAttribute('data-theme', theme); }
+            let preferredTheme = localStorage.getItem('theme');
+            if (preferredTheme) { setTheme(preferredTheme); }
+            else { const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches; setTheme(prefersDark ? 'dark' : 'light'); }
+        })();
+    </script>
+    <link rel="stylesheet" href="style.min.css">
+
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
+    <!-- Fallback for older browsers  below  -->
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+
+    <meta name="description" content="{{ siteDescription }}">
+    <meta name="author" content="Isaac Bernat">
+    <!-- Open Graph / Facebook / LinkedIn -->
+    <meta property="og:title" content="{{ title }}">
+    <meta property="og:description" content="{{ siteDescription }}">
+    <meta property="og:image" content="{{ siteUrl }}images/social-preview.webp">
+    <meta property="og:image:width" content="1920">
+    <meta property="og:image:height" content="1005">
+    <meta property="og:url" content="{{ siteUrl }}">
+    <meta property="og:type" content="website">
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{{ title }}">
+    <meta name="twitter:description" content="{{ siteDescription }}">
+    <meta name="twitter:image" content="{{ siteUrl }}images/social-preview.webp">
+
+    <!-- Inject extra head content if needed -->
+    {% block head %}{% endblock %}
+</head>
+<body>
+    {% include "../_partials/header.njk" %}
+
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+</body>
+</html>

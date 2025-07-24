@@ -1,0 +1,42 @@
+{% extends "../_layouts/base.njk" %}
+
+{# Adding the unique styles for this page here. #}
+{% block head %}
+<style>
+    .not-found-container {
+        text-align: center;
+        padding: 2rem;
+    }
+    .not-found-container h1 {
+        font-size: 6rem;
+        font-weight: 700;
+        margin: 0;
+        color: var(--color-text-strong);
+    }
+    .not-found-container p {
+        font-size: 1.2rem;
+        margin: 0.5rem 0 2rem 0;
+    }
+    .not-found-container .home-link {
+        display: inline-block;
+        padding: 0.75rem 1.5rem;
+        border-radius: 99px;
+        background-color: var(--color-text-strong);
+        color: var(--gradient-bottom); /* Cleverly reuse a background color for text */
+        text-decoration: none;
+        font-weight: 500;
+        transition: transform 0.2s ease;
+    }
+    .not-found-container .home-link:hover {
+        transform: scale(1.05);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="not-found-container">
+    <h1>404</h1>
+    <p>Page Not Found</p>
+    <a href="/" class="home-link">Return to Homepage</a>
+</div>
+{% endblock %}

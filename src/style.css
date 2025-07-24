@@ -4,9 +4,6 @@
 
     --color-text: #333;
     --color-text-strong: #000;
-    --nav-background: rgba(255, 255, 255, 0.1);
-
-    --theme-transition: color 0.3s ease, background-color 0.3s ease;  /* Smooth transition for color changes */
 }
 
 html[data-theme="dark"] {  /* Dark mode Palette */
@@ -15,7 +12,6 @@ html[data-theme="dark"] {  /* Dark mode Palette */
 
     --color-text: #e4e6eb;
     --color-text-strong: #fff;
-    --nav-background: rgba(0, 0, 0, 0.2);
 }
 
 body, html {
@@ -57,26 +53,23 @@ header {
 
 nav ul {
     margin: 0;
-    padding: 0;
     list-style: none;
     display: flex;
     gap: 2rem; /* Space between tabs */
-    background-color: var(--nav-background);
-    transition: var(--theme-transition);
-    backdrop-filter: blur(5px); /* Frosted glass effect */
     padding: 0.75rem 1.5rem;
-    border-radius: 99px; /* Pill shape */
 }
 
 nav a {
     text-decoration: none;
     color: var(--color-text);
     font-weight: 500;
-    transition: color 0.3s ease;
+    display: inline-block;
+    transition: color 0.3s ease, transform 0.2s ease-in-out;
 }
 
 nav a:hover {
     color: var(--color-text-strong);
+    transform: scale(1.05);
 }
 
 /* --- Main Content & Image Styling --- */
@@ -149,10 +142,11 @@ main > picture {
     top: 1rem;
     right: 2rem;
     z-index: 20;
+    transition: transform 0.2s ease-in-out;
 }
 
 .theme-toggle:hover {
-    background-color: var(--nav-background);
+    transform: scale(1.1);
 }
 
 .theme-toggle .icon {

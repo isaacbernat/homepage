@@ -4,14 +4,42 @@ const Terser = require('terser');
 const CleanCSS = require('clean-css');
 const { minify } = require('html-minifier');
 const svgo = require('svgo');
+const sharp = require('sharp');
+const toIco = require('to-ico');
+const nunjucks = require('nunjucks');
 
 // --- Configuration ---
 const SRC_DIR = 'src';
 const DIST_DIR = 'dist';
 const JS_FILE = 'script.js';
 const CSS_FILE = 'style.css';
-const HTML_FILE = 'index.html';
 const SVG_FAVICON = 'favicon.svg';
+const SITEMAP_FILE = 'sitemap.xml';
+
+
+async function generateIcoFromSvg(srcPath, distPath) {
+    if (!await fs.pathExists(srcPath)) return;
+
+    console.log('Generating favicon.ico from SVG...');
+    const svgBuffer = await fs.readFile(srcPath);
+
+    // Create PNG buffers of standard ICO sizes
+    const sizes = [16, 32, 48];
+    const pngBuffers = await Promise.all(
+        sizes.map(size =>
+            sharp(svgBuffer)
+                .resize(size)
+                .png()
+                .toBuffer()
+        )
+    );
+
+    // Bundle the PNGs into a single .ico file
+    const icoBuffer = await toIco(pngBuffers);
+    await fs.writeFile(distPath, icoBuffer);
+    console.log('favicon.ico generated successfully.');
+}
+
 
 console.log('--- Starting Build Process ---');
 
@@ -60,6 +88,9 @@ async function build() {
             await fs.writeFile(svgDistPath, result.data);
             console.log('SVG favicon optimized successfully.');
         }
+        // --- Generate Fallback Favicon ---
+        const icoDistPath = path.join(DIST_DIR, 'favicon.ico');
+        await generateIcoFromSvg(svgSrcPath, icoDistPath);
 
         // --- Copy from Images Directory ---
         const srcImages = path.join(SRC_DIR, 'images');
@@ -73,38 +104,81 @@ async function build() {
             await fs.copy(srcImages, distImages, { filter: filterWebP });
         }
 
+        // --- Process Sitemap and update lastmod date
+        console.log('Processing sitemap...');
+        const sitemapSrcPath = path.join(SRC_DIR, SITEMAP_FILE);
+        const sitemapDistPath = path.join(DIST_DIR, SITEMAP_FILE);
+
+        if (await fs.pathExists(sitemapSrcPath)) {
+            const formattedDate = new Date().toISOString().slice(0, 10);
+            let sitemapContent = await fs.readFile(sitemapSrcPath, 'utf8');
+            
+            // Use a regular expression to replace the content of all <lastmod> tags
+            // The 'g' flag ensures all occurrences are replaced if you have multiple URLs
+            sitemapContent = sitemapContent.replace(/<lastmod>.*<\/lastmod>/g, `<lastmod>${formattedDate}</lastmod>`);
+            
+            await fs.writeFile(sitemapDistPath, sitemapContent, 'utf8');
+            console.log(`Sitemap processed with lastmod date: ${formattedDate}`);
+        } else {
+            console.log('Sitemap not found in src directory, skipping.');
+        }
+
         // --- Copy Static Root Files ---
         console.log('Copying root static files...');
-        const rootFilesToCopy = ['robots.txt', 'sitemap.xml']; // Add any other root files e.g.  'site.webmanifest', 'favicon.ico', 'apple-touch-icon.png', 
-await Promise.all(
-  rootFilesToCopy.map(async (file) => {
-    const srcFile = path.join(SRC_DIR, file);
-    const distFile = path.join(DIST_DIR, file);
-    if (await fs.pathExists(srcFile)) {
-      await fs.copy(srcFile, distFile);
-      console.log(`Copied ${file} to ${DIST_DIR}.`);
-    }
-  })
-);
+        const rootFilesToCopy = ['robots.txt']; // Add any other root files e.g.  'site.webmanifest', 'apple-touch-icon.png', 
+        await Promise.all(
+        rootFilesToCopy.map(async (file) => {
+            const srcFile = path.join(SRC_DIR, file);
+            const distFile = path.join(DIST_DIR, file);
+            if (await fs.pathExists(srcFile)) {
+            await fs.copy(srcFile, distFile);
+            console.log(`Copied ${file} to ${DIST_DIR}.`);
+            }
+        })
+        );
 
-        // --- Minify HTML and Update Links ---
-        console.log('Processing HTML...');
-        const htmlSrcPath = path.join(SRC_DIR, HTML_FILE);
-        let htmlContent = await fs.readFile(htmlSrcPath, 'utf-8');
-        
-        // Replace links
-        htmlContent = htmlContent.replace(new RegExp(JS_FILE, 'g'), JS_FILE.replace('.js', '.min.js'));
-        htmlContent = htmlContent.replace(new RegExp(CSS_FILE, 'g'), CSS_FILE.replace('.css', '.min.css'));
-        
-        const minifiedHtml = minify(htmlContent, {
-            removeAttributeQuotes: true,
-            collapseWhitespace: true,
-            removeComments: true,
-            minifyCSS: true,
-            minifyJS: true,
-        });
-        const htmlDistPath = path.join(DIST_DIR, HTML_FILE);
-        await fs.writeFile(htmlDistPath, minifiedHtml, 'utf-8');
+        // --- Compile, Process, Minify HTML and update links from Nunjucks Templates ---
+        console.log('Compiling Nunjucks templates to HTML...');
+
+        nunjucks.configure(path.join(SRC_DIR), { autoescape: true });
+        const siteData = {
+            siteDescription: 'Isaac Bernat, Senior Software Engineer. Find my CV, projects and presentations here.',
+            siteUrl: 'https://www.isaacbernat.com/'
+        };
+
+        const pageData = {
+            'index.njk': { title: 'Isaac Bernat | Senior Software Engineer' },
+            '404.njk': { title: '404: Page Not Found @ IsaacBernat.com' }
+        };
+        const pagesDir = path.join(SRC_DIR, 'pages');
+        const pageFiles = await fs.readdir(pagesDir);
+
+        for (const pageFile of pageFiles) {
+            if (path.extname(pageFile) !== '.njk') continue;
+
+            const pageTemplatePath = path.join('pages', pageFile);
+            const dataForPage = {
+                ...siteData,
+                ...(pageData[pageFile] || {}) // Page-specific data comes second and can override globals if needed
+            };
+
+            let renderedHtml = nunjucks.render(pageTemplatePath, dataForPage);
+            renderedHtml = renderedHtml.replace(new RegExp(CSS_FILE, 'g'), CSS_FILE.replace('.css', '.min.css'));
+            renderedHtml = renderedHtml.replace(new RegExp(JS_FILE, 'g'), JS_FILE.replace('.js', '.min.js'));
+
+            const minifiedHtml = minify(renderedHtml, {
+                removeAttributeQuotes: true,
+                collapseWhitespace: true,
+                removeComments: true,
+                minifyCSS: true,
+                minifyJS: true,
+            });
+
+            const outputFileName = pageFile.replace('.njk', '.html');
+            const outputPath = path.join(DIST_DIR, outputFileName);
+            await fs.writeFile(outputPath, minifiedHtml, 'utf-8');
+            console.log(`Successfully compiled and minified ${pageFile} to ${outputFileName}`);
+        }
 
         console.log('\n--- Build Complete! ---');
         console.log(`Production-ready files are in the '${DIST_DIR}' directory.`);

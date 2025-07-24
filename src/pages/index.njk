@@ -1,0 +1,23 @@
+{% extends "../_layouts/base.njk" %}
+
+{% block content %}
+<picture>
+    <source 
+        type="image/webp"
+        srcset="">
+    <!-- img src is a transparent 1x1 GIF to prevent initial loading of an image from a non matching theme and blinking effects -->
+    <img
+        src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs="
+        alt="Computer keyboard keycaps spelling out ISAAC and BERNAT in two rows. Each row uses different keycaps, the first one and the enter key are beige from an IBM model M and the second black with white letters, including the Euro symbol beneath the E"
+        class="main-image lazy-load"
+        data-srcset-light="images/keyboard-light-1920.webp 1x, images/keyboard-light-3840.webp 2x"
+        data-srcset-dark="images/keyboard-dark-1920.webp 1x, images/keyboard-dark-3840.webp 2x">
+</picture>
+<noscript>
+    <!-- Fallback for users with no JS -->
+    <img
+        src="images/keyboard-light-480.webp"
+        alt="Computer keyboard keycaps spelling out ISAAC and BERNAT in two rows."
+        class="main-image">
+</noscript>
+{% endblock %}
