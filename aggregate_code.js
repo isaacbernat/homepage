@@ -19,7 +19,7 @@ const IGNORE_FILES = new Set([
     '.DS_Store'
 ]);
 const INCLUDE_EXTENSIONS = new Set([
-    '.md', '.js', '.json', '.html', '.css', '.xml', '.txt',
+    '.md', '.js', '.json', '.html', '.css', '.xml', '.txt', '.njk',
 ]);
 // --- End of Configuration ---
 

@@ -1,0 +1,71 @@
+{% extends "../_layouts/base.njk" %}
+
+{% block head %}
+<link rel="stylesheet" href="cv-style.min.css">
+{% endblock %}
+
+{% block content %}
+<div class="cv-container">
+    <div class="cv-page__header">
+        <div class="cv-page__identity">
+            <h2>Isaac Bernat</h2>
+            <p>Senior Software Engineer</p>
+        </div>
+        <div class="cv-page__actions">
+            <a href="https://github.com/isaacbernat/cv/raw/master/cv.pdf" class="btn" target="_blank" rel="noopener noreferrer">Download 1-Page PDF (Abridged)</a>
+            <div class="contact-links">
+                <a href="https://www.linkedin.com/in/isaacbernat/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+                <span class="contact-divider">|</span>
+                <span class="email-address" id="email-link" data-user="cv" data-domain="isaacbernat.com">@isaacbernat.com</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="cv-page__content">
+        <h3 class="cv-section-title">Experience</h3>
+        <div class="accordion">
+            <details>
+                <summary>
+                    <span class="company">Preply.com</span>
+                    {# UPDATED to include location #}
+                    <span class="location-duration">Barcelona, Spain<br>Mar 2020 - Jul 2024</span>
+                </summary>
+                <div class="details-content">
+                    {{ content.experience_preply | safe }}
+                </div>
+            </details>
+            {# TODO: create a new .md file for Wrapp and add a <details> block here #}
+            {# <details>
+                <summary>
+                    <span class="company">Wrapp.com</span>
+                    <span class="duration">Oct 2012 - Jun 2016</span>
+                </summary>
+                <div class="details-content">
+                    {{ content.experience_wrapp | safe }}
+                </div>
+            </details> #}
+        </div>
+
+        <h3 class="cv-section-title">Featured Case Study</h3>
+        <div class="case-study-card">
+            <h4>Subscription Model MVP</h4>
+            <p class="case-study-summary">Led the backend architecture for a company-defining project to introduce subscriptions, resulting in a +41% YoY increase in LTV and securing a Series C funding round.</p>
+            <details>
+                <summary class="link-summary">Read the full case study</summary>
+                <div class="details-content">
+                    {{ content.casestudy_subscription_model | safe }}
+                </div>
+            </details>
+        </div>
+
+        {# TODO: Add other sections as needed following this pattern 
+
+        <h3 class="cv-section-title">Presentations</h3>
+        ...
+        <h3 class="cv-section-title">Education & Credentials</h3>
+        ...
+        #}
+
+    </div>
+</div>
+{% endblock %}

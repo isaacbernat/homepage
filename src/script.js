@@ -63,3 +63,17 @@ function updateImageSource(theme, imageElement, sourceElement) {
     const fallbackSrc = srcsetValue.split(',')[0].split(' ')[0];
     imageElement.src = fallbackSrc;  // high-res 1x fallback on the <img> tag for older browsers
 }
+
+
+document.addEventListener("DOMContentLoaded", function() {  // Simple email obfuscation
+    const emailSpan = document.getElementById('email-link');
+    if (!emailSpan) return;
+
+    const user = emailSpan.getAttribute('data-user');
+    const domain = emailSpan.getAttribute('data-domain');
+    const fullEmail = `${user}@${domain}`;
+    const mailtoLink = document.createElement('a');
+    mailtoLink.href = `mailto:${fullEmail}`;
+    mailtoLink.textContent = fullEmail;
+    emailSpan.parentNode.replaceChild(mailtoLink, emailSpan);
+});
