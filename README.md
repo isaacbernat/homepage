@@ -45,6 +45,7 @@ The project was built with a focus on pragmatic and long-term value. The followi
 *   **CI/CD Pipeline:** A GitHub Actions workflow automates testing, building and deploying the site to GitHub Pages on every push to `main` branch.
 *   **DRY Templating:** Nunjucks is used to compile reusable layouts and partials (e.g. `<header>`) into static HTML, eliminating code duplication and ensuring consistency.
 *   **Content as Data:** To cleanly separate content from presentation, all narrative sections are authored in Markdown files and processed into HTML by the build script.
+*   **Disciplined Git History:** All commits follow the Conventional Commits specification for a clear, readable, and automated changelog.
 *   **Centralized Configuration:** Global site metadata is managed in a single configuration object within the build script.
 *   **Modular CSS:** Modern CSS with custom properties (`var(...)`) makes theming and maintenance straightforward.
 

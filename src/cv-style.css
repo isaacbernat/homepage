@@ -1,4 +1,3 @@
-/* --- CV Page Styling --- */
 body.page-cv {
     background: var(--gradient-top);
 }
@@ -15,7 +14,25 @@ body.page-cv header {
     box-sizing: border-box;
 }
 
-/* --- Page Header --- */
+.cv-container .details-content a,
+.cv-container .project-link,
+.cv-container .presentation-details a,
+.cv-container .presentations-other a,
+.cv-container .leadership-content a,
+.cv-container p > a {
+    color: var(--color-text-strong);
+    text-decoration: underline;
+    font-weight: 500;
+}
+.cv-container .details-content a:hover,
+.cv-container .project-link:hover,
+.cv-container .presentation-details a:hover,
+.cv-container .presentations-other a:hover,
+.cv-container .leadership-content a:hover,
+.cv-container p > a:hover {
+    color: var(--color-text);
+}
+
 .cv-page__header {
     padding-bottom: 1.5rem;
     border-bottom: 1px solid rgba(128, 128, 128, 0.2);
@@ -27,7 +44,28 @@ body.page-cv header {
 }
 .cv-page__identity h2 { margin: 0 0 0.25rem 0; font-size: 2rem; color: var(--color-text-strong); }
 .cv-page__identity p { margin: 0; font-size: 1.1rem; }
-.cv-page__actions { text-align: right; flex-shrink: 0; }
+.cv-page__actions { text-align: center; flex-shrink: 0; }
+
+
+.cv-section-title {
+    font-size: 1.5rem;
+    color: var(--color-text-strong);
+    margin-top: 3rem;
+    margin-bottom: 1.5rem;
+    text-align: center; /* Center the title text */
+    border-bottom: none; /* Remove the old full-width border */
+    padding-bottom: 0;
+}
+/* Add a short, elegant, centered underline 
+.cv-section-title::after {
+    content: '';
+    display: block;
+    width: 60px;
+    height: 2px;
+    background-color: var(--color-text);
+    opacity: 0.5;
+    margin: 0.75rem auto 0 auto; 
+} /* Center the line horizontally */
 
 .contact-links { margin-top: 0.75rem; }
 .contact-links a {
@@ -52,8 +90,6 @@ body.page-cv header {
     text-decoration: underline;
 }
 
-
-/* --- NEW Button Styling (from 404 page) --- */
 .btn {
     display: inline-block;
     padding: 0.75rem 1.5rem;
@@ -71,50 +107,71 @@ html[data-theme="dark"] .btn {
     color: var(--gradient-top);
 }
 
-
-/* --- Updated Accordion Styling --- */
-.accordion details { /* ... same ... */ }
 .accordion summary {
     padding: 1rem; cursor: pointer; font-weight: 500;
     list-style: none; display: flex; justify-content: space-between; align-items: center;
     transition: background-color 0.2s ease;
+    gap: 1rem;
 }
 .accordion summary:hover { background-color: rgba(128, 128, 128, 0.05); }
 .accordion summary::-webkit-details-marker { display: none; }
-.accordion summary .company { font-size: 1.1rem; color: var(--color-text-strong); }
+.accordion summary .company {
+    font-size: 1.1rem;
+    color: var(--color-text-strong);
+    font-weight: 500;
+    margin-right: 1rem;
+    flex-grow: 1; 
+}
 .accordion summary .location-duration {
     font-size: 0.9rem;
     color: var(--color-text);
     text-align: right;
+    flex-shrink: 0;
 }
 
+.accordion summary .summary-title {
+    font-size: 1.1rem;
+    color: var(--color-text-strong);
+    font-weight: 500;
+    flex-grow: 1; 
+}
 
+.accordion .summary-title {
+    font-weight: 500;
+}
 
+.accordion summary .summary-title {
+    font-size: 1.1rem;
+    color: var(--color-text-strong);
+    font-weight: 500;
+    flex-grow: 1; 
+}
 
+.accordion summary .summary-meta {
+    font-size: 0.9rem;
+    color: var(--color-text);
+    text-align: right;
+    flex-shrink: 0;
+}
 
+.accordion summary .summary-icon {
+    flex-shrink: 0;
+    width: 24px;
+    text-align: center;
+}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-.accordion summary::after {
-    content: '+'; font-size: 1.5rem; font-weight: 300;
+.accordion summary .summary-icon::after {
+    content: '+';
+    font-size: 1.5rem;
+    font-weight: 300;
+    line-height: 1;
+    display: inline-block;
     transition: transform 0.2s ease-in-out;
 }
-.accordion details[open] summary::after { transform: rotate(45deg); }
+.accordion details[open] .summary-icon::after {
+    transform: rotate(45deg);
+}
+
 .details-content {
     padding: 0 1.5rem 1.5rem 1.5rem; line-height: 1.6;
 }
@@ -122,11 +179,91 @@ html[data-theme="dark"] .btn {
 .details-content ul { padding-left: 20px; margin-top: 0; }
 .details-content p, .details-content ul { max-width: 65ch; }
 
-/* --- Case Study Card Styling --- */
-.case-study-card { /* ... same as before ... */ }
-
 @media (max-width: 600px) {
     .cv-container { padding: 1rem 1rem 3rem 1rem; }
     .cv-page__header { flex-direction: column; align-items: flex-start; }
     .cv-page__actions { text-align: left; margin-top: 1rem; }
+    .presentation-featured { flex-direction: column; }
+    .presentation-preview-image { width: 100%; }
+}
+
+.featured-project-card {
+
+    /* Use the existing border for the top, right, and bottom */
+    border: 1px solid rgba(var(--color-text-rgb), 0.15);
+    
+    /* Add the thicker, more prominent accent border on the left */
+    border-left: 4px solid rgba(var(--color-text-rgb), 0.5);
+
+    /* A more noticeable but still subtle background tint */
+    background-color: rgba(var(--color-text-rgb), 0.03);
+
+
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+.project-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 0.5rem;
+}
+.project-header h4 {
+    margin: 0;
+    font-size: 1.2rem;
+}
+.featured-project-card .details-content {
+    padding: 0; /* Override default accordion padding */
+}
+
+.project-grid {
+    display: grid;
+    /* Two columns on wider screens */
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin-top: 1.5rem; /* Add space below featured projects */
+}
+
+.project-card {
+    border: 1px solid rgba(128, 128, 128, 0.2);
+    border-radius: 8px;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+}
+.project-card h4 { margin: 0 0 0.5rem 0; font-size: 1.1rem; }
+.project-card p { flex-grow: 1; margin: 0 0 1.5rem 0; }
+.project-link { font-weight: 500; text-decoration: none; }
+.project-link:hover { text-decoration: underline; }
+.project-card .project-link {
+    margin-top: auto; /* Pushes link to the bottom of the card */
+}
+.pdf-download-link {
+    display: block;
+    margin-top: 1rem;
+    font-weight: 500;
+}
+
+.presentation-featured {
+    display: flex;
+    gap: 1.5rem;
+    align-items: flex-start;
+}
+.presentation-preview-image {
+    width: 240px;
+    height: auto;
+    border-radius: 8px;
+    flex-shrink: 0;
+    transition: transform 0.2s ease;
+}
+.presentation-preview-image:hover { transform: scale(1.03); }
+.presentation-details h4 { margin: 0 0 0.5rem 0; }
+.presentation-details p { margin-top: 0; }
+
+.presentations-other { margin-top: 2rem; }
+.presentations-other ul { padding-left: 20px; }
+
+.btn, .cv-page__actions a.btn {
+    text-decoration: none;
 }

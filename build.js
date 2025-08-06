@@ -140,7 +140,7 @@ async function build() {
 
         // --- Copy Static Root Files ---
         console.log('Copying root static files...');
-        const rootFilesToCopy = ['robots.txt']; // Add any other root files e.g.  'site.webmanifest', 'apple-touch-icon.png', 
+        const rootFilesToCopy = ['robots.txt', 'cv.pdf'];
         await Promise.all(
         rootFilesToCopy.map(async (file) => {
             const srcFile = path.join(SRC_DIR, file);
