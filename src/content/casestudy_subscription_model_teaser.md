@@ -1,0 +1,1 @@
+Led the backend architecture for a company-defining project that transitioned a manual, package-based business to a recurring subscription model. The solution resulted in a **+41% YoY increase in LTV**, an improvement on the LTV-to-CAC ratio from **1.4x to 3.0x** and was instrumental in securing a **Series C funding round**.

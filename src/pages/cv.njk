@@ -84,15 +84,29 @@
                 <h4>Subscription Model MVP at Preply</h4>
             </div>
             <div class="details-content">
-                <p>Led the backend architecture for a company-defining project, resulting in a <strong>+41% YoY increase in LTV by Q1 2023</strong> and securing a Series C funding round.</p>
+                <p>{{ content.casestudy_subscription_model_teaser | safe }}</p>
                 <details>
-                    <summary class="link-summary">Read the full case study</summary>
-                    <div class="details-content">{{ content.casestudy_subscription_model | safe }}</div>
+                    <summary class="link-summary">Read the full case study &darr;</summary>
+                    <div class="details-content" style="padding-top: 1rem;">{{ content.casestudy_subscription_model | safe }}</div>
                 </details>
             </div>
         </div>
 
         <div class="case-study-grid accordion">
+            <details class="project-card" id="casestudy-yearly-subscriptions">
+                <summary>
+                    <span class="summary-title">Learning from a Failed Experiment (Yearly Subscriptions)</span>
+                    <span class="summary-icon"></span>
+                </summary>
+                <div class="details-content">
+                    <p>{{ content.casestudy_yearly_subscriptions_teaser | safe }}</p>
+                    <details>
+                        <summary class="link-summary" style="font-weight: 500; cursor: pointer;">Read the full retrospective &darr;</summary>
+                        <div class="details-content" style="padding-top: 1rem;">{{ content.casestudy_yearly_subscriptions | safe }}</div>
+                    </details>
+                </div>
+            </details>
+
             <details class="project-card">
                 <summary>
                     <span class="summary-title">Q&A Platform Migration</span>
