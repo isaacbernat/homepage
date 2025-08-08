@@ -1,0 +1,1 @@
+A retrospective on a SEV-2 incident where I took full ownership of a pre-launch misconfiguration for a critical MVP. This case study details the methodical response process and the key systemic improvements that resulted, turning a personal mistake into a valuable lesson for the entire engineering organization on the non-negotiable importance of observability.

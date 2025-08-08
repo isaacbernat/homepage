@@ -1,0 +1,1 @@
+Identified a key inefficiency in our CI/CD pipeline and led a data-driven initiative to fix it. This simple change, implemented in one day, resulted in an **80% reduction in unnecessary test runs**, saving over **$31,000 USD annually** in infrastructure costs and hundreds of hours in developer wait time.

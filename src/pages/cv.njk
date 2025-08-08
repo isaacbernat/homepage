@@ -85,13 +85,24 @@
             </div>
             <div class="details-content">
                 <p>{{ content.casestudy_subscription_model_teaser | safe }}</p>
-                <details>
+                <details id="casestudy-subscription-model">
                     <summary class="link-summary">Read the full case study &darr;</summary>
                     <div class="details-content" style="padding-top: 1rem;">{{ content.casestudy_subscription_model | safe }}</div>
                 </details>
             </div>
         </div>
-
+        <div class="featured-project-card">
+            <div class="project-header">
+                <h4>Optimizing Subscriptions with a Data-Driven Pivot</h4>
+            </div>
+            <div class="details-content">
+                <p>{{ content.casestudy_postpone_billing_teaser | safe }}</p>
+                <details>
+                    <summary class="link-summary" style="font-weight: 500; cursor: pointer;">Read the full case study &darr;</summary>
+                    <div class="details-content" style="padding-top: 1rem;">{{ content.casestudy_postpone_billing | safe }}</div>
+                </details>
+            </div>
+        </div>
         <div class="case-study-grid accordion">
             <details class="project-card" id="casestudy-yearly-subscriptions">
                 <summary>
@@ -106,20 +117,57 @@
                     </details>
                 </div>
             </details>
-
             <details class="project-card">
                 <summary>
-                    <span class="summary-title">Q&A Platform Migration</span>
+                    <span class="summary-title">CI/CD Pipeline Optimization</span>
                     <span class="summary-icon"></span>
                 </summary>
-                <div class="details-content">{{ content.casestudy_qa_migration | safe }}</div>
+                <div class="details-content">
+                    <p>{{ content.casestudy_ci_savings_teaser | safe }}</p>
+                    <details>
+                        <summary class="link-summary" style="font-weight: 500; cursor: pointer;">Read the full retrospective &darr;</summary>
+                        <div class="details-content" style="padding-top: 1rem;">{{ content.casestudy_ci_savings | safe }}</div>
+                    </details>
+                </div>
+            </details>
+            <details class="project-card" id="casestudy-incident-74">
+                <summary>
+                    <span class="summary-title">Leading a SEV-2 Incident Response</span>
+                    <span class="summary-icon"></span>
+                </summary>
+                <div class="details-content">
+                    <p>{{ content.casestudy_incident_74_teaser | safe }}</p>
+                    <details>
+                        <summary class="link-summary" style="font-weight: 500; cursor: pointer;">Read the full retrospective &darr;</summary>
+                        <div class="details-content" style="padding-top: 1rem;">{{ content.casestudy_incident_74 | safe }}</div>
+                    </details>
+                </div>
             </details>
             <details class="project-card">
                 <summary>
-                    <span class="summary-title">Yearly Subscriptions Launch</span>
+                    <span class="summary-title">Proactive UX Improvement</span>
                     <span class="summary-icon"></span>
                 </summary>
-                <div class="details-content">{{ content.casestudy_yearly_subscriptions | safe }}</div>
+                <div class="details-content">
+                    <p>{{ content.casestudy_hero_image_teaser | safe }}</p>
+                    <details>
+                        <summary class="link-summary" style="font-weight: 500; cursor: pointer;">Read the full retrospective &darr;</summary>
+                        <div class="details-content" style="padding-top: 1rem;">{{ content.casestudy_hero_image | safe }}</div>
+                    </details>
+                </div>
+            </details>
+            <details class="project-card">
+                <summary>
+                    <span class="summary-title">Strategic Advocacy for Niche Segments</span>
+                    <span class="summary-icon"></span>
+                </summary>
+                <div class="details-content">
+                    <p>{{ content.casestudy_music_teaser | safe }}</p>
+                    <details>
+                        <summary class="link-summary" style="font-weight: 500; cursor: pointer;">Read the full retrospective &darr;</summary>
+                        <div class="details-content" style="padding-top: 1rem;">{{ content.casestudy_music | safe }}</div>
+                    </details>
+                </div>
             </details>
         </div>
 
