@@ -138,19 +138,25 @@ async function build() {
             console.log('Sitemap not found in src directory, skipping.');
         }
 
-        // --- Copy Static Root Files ---
+        // --- Copy Static Files ---
         console.log('Copying root static files...');
-        const rootFilesToCopy = ['robots.txt', 'cv.pdf'];
+        const rootFilesToCopy = ['robots.txt'];
         await Promise.all(
-        rootFilesToCopy.map(async (file) => {
-            const srcFile = path.join(SRC_DIR, file);
-            const distFile = path.join(DIST_DIR, file);
-            if (await fs.pathExists(srcFile)) {
-            await fs.copy(srcFile, distFile);
-            console.log(`Copied ${file} to ${DIST_DIR}.`);
-            }
-        })
+            rootFilesToCopy.map(async (file) => {
+                const srcFile = path.join(SRC_DIR, file);
+                const distFile = path.join(DIST_DIR, file);
+                if (await fs.pathExists(srcFile)) {
+                    await fs.copy(srcFile, distFile);
+                    console.log(`Copied ${file} to ${DIST_DIR}.`);
+                }
+            })
         );
+        const srcAssets = path.join(SRC_DIR, 'assets');
+        const distAssets = path.join(DIST_DIR, 'assets');
+        if (await fs.pathExists(srcAssets)) {
+            console.log("Copying 'assets' directory...");
+            await fs.copy(srcAssets, distAssets);
+        }
 
         // --- Compile, Process, Minify HTML and update links from Nunjucks Templates ---
         console.log('Compiling Nunjucks templates to HTML...');
