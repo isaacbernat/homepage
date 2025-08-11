@@ -1,6 +1,6 @@
 ### **The Challenge: The "Obvious" Next Step**
 
-Following the immense success of our 4-week subscription model, the next logical step seemed to be launching a yearly subscription option. The hypothesis had several layers: we could increase long-term user commitment, create a more predictable annual revenue stream, and further reduce churn by offering a compelling discount for a year-long commitment.
+Following the immense success of our initial **[4-week subscription model](#casestudy_subscription_model)**, the next logical step seemed to be launching a yearly subscription option. The hypothesis had several layers: we could increase long-term user commitment, create a more predictable annual revenue stream, and further reduce churn by offering a compelling discount for a year-long commitment.
 
 While we had qualitative data from user research teams suggesting this was a desired feature, the team, myself included, moved into the implementation phase with a high degree of optimism, without fully scrutinizing the underlying business and logistical assumptions.
 
