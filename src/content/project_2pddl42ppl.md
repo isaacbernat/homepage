@@ -1,0 +1,1 @@
+A proof-of-concept **Pong clone** built in **MicroPython** for the tiny Thumby game console. This project demonstrates rapid prototyping and resource-constrained development, showcasing a complete game that supports both cooperative and competitive 2-player modes on a single, shared device.

@@ -1,10 +1,10 @@
 ##### Senior Backend Engineer I (P7, Staff-Equivalent)
 *Jun 2022 – Jul 2024*
 
-- **Business Impact:** Drove the **"Postpone Billing" experiment, the single most profitable initiative of 2023** (out of 215 A/B tests), delivering a **+3% global Gross Margin lift**. Championed the project for three quarters against initial resistance, turning short-term negative metrics into a massive long-term win. ([Read the Case Study](#casestudy-postpone-billing))
-- **Strategic Foresight:** Identified critical risks in a major company initiative ("Subs Direct") and formally advocated for a phased, iterative approach to mitigate over 10k+ hours in potential wasted development. The core of my proposed strategy was eventually adopted after the initial "big bang" approach proved too complex.
+- **Business Impact:** Drove the "Postpone Billing" experiment, **the single most profitable initiative of 2023** (out of 215 A/B tests), delivering a **+3% global Gross Margin lift**. Championed the project for three quarters against initial resistance, turning short-term negative metrics into a massive long-term win. ([Read the Case Study](#casestudy-postpone-billing))
+- **Strategic Foresight:** Identified critical risks in a major company initiative ("Subs Direct") and formally advocated for a phased, iterative approach to mitigate over **10k+ hours in potential wasted development**. The core of my proposed strategy was eventually adopted after the initial "big bang" approach proved too complex.
 - **Cross-Functional Leadership:** As the engineering representative for the Subscription Experience team I held bi-weekly stakeholder meetings with Finance, Data and CRM teams to coordinate on critical projects, ensuring data models and financial reporting remained accurate during high-stakes experiments. I also supported engineering-wide quality by conducting technical interviews for multiple backend roles.
-- **Proactive System Ownership:** Identified and led the mitigation of critical bugs outside my team's domain, including a flaw costing over **$21k USD/week** and a celery task spamming the queue with over **1 million executions per hour**.
+- **Proactive System Ownership:** Identified and led the mitigation of critical bugs **outside my team's domain**, including a flaw costing over **$21k USD/week** and a celery task spamming the queue with over **1 million executions per hour**.
 
 ---
 

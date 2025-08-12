@@ -32,7 +32,7 @@
                 </summary>
                 <div class="details-content">{{ content.experience_sabbatical | safe }}</div>
             </details>
-            <details>
+            <details open>
                 <summary>
                     <span class="summary-title">Preply</span>
                     <span class="summary-meta">Barcelona, Spain<br>Mar 2020 - Jul 2024</span>
@@ -81,7 +81,7 @@
 
         <div class="featured-project-card">
             <div class="project-header" id="casestudy-subscription-model">
-                <h4>Subscription Model MVP (2021)</h4>
+                <h4>Subscription Model MVP: Building a Company-Defining Success (2021)</h4>
             </div>
             <div class="details-content">
                 <p>{{ content.casestudy_subscription_model_teaser | safe }}</p>
@@ -93,7 +93,7 @@
         </div>
         <div class="featured-project-card">
             <div class="project-header" id="casestudy-postpone-billing">
-                <h4>Optimizing Subscriptions with a Data-Driven Pivot (2023)</h4>
+                <h4>Subscription Optimization: A Crisis Turned into Best Experiment (2023)</h4>
             </div>
             <div class="details-content">
                 <p>{{ content.casestudy_postpone_billing_teaser | safe }}</p>
@@ -104,9 +104,9 @@
             </div>
         </div>
         <div class="case-study-grid accordion">
-            <details class="project-card" id="casestudy-yearly-subscriptions">
+            <details class="project-card" id="casestudy-yearly-subscriptions" open>
                 <summary>
-                    <span class="summary-title">Learning from a Failed Experiment (Yearly Subscriptions)</span>
+                    <span class="summary-title">A Failed Experiment: Key Lessons from Yearly Subscriptions</span>
                     <span class="summary-icon"></span>
                 </summary>
                 <div class="details-content">
@@ -117,9 +117,9 @@
                     </details>
                 </div>
             </details>
-            <details class="project-card">
+            <details class="project-card" open>
                 <summary>
-                    <span class="summary-title">CI/CD Pipeline Optimization</span>
+                    <span class="summary-title">CI/CD Optimization: Driving $31k in Annual Savings with a 1-Day Fix</span>
                     <span class="summary-icon"></span>
                 </summary>
                 <div class="details-content">
@@ -130,9 +130,9 @@
                     </details>
                 </div>
             </details>
-            <details class="project-card" id="casestudy-incident-74">
+            <details class="project-card" id="casestudy-incident-74" open>
                 <summary>
-                    <span class="summary-title">Leading a SEV-2 Incident Response</span>
+                    <span class="summary-title">Incident Command: Turning a Personal Mistake into Systemic Improvements</span>
                     <span class="summary-icon"></span>
                 </summary>
                 <div class="details-content">
@@ -143,9 +143,9 @@
                     </details>
                 </div>
             </details>
-            <details class="project-card">
+            <details class="project-card" open>
                 <summary>
-                    <span class="summary-title">Proactive UX Improvement</span>
+                    <span class="summary-title">Proactive Ownership: A UX Fix for a +27% GMV Lift</span>
                     <span class="summary-icon"></span>
                 </summary>
                 <div class="details-content">
@@ -156,9 +156,9 @@
                     </details>
                 </div>
             </details>
-            <details class="project-card">
+            <details class="project-card" open>
                 <summary>
-                    <span class="summary-title">Strategic Advocacy for Niche Segments</span>
+                    <span class="summary-title">Strategic Alignment: A Lesson in "Disagree & Commit"</span>
                     <span class="summary-icon"></span>
                 </summary>
                 <div class="details-content">
@@ -279,36 +279,15 @@
         <!-- EDUCATION SECTION                                      -->
         <!-- ====================================================== -->
         <h3 class="cv-section-title">Education &amp; Interests</h3>
+
         <div class="accordion">
             <details>
                 <summary>
-                    <span class="summary-title">University Education</span>
+                    <p>M.Sc. from NTNU/UPC, fluent in English and active in community leadership.</p>
+                    <span class="summary-title">See more </span>
                     <span class="summary-icon"></span>
                 </summary>
-                <div class="details-content">{{ content.education | safe }}</div>
-            </details>
-            <details>
-                <summary>
-                    <span class="summary-title">Languages</span>
-                    <span class="summary-icon"></span>
-                </summary>
-                <div class="details-content">{{ content.languages | safe }}</div>
-            </details>
-            <details>
-                <summary>
-                    <span class="summary-title">Interests</span>
-                    <span class="summary-icon"></span>
-                </summary>
-                <div class="details-content">{{ content.interests | safe }}</div>
-            </details>
-
-            <details>
-                <summary>
-                    <span class="summary-title">Credentials</span>
-                    <span class="summary-icon"></span>
-                </summary>
-                <div class="details-content">{{ content.credentials | safe }}</div>
-                <a href="https://github.com/isaacbernat/cv/tree/master/certificates" class="project-link" target="_blank" rel="noopener noreferrer">View on GitHub &rarr;</a>
+                <div class="details-content">{{ content.education_and_interests | safe }}</div>
             </details>
         </div>
     </div>
