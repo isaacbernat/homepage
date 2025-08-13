@@ -8,7 +8,7 @@ This created two clear problems:
 
 ### **My Role: From Idea to Impact**
 
-As the originator of the idea, my role was to validate the problem, build consensus for a solution, and coordinate its rapid implementation.
+As the originator of the idea, my role was to validate the problem, build consensus for a solution and coordinate its rapid implementation.
 
 ### **The Solution: A Data-Driven, Consensus-First Approach**
 
