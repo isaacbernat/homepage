@@ -1,4 +1,5 @@
 {% extends "../_layouts/base.njk" %}
+{% from "../_partials/macros.njk" import simpleProjectCard, featuredProjectCard, experienceEntry, featuredCaseStudy, caseStudyCard, featuredSystemDesign %}
 
 {% block head %}
 <link rel="stylesheet" href="cv-style.min.css">
@@ -24,246 +25,173 @@
     <div class="cv-page__content">
         <h3 class="cv-section-title">Experience</h3>
         <div class="accordion">
-            <details>
-                <summary>
-                    <span class="summary-title">Sabbatical</span>
-                    <span class="summary-meta">Barcelona, Spain<br>Aug 2024 - current</span>
-                    <span class="summary-icon"></span>
-                </summary>
-                <div class="details-content">{{ content.experience_sabbatical | safe }}</div>
-            </details>
-            <details open>
-                <summary>
-                    <span class="summary-title">Preply</span>
-                    <span class="summary-meta">Barcelona, Spain<br>Mar 2020 - Jul 2024</span>
-                    <span class="summary-icon"></span>
-                </summary>
-                <div class="details-content">{{ content.experience_preply | safe }}</div>
-            </details>
-            <details>
-                <summary>
-                    <span class="summary-title">Ivbar Institute</span>
-                    <span class="summary-meta">Stockholm, Sweden<br>Mar 2018 - Mar 2020</span>
-                    <span class="summary-icon"></span>
-                </summary>
-                <div class="details-content">{{ content.experience_ivbar | safe }}</div>
-            </details>
-            <details>
-                <summary>
-                    <span class="summary-title">Productos Aditivos</span>
-                    <span class="summary-meta">Montcada, Spain<br>Jun 2016 - Jan 2018</span>
-                    <span class="summary-icon"></span>
-                </summary>
-                <div class="details-content">{{ content.experience_productos_aditivos | safe }}</div>
-            </details>
-            <details>
-                <summary>
-                    <span class="summary-title">Wrapp</span>
-                    <span class="summary-meta">Stockholm, Sweden<br>Oct 2012 - Jun 2016</span>
-                    <span class="summary-icon"></span>
-                </summary>
-                <div class="details-content">{{ content.experience_wrapp | safe }}</div>
-            </details>
-            <details>
-                <summary>
-                    <span class="summary-title">FXStreet</span>
-                    <span class="summary-meta">Barcelona, Spain<br>Feb 2012 - Jul 2012</span>
-                    <span class="summary-icon"></span>
-                </summary>
-                <div class="details-content">{{ content.experience_fxstreet | safe }}</div>
-            </details>
+            {{ experienceEntry(
+                title='Sabbatical',
+                location='Barcelona, Spain',
+                dates='Aug 2024 - current',
+                content=content.experience_sabbatical
+            ) }}
+            {{ experienceEntry(
+                title='Preply',
+                location='Barcelona, Spain',
+                dates='Mar 2020 - Jul 2024',
+                content=content.experience_preply,
+                is_open=true
+            ) }}
+            {{ experienceEntry(
+                title='Ivbar Institute',
+                location='Stockholm, Sweden',
+                dates='Mar 2018 - Mar 2020',
+                content=content.experience_ivbar
+            ) }}
+            {{ experienceEntry(
+                title='Productos Aditivos',
+                location='Montcada, Spain',
+                dates='Jun 2016 - Jan 2018',
+                content=content.experience_productos_aditivos
+            ) }}
+            {{ experienceEntry(
+                title='Wrapp',
+                location='Stockholm, Sweden',
+                dates='Oct 2012 - Jun 2016',
+                content=content.experience_wrapp
+            ) }}
+            {{ experienceEntry(
+                title='FXStreet',
+                location='Barcelona, Spain',
+                dates='Feb 2012 - Jul 2012',
+                content=content.experience_fxstreet
+            ) }}
         </div>
 
-        <!-- ====================================================== -->
-        <!-- CASE STUDIES SECTION                                   -->
-        <!-- ====================================================== -->
+
         <h3 class="cv-section-title">Case Studies</h3>
-
-        <div class="featured-project-card">
-            <div class="project-header" id="casestudy-subscription-model">
-                <h4>Subscription Model MVP: Building a Company-Defining Success (2021)</h4>
-            </div>
-            <div class="details-content">
-                <p>{{ content.casestudy_subscription_model_teaser | safe }}</p>
-                <details>
-                    <summary class="link-summary">Read the full case study &darr;</summary>
-                    <div class="details-content" style="padding-top: 1rem;">{{ content.casestudy_subscription_model | safe }}</div>
-                </details>
-            </div>
-        </div>
-        <div class="featured-project-card">
-            <div class="project-header" id="casestudy-postpone-billing">
-                <h4>Subscription Optimization: A Crisis Turned into Best Experiment (2023)</h4>
-            </div>
-            <div class="details-content">
-                <p>{{ content.casestudy_postpone_billing_teaser | safe }}</p>
-                <details>
-                    <summary class="link-summary" style="font-weight: 500; cursor: pointer;">Read the full case study &darr;</summary>
-                    <div class="details-content" style="padding-top: 1rem;">{{ content.casestudy_postpone_billing | safe }}</div>
-                </details>
-            </div>
-        </div>
+        {{ featuredCaseStudy(
+            id='casestudy-subscription-model',
+            title='Model MVP: Building a Company-Defining Success (2021)',
+            teaser=content.casestudy_subscription_model_teaser,
+            full_content=content.casestudy_subscription_model
+        ) }}
+        {{ featuredCaseStudy(
+            id='casestudy-postpone-billing',
+            title='Subscription Optimization: A Crisis Turned into Best Experiment (2023)',
+            teaser=content.casestudy_postpone_billing_teaser,
+            full_content=content.casestudy_postpone_billing
+        ) }}
         <div class="case-study-grid accordion">
-            <details class="project-card" id="casestudy-yearly-subscriptions" open>
-                <summary>
-                    <span class="summary-title">A Failed Experiment: Key Lessons from Yearly Subscriptions</span>
-                    <span class="summary-icon"></span>
-                </summary>
-                <div class="details-content">
-                    <p>{{ content.casestudy_yearly_subscriptions_teaser | safe }}</p>
-                    <details>
-                        <summary class="link-summary" style="font-weight: 500; cursor: pointer;">Read the full retrospective &darr;</summary>
-                        <div class="details-content" style="padding-top: 1rem;">{{ content.casestudy_yearly_subscriptions | safe }}</div>
-                    </details>
-                </div>
-            </details>
-            <details class="project-card" open>
-                <summary>
-                    <span class="summary-title">CI/CD Optimization: Driving $31k in Annual Savings with a 1-Day Fix</span>
-                    <span class="summary-icon"></span>
-                </summary>
-                <div class="details-content">
-                    <p>{{ content.casestudy_ci_savings_teaser | safe }}</p>
-                    <details>
-                        <summary class="link-summary" style="font-weight: 500; cursor: pointer;">Read the full retrospective &darr;</summary>
-                        <div class="details-content" style="padding-top: 1rem;">{{ content.casestudy_ci_savings | safe }}</div>
-                    </details>
-                </div>
-            </details>
-            <details class="project-card" id="casestudy-incident-74" open>
-                <summary>
-                    <span class="summary-title">Incident Command: Turning a Personal Mistake into Systemic Improvements</span>
-                    <span class="summary-icon"></span>
-                </summary>
-                <div class="details-content">
-                    <p>{{ content.casestudy_incident_74_teaser | safe }}</p>
-                    <details>
-                        <summary class="link-summary" style="font-weight: 500; cursor: pointer;">Read the full retrospective &darr;</summary>
-                        <div class="details-content" style="padding-top: 1rem;">{{ content.casestudy_incident_74 | safe }}</div>
-                    </details>
-                </div>
-            </details>
-            <details class="project-card" open>
-                <summary>
-                    <span class="summary-title">Proactive Ownership: A UX Fix for a +27% GMV Lift</span>
-                    <span class="summary-icon"></span>
-                </summary>
-                <div class="details-content">
-                    <p>{{ content.casestudy_hero_image_teaser | safe }}</p>
-                    <details>
-                        <summary class="link-summary" style="font-weight: 500; cursor: pointer;">Read the full retrospective &darr;</summary>
-                        <div class="details-content" style="padding-top: 1rem;">{{ content.casestudy_hero_image | safe }}</div>
-                    </details>
-                </div>
-            </details>
-            <details class="project-card" open>
-                <summary>
-                    <span class="summary-title">Strategic Alignment: A Lesson in "Disagree & Commit"</span>
-                    <span class="summary-icon"></span>
-                </summary>
-                <div class="details-content">
-                    <p>{{ content.casestudy_music_teaser | safe }}</p>
-                    <details>
-                        <summary class="link-summary" style="font-weight: 500; cursor: pointer;">Read the full retrospective &darr;</summary>
-                        <div class="details-content" style="padding-top: 1rem;">{{ content.casestudy_music | safe }}</div>
-                    </details>
-                </div>
-            </details>
+            {{ caseStudyCard(
+                id='casestudy-yearly-subscriptions',
+                title='A Failed Experiment: Key Lessons from Yearly Subscriptions',
+                teaser=content.casestudy_yearly_subscriptions_teaser,
+                full_content=content.casestudy_yearly_subscriptions,
+                is_open=true
+            ) }}
+            {{ caseStudyCard(
+                id='casestudy-ci-savings',
+                title='CI/CD Optimization: Driving $31k in Annual Savings with a 1-Day Fix',
+                teaser=content.casestudy_ci_savings_teaser,
+                full_content=content.casestudy_ci_savings,
+                is_open=true
+            ) }}
+            {{ caseStudyCard(
+                id='casestudy-incident-74',
+                title='Incident Command: Turning a Personal Mistake into Systemic Improvements',
+                teaser=content.casestudy_incident_74_teaser,
+                full_content=content.casestudy_incident_74,
+                is_open=true
+            ) }}
+            {{ caseStudyCard(
+                id='casestudy-hero-image',
+                title='Proactive Ownership: A UX Fix for a +27% GMV Lift',
+                teaser=content.casestudy_hero_image_teaser,
+                full_content=content.casestudy_hero_image,
+                is_open=true
+            ) }}
+            {{ caseStudyCard(
+                id='casestudy-music',
+                title='Strategic Alignment: A Lesson in "Disagree & Commit"',
+                teaser=content.casestudy_music_teaser,
+                full_content=content.casestudy_music,
+                is_open=true
+            ) }}
         </div>
 
-        <!-- ====================================================== -->
-        <!-- SYSTEM DESIGN SECTION                                    -->
-        <!-- ====================================================== -->
+
         <h3 class="cv-section-title" id="system-design">System Design</h3>
-        <div class="featured-project-card">
-            <div class="project-header">
-                <h4>Spam Classification Engine (2025)</h4>
-            </div>
-            <div class="details-content">
-                <p>{{ content.design_spam_classifier | safe }}</p>
-                <a href="assets/spam_classifier.pdf" class="pdf-download-link" target="_blank" rel="noopener noreferrer">Download Design Doc (PDF) &rarr;</a>
-                <details style="margin-top: 1rem;">
-                    <summary class="link-summary">Read the full document online</summary>
-                    <div class="details-content">{{ content.design_spam_classifier_full | safe }}</div>
-                </details>
-            </div>
-        </div>
-
+        {{ featuredSystemDesign(
+            title='Spam Classification Engine (2025)',
+            teaser=content.design_spam_classifier,
+            pdf_link='assets/spam_classifier.pdf',
+            full_content=content.design_spam_classifier_full
+        ) }}
+        
         <div class="project-grid">
-            <div class="project-card">
-                <h4>Reimbursement API (2017)</h4>
-                <p>{{ content.design_reimbursement | safe }}</p>
-                <a href="https://github.com/isaacbernat/cv/tree/master/samples/reimbursement-system" class="project-link" target="_blank" rel="noopener noreferrer">View on GitHub &rarr;</a>
-            </div>
-            <div class="project-card">
-                <h4>URL Shortener (2012)</h4>
-                <p>{{ content.design_shortener | safe }}</p>
-                <a href="https://github.com/isaacbernat/gae-shorten" class="project-link" target="_blank" rel="noopener noreferrer">View on GitHub &rarr;</a>
-            </div>
+            {{ simpleProjectCard(
+                title='Reimbursement API (2017)',
+                content=content.design_reimbursement,
+                link='https://github.com/isaacbernat/cv/tree/master/samples/reimbursement-system'
+            ) }}
+            {{ simpleProjectCard(
+                title='URL Shortener (2012)',
+                content=content.design_shortener,
+                link='https://github.com/isaacbernat/gae-shorten'
+            ) }}
         </div>
 
-        <!-- ====================================================== -->
-        <!-- PERSONAL & OPEN SOURCE PROJECTS SECTION                -->
-        <!-- ====================================================== -->
+
         <h3 class="cv-section-title" id="personal-open-source-projects">Personal &amp; Open Source Projects</h3>
-        <div class="featured-project-card">
-            <div class="project-header">
-                <h4>netflix-to-srt</h4>
-                <a href="https://github.com/isaacbernat/netflix-to-srt" class="project-link" target="_blank" rel="noopener noreferrer">View on GitHub &rarr;</a>
-            </div>
-            <div class="details-content">{{ content.project_netflix | safe }}</div>
-        </div>
-
-        <div class="featured-project-card">
-            <div class="project-header">
-                <h4>This Homepage</h4>
-                <a href="https://github.com/isaacbernat/homepage" class="project-link" target="_blank" rel="noopener noreferrer">View on GitHub &rarr;</a>
-            </div>
-            <div class="details-content">{{ content.project_homepage | safe }}</div>
-        </div>
-
+        {{ featuredProjectCard(
+            title='netflix-to-srt',
+            content=content.project_netflix,
+            link='https://github.com/isaacbernat/netflix-to-srt'
+        ) }}
+        {{ featuredProjectCard(
+            title='This Homepage',
+            content=content.project_homepage,
+            link='https://github.com/isaacbernat/homepage'
+        ) }}
         <div class="project-grid">
-            <div class="project-card">
-                <h4>Basepaint Media Pipeline</h4>
-                <p>{{ content.project_basepaint | safe }}</p>
-                <a href="https://github.com/isaacbernat/basepaint-media" class="project-link" target="_blank" rel="noopener noreferrer">View on GitHub &rarr;</a>
-            </div>
-            <div class="project-card">
-                <h4>Rhythm Radar (2016)</h4>
-                <p>{{ content.project_rhythm_radar | safe }}</p>
-                <a href="https://github.com/isaacbernat/rhythm-radar" class="project-link" target="_blank" rel="noopener noreferrer">View on GitHub &rarr;</a>
-            </div>
-             <div class="project-card">
-                <h4>Docker Remote Debugging</h4>
-                <p>{{ content.project_docker_pudb | safe }}</p>
-                <a href="https://github.com/isaacbernat/docker-pudb" class="project-link" target="_blank" rel="noopener noreferrer">View on GitHub &rarr;</a>
-            </div>
-            <div class="project-card">
-                <h4>Moon Cycle Data Analysis</h4>
-                <p>{{ content.project_moon | safe }}</p>
-                <a href="https://github.com/isaacbernat/moon-data" class="project-link" target="_blank" rel="noopener noreferrer">View on GitHub &rarr;</a>
-            </div>
-            <div class="project-card">
-                <h4>Tinymem</h4>
-                <p>{{ content.project_tinymem | safe }}</p>
-                <a href="https://github.com/isaacbernat/tinymem" class="project-link" target="_blank" rel="noopener noreferrer">View on GitHub &rarr;</a>
-            </div>
-            <div class="project-card">
-                <h4>Pycrastinate (2014)</h4>
-                <p>{{ content.project_pycrastinate | safe }}</p>
-                <a href="https://github.com/isaacbernat/pycrastinate" class="project-link" target="_blank" rel="noopener noreferrer">View on GitHub &rarr;</a>
-            </div>
-            <!-- To be uncomented when we have another card, so the number is even and the contiguous space is not empty
-            <div class="project-card">
-                <h4>2-Player Thumby Pong</h4>
-                <p>{{ content.project_2pddl42ppl | safe }}</p>
-                <a href="https://github.com/isaacbernat/2pddl42ppl" class="project-link" target="_blank" rel="noopener noreferrer">View on GitHub &rarr;</a>
-            </div>
-            -->
+            {{ simpleProjectCard(
+                    title='Basepaint Media Pipeline',
+                    content=content.project_basepaint,
+                    link='https://github.com/isaacbernat/basepaint-media'
+                ) }}
+                {{ simpleProjectCard(
+                    title='Rhythm Radar (2016)',
+                    content=content.project_rhythm_radar,
+                    link='https://github.com/isaacbernat/rhythm-radar'
+                ) }}
+                {{ simpleProjectCard(
+                    title='Docker Remote Debugging',
+                    content=content.project_docker_pudb,
+                    link='https://github.com/isaacbernat/docker-pudb'
+                ) }}
+                {{ simpleProjectCard(
+                    title='Moon Cycle Data Analysis',
+                    content=content.project_moon,
+                    link='https://github.com/isaacbernat/moon-data'
+                ) }}
+                {{ simpleProjectCard(
+                    title='Tinymem',
+                    content=content.project_tinymem,
+                    link='https://github.com/isaacbernat/tinymem'
+                ) }}
+                {{ simpleProjectCard(
+                    title='Pycrastinate (2014)',
+                    content=content.project_pycrastinate,
+                    link='https://github.com/isaacbernat/pycrastinate'
+                ) }}
+                <!-- To be uncomented when we have another card, so the number is even and the contiguous space is not empty
+                {{ simpleProjectCard(
+                    title='2-Player Thumby Pong',
+                    content=content.project_2pddl42ppl,
+                    link='https://github.com/isaacbernat/2pddl42ppl'
+                ) }} 
+                -->
         </div>
         
-        <h3 class="cv-section-title" id="presentations">Presentations</h3>
 
+        <h3 class="cv-section-title" id="presentations">Presentations</h3>
         <div class="presentation-featured">
             <a href="https://youtu.be/asZ0SDTKqvM" target="_blank" rel="noopener noreferrer">
                 <img src="https://raw.githubusercontent.com/isaacbernat/presentations/master/optimise/images/video_preview_with_play_button.png" alt="YouTube preview for PyCon talk" class="presentation-preview-image">
@@ -275,11 +203,8 @@
             </div>
         </div>
 
-        <!-- ====================================================== -->
-        <!-- EDUCATION SECTION                                      -->
-        <!-- ====================================================== -->
-        <h3 class="cv-section-title">Education &amp; Interests</h3>
 
+        <h3 class="cv-section-title">Education &amp; Interests</h3>
         <div class="accordion">
             <details>
                 <summary>

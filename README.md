@@ -23,9 +23,9 @@ This repository contains the source code for my personal homepage, which serves 
 
 ### 1. Project Overview
 
-I present this static page to showcase how I approach engineering projects. The goal was to build a simple portfolio that is technically sound, maintainable and demonstrably high-quality while being elegant and visually appealing. The site is hosted on GitHub Pages but served through a custom domain for long-term URL stability.
+I present this static page to showcase how I approach engineering projects. The goal was to build a simple portfolio that is technically sound, maintainable and demonstrably high-quality while being neat and visually appealing. The site is hosted on GitHub Pages but served through a custom domain for long-term URL stability.
 
-The development of this robust, performant and accessible website was assisted by AI for generating boilerplate and accelerating implementation. Every final decision (e.g. architecture, technology, code) was a deliberate choice based on my own reflections and senior engineering experience. The most relevant aspects are highlighted below.
+The development of this robust, performant and accessible website was assisted by AI/LLMs for generating boilerplate and accelerating implementation. Every final decision (e.g. architecture, technology, code) was a deliberate choice based on my own reflections and senior engineering experience. The most relevant aspects are highlighted below.
 
 
 ### 2. Guiding Principles
@@ -43,9 +43,9 @@ The project was built with a focus on pragmatic and long-term value. The followi
 #### Development & Maintainability
 *   **Transparent Build Process:** Powered by an extensible Node.js script that provides full control over the asset pipeline without framework lock-in.
 *   **CI/CD Pipeline:** A GitHub Actions workflow automates testing, building and deploying the site to GitHub Pages on every push to `main` branch.
-*   **DRY Templating:** Nunjucks is used to compile reusable layouts and partials (e.g. `<header>`) into static HTML, eliminating code duplication and ensuring consistency.
+*   **Component-Based Content with Macros:** Repetitive UI components, like project cards and experience entries, are abstracted into Nunjucks `macros`. This allows content to be rendered consistently with a single line of code, making the site radically easier to maintain and update.
 *   **Content as Data:** To cleanly separate content from presentation, all narrative sections are authored in Markdown files and processed into HTML by the build script.
-*   **Disciplined Git History:** All commits follow the Conventional Commits specification for a clear, readable, and automated changelog.
+*   **Disciplined Git History:** All commits follow the Conventional Commits specification for a clear, readable and automated changelog.
 *   **Centralized Configuration:** Global site metadata is managed in a single configuration object within the build script.
 *   **Modular CSS:** Modern CSS with custom properties (`var(...)`) makes theming and maintenance straightforward.
 

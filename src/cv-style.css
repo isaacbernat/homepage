@@ -267,3 +267,21 @@ html[data-theme="dark"] .btn {
 .btn, .cv-page__actions a.btn {
     text-decoration: none;
 }
+
+.link-summary {
+    font-weight: 500;
+    cursor: pointer;
+    color: var(--color-text-strong); /* Make it look more like a link */
+    display: inline-block; /* Allows for margin/padding */
+    margin-top: 1rem;
+}
+.link-summary:hover {
+    text-decoration: underline;
+}
+
+.nested-details-content {
+    padding-top: 1rem;
+    padding-left: 0.5rem; /* Slightly indent nested content */
+    border-left: 2px solid rgba(var(--color-text-rgb), 0.1);
+    margin-left: -0.5rem; /* Counteract the padding for alignment */
+}
