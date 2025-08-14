@@ -14,7 +14,7 @@ const IGNORE_DIRS = new Set([
     'wip'
 ]);
 const IGNORE_FILES = new Set([
-    OUTPUT_FILE, // Ignore the script's own output
+    OUTPUT_FILE,
     'package-lock.json',
     '.DS_Store'
 ]);
@@ -25,10 +25,14 @@ const INCLUDE_EXTENSIONS = new Set([
 
 function walkDir(dir, callback) {
     fs.readdirSync(dir).forEach(f => {
-        let dirPath = path.join(dir, f);
-        let isDirectory = fs.statSync(dirPath).isDirectory();
-        isDirectory ?
-            walkDir(dirPath, callback) : callback(path.join(dir, f));
+        const dirPath = path.join(dir, f);
+        const isDirectory = fs.statSync(dirPath).isDirectory();
+
+        if (IGNORE_DIRS.has(path.basename(dirPath))) {
+            return; // Skip ignored directories
+        }
+
+        isDirectory ? walkDir(dirPath, callback) : callback(path.join(dir, f));
     });
 }
 
@@ -36,43 +40,31 @@ function aggregateProjectFiles() {
     console.log(`Starting to aggregate files into '${OUTPUT_FILE}'...`);
     let aggregatedContent = [];
 
-    const processPath = (currentPath) => {  // Walk the directory recursively
-        const baseName = path.basename(currentPath);
-        if (IGNORE_DIRS.has(baseName)) {
+    const processFile = (filePath) => {
+        const baseName = path.basename(filePath);
+        if (IGNORE_FILES.has(baseName)) {
             return;
         }
 
-        const files = fs.readdirSync(currentPath);
-        for (const file of files) {
-            const filePath = path.join(currentPath, file);
-            const stat = fs.statSync(filePath);
+        const extension = path.extname(baseName);
+        if (!INCLUDE_EXTENSIONS.has(extension)) {
+            return;
+        }
 
-            if (stat.isDirectory()) {
-                processPath(filePath);
-            } else {
-                if (IGNORE_FILES.has(file)) {
-                    continue;
-                }
-
-                const extension = path.extname(file);
-                if (!INCLUDE_EXTENSIONS.has(extension)) {
-                    continue;
-                }
-
-                const relativePath = path.relative(ROOT_DIR, filePath).replace(/\\/g, '/');
-                console.log(`  -> Processing: ${relativePath}`);
-                try {
-                    const content = fs.readFileSync(filePath, 'utf-8');
-                    const formattedBlock = `${relativePath.toUpperCase()}:\n"""\n${content}\n"""\n`;
-                    aggregatedContent.push(formattedBlock);
-                } catch (e) {
-                    console.log(`    [!] Error reading ${filePath}: ${e.message}`);
-                }
-            }
+        const relativePath = path.relative(ROOT_DIR, filePath).replace(/\\/g, '/');
+        console.log(`  -> Processing: ${relativePath}`);
+        try {
+            const content = fs.readFileSync(filePath, 'utf-8');
+            const formattedBlock = `${relativePath.toUpperCase()}:\n"""\n${content}\n"""\n`;
+            aggregatedContent.push(formattedBlock);
+        } catch (e) {
+            console.log(`    [!] Error reading ${filePath}: ${e.message}`);
         }
     };
 
-    processPath(ROOT_DIR);
+    // Start the process by calling the generic walker with our specific file processor.
+    walkDir(ROOT_DIR, processFile);
+
     fs.writeFileSync(OUTPUT_FILE, aggregatedContent.join('\n'));
     console.log(`\n✅ Aggregation complete. File '${OUTPUT_FILE}' has been created.`);
 }

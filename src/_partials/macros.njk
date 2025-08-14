@@ -54,7 +54,7 @@
     <div class="details-content">
         <p>{{ teaser | safe }}</p>
         <a href="{{ pdf_link }}" class="pdf-download-link" target="_blank" rel="noopener noreferrer">Download Design Doc (PDF) &rarr;</a>
-        <details style="margin-top: 1rem;">
+        <details class="details-with-top-margin">
             <summary class="link-summary">Read the full document online &darr;</summary>
             <div class="nested-details-content">{{ full_content | safe }}</div>
         </details>

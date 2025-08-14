@@ -56,16 +56,6 @@ body.page-cv header {
     border-bottom: none; /* Remove the old full-width border */
     padding-bottom: 0;
 }
-/* Add a short, elegant, centered underline 
-.cv-section-title::after {
-    content: '';
-    display: block;
-    width: 60px;
-    height: 2px;
-    background-color: var(--color-text);
-    opacity: 0.5;
-    margin: 0.75rem auto 0 auto; 
-} /* Center the line horizontally */
 
 .contact-links { margin-top: 0.75rem; }
 .contact-links a {
@@ -127,13 +117,6 @@ html[data-theme="dark"] .btn {
     color: var(--color-text);
     text-align: right;
     flex-shrink: 0;
-}
-
-.accordion summary .summary-title {
-    font-size: 1.1rem;
-    color: var(--color-text-strong);
-    font-weight: 500;
-    flex-grow: 1; 
 }
 
 .accordion .summary-title {
@@ -284,4 +267,8 @@ html[data-theme="dark"] .btn {
     padding-left: 0.5rem; /* Slightly indent nested content */
     border-left: 2px solid rgba(var(--color-text-rgb), 0.1);
     margin-left: -0.5rem; /* Counteract the padding for alignment */
+}
+
+.details-with-top-margin {
+    margin-top: 1rem;
 }
