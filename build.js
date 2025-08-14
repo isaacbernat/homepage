@@ -7,7 +7,6 @@ const svgo = require('svgo');
 const sharp = require('sharp');
 const toIco = require('to-ico');
 const nunjucks = require('nunjucks');
-const { marked } = require('marked');
 
 // --- Configuration ---
 const SRC_DIR = 'src';
@@ -67,6 +66,12 @@ async function generateIcoFromSvg(srcPath, distPath) {
 console.log('--- Starting Build Process ---');
 
 async function build() {
+    // The 'marked' library's package configuration (in this version and newer)
+    // resolves `require('marked')` to an ES Module (ESM) file, which is not
+    // supported in a CommonJS file like `build.js`. To resolve this, we must use
+    // a dynamic `await import()`, which correctly handles ESM packages.
+    const { marked } = await import('marked');  // 'marked' is a pure ES Module (ESM) and cannot be imported with require()
+
     try {
         // --- Clean and Create Destination Directory ---
         console.log(`Cleaning old '${DIST_DIR}' directory...`);
