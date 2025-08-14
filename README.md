@@ -43,6 +43,7 @@ The project was built with a focus on pragmatic and long-term value. The followi
 #### Development & Maintainability
 *   **Transparent Build Process:** Powered by an extensible Node.js script that provides full control over the asset pipeline without framework lock-in.
 *   **CI/CD Pipeline:** A GitHub Actions workflow automates testing, building and deploying the site to GitHub Pages on every push to `main` branch.
+*   **Reproducible Builds:** The CI pipeline uses `npm ci` instead of `npm install`. This is a deliberate choice to ensure that the exact dependency versions specified in the `package-lock.json` are used on every run, eliminating "works on my machine" issues and guaranteeing a stable, predictable deployment process.
 *   **Component-Based Content with Macros:** Repetitive UI components, like project cards and experience entries, are abstracted into Nunjucks `macros`. This allows content to be rendered consistently with a single line of code, making the site radically easier to maintain and update.
 *   **Content as Data:** To cleanly separate content from presentation, all narrative sections are authored in Markdown files and processed into HTML by the build script.
 *   **Disciplined Git History:** All commits follow the Conventional Commits specification for a clear, readable and automated changelog.
