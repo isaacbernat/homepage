@@ -1,0 +1,1 @@
+A data-centric project providing daily moon phase data from 1800-2050 in a clean CSV format. The repository includes two **Python** scripts: one using the `ephem` library for high-accuracy calculations and a dependency-free version for faster, less precise estimates. This demonstrates an understanding of both scientific accuracy and practical performance trade-offs.

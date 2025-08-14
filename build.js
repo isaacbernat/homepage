@@ -7,14 +7,37 @@ const svgo = require('svgo');
 const sharp = require('sharp');
 const toIco = require('to-ico');
 const nunjucks = require('nunjucks');
+const { marked } = require('marked');
 
 // --- Configuration ---
 const SRC_DIR = 'src';
 const DIST_DIR = 'dist';
 const JS_FILE = 'script.js';
 const CSS_FILE = 'style.css';
+const CV_CSS_FILE = 'cv-style.css';
+const CSS_FILES_TO_MINIFY = [CSS_FILE, CV_CSS_FILE];
 const SVG_FAVICON = 'favicon.svg';
 const SITEMAP_FILE = 'sitemap.xml';
+
+
+async function minifyCss(filename) {
+    const srcPath = path.join(SRC_DIR, filename);
+    if (!await fs.pathExists(srcPath)) return;
+
+    console.log(`Minifying ${filename}...`);
+    const distPath = path.join(DIST_DIR, filename.replace('.css', '.min.css'));
+    const mapPath = `${path.basename(distPath)}.map`;
+    const code = await fs.readFile(srcPath, 'utf8');
+
+    // Minify with source map generation
+    const result = new CleanCSS({ sourceMap: true }).minify({
+        [filename]: { styles: code }
+    });
+
+    await fs.writeFile(distPath, result.styles);
+    await fs.writeFile(`${distPath}.map`, result.sourceMap.toString());
+    console.log(`${filename} minified successfully.`);
+}
 
 
 async function generateIcoFromSvg(srcPath, distPath) {
@@ -66,15 +89,7 @@ async function build() {
         await fs.writeFile(`${jsDistPath}.map`, terserResult.map);
         console.log('JavaScript minified successfully.');
 
-        // --- Minify CSS with clean-css-cli ---
-        const cssSrcPath = path.join(SRC_DIR, CSS_FILE);
-        const cssDistPath = path.join(DIST_DIR, CSS_FILE.replace('.css', '.min.css'));
-        console.log('Minifying CSS...');
-        const cssCode = await fs.readFile(cssSrcPath, 'utf8');
-        const cleanCssResult = new CleanCSS({ sourceMap: true }).minify({ [CSS_FILE]: { styles: cssCode } });
-        await fs.writeFile(cssDistPath, cleanCssResult.styles);
-        await fs.writeFile(`${cssDistPath}.map`, cleanCssResult.sourceMap.toString());
-        console.log('CSS minified successfully.');
+        await Promise.all(CSS_FILES_TO_MINIFY.map(minifyCss));
 
         // --- Optimize SVG Favicon with SVGO ---
         const svgSrcPath = path.join(SRC_DIR, SVG_FAVICON);
@@ -123,32 +138,54 @@ async function build() {
             console.log('Sitemap not found in src directory, skipping.');
         }
 
-        // --- Copy Static Root Files ---
+        // --- Copy Static Files ---
         console.log('Copying root static files...');
-        const rootFilesToCopy = ['robots.txt']; // Add any other root files e.g.  'site.webmanifest', 'apple-touch-icon.png', 
+        const rootFilesToCopy = ['robots.txt'];
         await Promise.all(
-        rootFilesToCopy.map(async (file) => {
-            const srcFile = path.join(SRC_DIR, file);
-            const distFile = path.join(DIST_DIR, file);
-            if (await fs.pathExists(srcFile)) {
-            await fs.copy(srcFile, distFile);
-            console.log(`Copied ${file} to ${DIST_DIR}.`);
-            }
-        })
+            rootFilesToCopy.map(async (file) => {
+                const srcFile = path.join(SRC_DIR, file);
+                const distFile = path.join(DIST_DIR, file);
+                if (await fs.pathExists(srcFile)) {
+                    await fs.copy(srcFile, distFile);
+                    console.log(`Copied ${file} to ${DIST_DIR}.`);
+                }
+            })
         );
+        const srcAssets = path.join(SRC_DIR, 'assets');
+        const distAssets = path.join(DIST_DIR, 'assets');
+        if (await fs.pathExists(srcAssets)) {
+            console.log("Copying 'assets' directory...");
+            await fs.copy(srcAssets, distAssets);
+        }
 
         // --- Compile, Process, Minify HTML and update links from Nunjucks Templates ---
         console.log('Compiling Nunjucks templates to HTML...');
 
+        const contentDir = path.join(SRC_DIR, 'content');
+        const contentFiles = await fs.readdir(contentDir);
+        const markdownContent = {};
+
+        for (const file of contentFiles) {
+            if (path.extname(file) === '.md') {
+                const filePath = path.join(contentDir, file);
+                const contentKey = path.basename(file, '.md');
+                const markdown = await fs.readFile(filePath, 'utf-8');
+                markdownContent[contentKey] = marked.parse(markdown);
+            }
+        }
+        console.log(`Processed ${Object.keys(markdownContent).length} Markdown files.`);
+
         nunjucks.configure(path.join(SRC_DIR), { autoescape: true });
         const siteData = {
             siteDescription: 'Isaac Bernat, Senior Software Engineer. Find my CV, projects and presentations here.',
-            siteUrl: 'https://www.isaacbernat.com/'
+            siteUrl: 'https://www.isaacbernat.com/',
+            content: markdownContent
         };
 
         const pageData = {
             'index.njk': { title: 'Isaac Bernat | Senior Software Engineer' },
-            '404.njk': { title: '404: Page Not Found @ IsaacBernat.com' }
+            '404.njk': { title: '404: Page Not Found @ IsaacBernat.com' },
+            'cv.njk': { title: 'CV | Isaac Bernat', page_class: 'page-cv' }
         };
         const pagesDir = path.join(SRC_DIR, 'pages');
         const pageFiles = await fs.readdir(pagesDir);
@@ -164,6 +201,7 @@ async function build() {
 
             let renderedHtml = nunjucks.render(pageTemplatePath, dataForPage);
             renderedHtml = renderedHtml.replace(new RegExp(CSS_FILE, 'g'), CSS_FILE.replace('.css', '.min.css'));
+            renderedHtml = renderedHtml.replace(new RegExp(CV_CSS_FILE, 'g'), CV_CSS_FILE.replace('.css', '.min.css'));
             renderedHtml = renderedHtml.replace(new RegExp(JS_FILE, 'g'), JS_FILE.replace('.js', '.min.js'));
 
             const minifiedHtml = minify(renderedHtml, {

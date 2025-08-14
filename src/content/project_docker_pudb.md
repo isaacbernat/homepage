@@ -1,0 +1,1 @@
+A practical guide and working example for debugging **Python** code remotely within a **Docker** container. This project provides a clear, step-by-step solution using `pudb` and `telnet`, complete with sample code and configuration, to improve development workflows in containerized environments.

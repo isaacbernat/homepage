@@ -1,0 +1,1 @@
+A retrospective on a failed experiment to launch yearly subscriptions. This project became a powerful lesson in the importance of upfront product validation and the engineering principle of YAGNI ("You Ain't Gonna Need It"), leading to a more pragmatic and data-driven approach in subsequent work.

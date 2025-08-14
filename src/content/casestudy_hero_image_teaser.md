@@ -1,0 +1,1 @@
+Identified a simple user experience mismatch on our mobile homepage, proactively proposed a low-effort A/B test to a different team and drove a **+27% increase in Gross Merchandise Value (GMV)** from the affected user segment. This case study is a testament to the power of looking beyond assigned tasks and thinking like an owner of the entire product.

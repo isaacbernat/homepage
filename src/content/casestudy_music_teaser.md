@@ -1,0 +1,1 @@
+Identified a growing, underserved user segment (Music learners) experiencing significant friction due to product limitations. This case study details a data-backed advocacy effort to improve their experience, ultimately serving as a lesson in aligning individual insights with broader company strategy and the principle of "disagree and commit."

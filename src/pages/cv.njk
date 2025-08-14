@@ -1,0 +1,220 @@
+{% extends "../_layouts/base.njk" %}
+{% from "../_partials/macros.njk" import simpleProjectCard, featuredProjectCard, experienceEntry, featuredCaseStudy, caseStudyCard, featuredSystemDesign %}
+
+{% block head %}
+<link rel="stylesheet" href="cv-style.min.css">
+{% endblock %}
+
+{% block content %}
+<div class="cv-container">
+    <div class="cv-page__header">
+        <div class="cv-page__identity">
+            <h2>Isaac Bernat</h2>
+            <p>Senior Software Engineer</p>
+        </div>
+        <div class="cv-page__actions">
+            <a href="assets/cv.pdf" class="btn" target="_blank" rel="noopener noreferrer">Download 1-Page PDF (Abridged)</a>
+            <div class="contact-links">
+                <a href="https://www.linkedin.com/in/isaacbernat/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+                <span class="contact-divider">|</span>
+                <span class="email-address" id="email-link" data-user="cv" data-domain="isaacbernat.com">@isaacbernat.com</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="cv-page__content">
+        <h3 class="cv-section-title">Experience</h3>
+        <div class="accordion">
+            {{ experienceEntry(
+                title='Sabbatical',
+                location='Barcelona, Spain',
+                dates='Aug 2024 - current',
+                content=content.experience_sabbatical
+            ) }}
+            {{ experienceEntry(
+                title='Preply',
+                location='Barcelona, Spain',
+                dates='Mar 2020 - Jul 2024',
+                content=content.experience_preply,
+                is_open=true
+            ) }}
+            {{ experienceEntry(
+                title='Ivbar Institute',
+                location='Stockholm, Sweden',
+                dates='Mar 2018 - Mar 2020',
+                content=content.experience_ivbar
+            ) }}
+            {{ experienceEntry(
+                title='Productos Aditivos',
+                location='Montcada, Spain',
+                dates='Jun 2016 - Jan 2018',
+                content=content.experience_productos_aditivos
+            ) }}
+            {{ experienceEntry(
+                title='Wrapp',
+                location='Stockholm, Sweden',
+                dates='Oct 2012 - Jun 2016',
+                content=content.experience_wrapp
+            ) }}
+            {{ experienceEntry(
+                title='FXStreet',
+                location='Barcelona, Spain',
+                dates='Feb 2012 - Jul 2012',
+                content=content.experience_fxstreet
+            ) }}
+        </div>
+
+
+        <h3 class="cv-section-title">Case Studies</h3>
+        {{ featuredCaseStudy(
+            id='casestudy-subscription-model',
+            title='Model MVP: Building a Company-Defining Success (2021)',
+            teaser=content.casestudy_subscription_model_teaser,
+            full_content=content.casestudy_subscription_model
+        ) }}
+        {{ featuredCaseStudy(
+            id='casestudy-postpone-billing',
+            title='Subscription Optimization: A Crisis Turned into Best Experiment (2023)',
+            teaser=content.casestudy_postpone_billing_teaser,
+            full_content=content.casestudy_postpone_billing
+        ) }}
+        <div class="case-study-grid accordion">
+            {{ caseStudyCard(
+                id='casestudy-yearly-subscriptions',
+                title='A Failed Experiment: Key Lessons from Yearly Subscriptions',
+                teaser=content.casestudy_yearly_subscriptions_teaser,
+                full_content=content.casestudy_yearly_subscriptions,
+                is_open=true
+            ) }}
+            {{ caseStudyCard(
+                id='casestudy-ci-savings',
+                title='CI/CD Optimization: Driving $31k in Annual Savings with a 1-Day Fix',
+                teaser=content.casestudy_ci_savings_teaser,
+                full_content=content.casestudy_ci_savings,
+                is_open=true
+            ) }}
+            {{ caseStudyCard(
+                id='casestudy-incident-74',
+                title='Incident Command: Turning a Personal Mistake into Systemic Improvements',
+                teaser=content.casestudy_incident_74_teaser,
+                full_content=content.casestudy_incident_74,
+                is_open=true
+            ) }}
+            {{ caseStudyCard(
+                id='casestudy-hero-image',
+                title='Proactive Ownership: A UX Fix for a +27% GMV Lift',
+                teaser=content.casestudy_hero_image_teaser,
+                full_content=content.casestudy_hero_image,
+                is_open=true
+            ) }}
+            {{ caseStudyCard(
+                id='casestudy-music',
+                title='Strategic Alignment: A Lesson in "Disagree & Commit"',
+                teaser=content.casestudy_music_teaser,
+                full_content=content.casestudy_music,
+                is_open=true
+            ) }}
+        </div>
+
+
+        <h3 class="cv-section-title" id="system-design">System Design</h3>
+        {{ featuredSystemDesign(
+            title='Spam Classification Engine (2025)',
+            teaser=content.design_spam_classifier,
+            pdf_link='assets/spam_classifier.pdf',
+            full_content=content.design_spam_classifier_full
+        ) }}
+        
+        <div class="project-grid">
+            {{ simpleProjectCard(
+                title='Reimbursement API (2017)',
+                content=content.design_reimbursement,
+                link='https://github.com/isaacbernat/cv/tree/master/samples/reimbursement-system'
+            ) }}
+            {{ simpleProjectCard(
+                title='URL Shortener (2012)',
+                content=content.design_shortener,
+                link='https://github.com/isaacbernat/gae-shorten'
+            ) }}
+        </div>
+
+
+        <h3 class="cv-section-title" id="personal-open-source-projects">Personal &amp; Open Source Projects</h3>
+        {{ featuredProjectCard(
+            title='netflix-to-srt',
+            content=content.project_netflix,
+            link='https://github.com/isaacbernat/netflix-to-srt'
+        ) }}
+        {{ featuredProjectCard(
+            title='This Homepage',
+            content=content.project_homepage,
+            link='https://github.com/isaacbernat/homepage'
+        ) }}
+        <div class="project-grid">
+            {{ simpleProjectCard(
+                    title='Basepaint Media Pipeline',
+                    content=content.project_basepaint,
+                    link='https://github.com/isaacbernat/basepaint-media'
+                ) }}
+                {{ simpleProjectCard(
+                    title='Rhythm Radar (2016)',
+                    content=content.project_rhythm_radar,
+                    link='https://github.com/isaacbernat/rhythm-radar'
+                ) }}
+                {{ simpleProjectCard(
+                    title='Docker Remote Debugging',
+                    content=content.project_docker_pudb,
+                    link='https://github.com/isaacbernat/docker-pudb'
+                ) }}
+                {{ simpleProjectCard(
+                    title='Moon Cycle Data Analysis',
+                    content=content.project_moon,
+                    link='https://github.com/isaacbernat/moon-data'
+                ) }}
+                {{ simpleProjectCard(
+                    title='Tinymem',
+                    content=content.project_tinymem,
+                    link='https://github.com/isaacbernat/tinymem'
+                ) }}
+                {{ simpleProjectCard(
+                    title='Pycrastinate (2014)',
+                    content=content.project_pycrastinate,
+                    link='https://github.com/isaacbernat/pycrastinate'
+                ) }}
+                <!-- To be uncomented when we have another card, so the number is even and the contiguous space is not empty
+                {{ simpleProjectCard(
+                    title='2-Player Thumby Pong',
+                    content=content.project_2pddl42ppl,
+                    link='https://github.com/isaacbernat/2pddl42ppl'
+                ) }} 
+                -->
+        </div>
+        
+
+        <h3 class="cv-section-title" id="presentations">Presentations</h3>
+        <div class="presentation-featured">
+            <a href="https://youtu.be/asZ0SDTKqvM" target="_blank" rel="noopener noreferrer">
+                <img src="https://raw.githubusercontent.com/isaacbernat/presentations/master/optimise/images/video_preview_with_play_button.png" alt="YouTube preview for PyCon talk" class="presentation-preview-image">
+            </a>
+            <div class="presentation-details">
+                <h4>From >1 Billion years to &lt;1 second</h4>
+                <p>A talk on code optimization given at <strong>PyCon Sweden 2019</strong>, covering 10+ techniques and a performance comparison of Python vs. C++. The iterative process shows how a simple problem can be sped up by over 10<sup>18</sup>x on a regular laptop.</p>
+                <p style="margin-top: 1.0rem;"><a href="https://github.com/isaacbernat/presentations?#optimise" target="_blank" rel="noopener noreferrer">View all presentations on GitHub &rarr;</a></p>
+            </div>
+        </div>
+
+
+        <h3 class="cv-section-title">Education &amp; Interests</h3>
+        <div class="accordion">
+            <details>
+                <summary>
+                    <p>M.Sc. from NTNU/UPC, fluent in English and active in community leadership.</p>
+                    <span class="summary-title">See more </span>
+                    <span class="summary-icon"></span>
+                </summary>
+                <div class="details-content">{{ content.education_and_interests | safe }}</div>
+            </details>
+        </div>
+    </div>
+</div>
+{% endblock %}

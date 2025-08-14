@@ -1,0 +1,1 @@
+A technical design for a proof-of-concept spam classifier in a legacy Perl ecosystem. This document showcases a pragmatic, "white-box" heuristic approach chosen for its interpretability, maintainability and a phased evolution towards a modern ML service, demonstrating deep architectural thinking under realistic constraints.

@@ -1,0 +1,1 @@
+An experimental real-time rhythm visualizer built with **D3.js**. This proof-of-concept uses polar coordinates to create an intuitive "radar" display for drum patterns, offering a novel alternative to traditional linear notation. The project was inspired by a desire to to understand complex rhythms in real time, especially when multiple instruments and loops are involved.
