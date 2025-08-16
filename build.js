@@ -124,6 +124,14 @@ async function build() {
             await fs.copy(srcImages, distImages, { filter: filterWebP });
         }
 
+        // --- Copy Redirects ---
+        const srcRedirects = path.join(SRC_DIR, 'case-study');
+        const distRedirects = path.join(DIST_DIR, 'case-study');
+        if (await fs.pathExists(srcRedirects)) {
+            console.log("Copying 'case-study' redirects...");
+            await fs.copy(srcRedirects, distRedirects);
+        }
+
         // --- Process Sitemap and update lastmod date
         console.log('Processing sitemap...');
         const sitemapSrcPath = path.join(SRC_DIR, SITEMAP_FILE);

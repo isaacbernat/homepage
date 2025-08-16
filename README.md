@@ -58,11 +58,13 @@ The project was built with a focus on pragmatic and long-term value. The followi
 *   **Image Optimization:** Initial images were optimized with Squoosh.app to a compressed `.webp` format. The build process uses `sharp` and `svgo` for automated optimization of favicons.
 *   **Lazy Loading (LQIP):** A tiny, blurred placeholder for the main image is loaded instantly to improve Largest Contentful Paint (LCP) and prevent layout shift (the high-resolution version is loaded in the background).
 *   **"No-Flicker" Theme Script:** A critical, render-blocking inline script sets the theme before CSS is applied, preventing a "Flash of Unstyled Content" (FOUC).
+*   **Seamless Theming Transitions:** The above FUOC technique is extended to intermediate redirect pages to eliminate jarring white flashes during navigation, ensuring a polished and seamless user experience from the first click.
 *   **Non-Blocking Scripts:** The main JavaScript file is loaded with the `defer` attribute.
 
 #### Accessibility (A11y), SEO & UX
 *   **Art-Directed Theming:** The site features distinct light and dark themes with purpose-made imagery for each, rather than using CSS filters. The theme defaults to system preference and is persisted in `localStorage`.
 *   **WCAG 2.0 Compliance:** Both light and dark themes were designed and verified to meet AAA contrast ratio standards. Automated testing is a priority on the roadmap.
+*   **Robust Deep Linking for Social Media:** Implemented a system of clean, canonical redirect pages to work around limitations in platforms like LinkedIn that do not correctly handle URL hash fragments. This ensures that links to specific case studies (e.g. `.../cv.html#casestudy-x`) can be shared with a clean URL (e.g. `.../case-study/x`) and still resolve correctly, providing a seamless user experience.
 *   **SEO Best Practices:** The site includes a `robots.txt` and a `sitemap.xml` that is automatically updated with the latest modification date during every build.
 *   **Progressive Disclosure UI:** Native HTML `<details>` elements create interactive accordions, managing information density without requiring a JavaScript library.
 *   **Semantic HTML:** Correct use of elements like `<header>`, `<main>` and `<nav>` provides clear structure for screen readers and search engines.
