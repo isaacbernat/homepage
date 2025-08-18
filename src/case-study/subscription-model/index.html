@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title>Redirecting...</title>
+    
+    <!-- 1. The No-Flicker Script to set the theme immediately -->
+    <script>
+        (function() {
+            function setTheme(theme) { document.documentElement.setAttribute('data-theme', theme); }
+            let preferredTheme = localStorage.getItem('theme');
+            if (preferredTheme) { setTheme(preferredTheme); }
+            else { const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches; setTheme(prefersDark ? 'dark' : 'light'); }
+        })();
+    </script>
+
+    <!-- 2. Tiny inline style to make the redirect page match the theme -->
+    <style>
+      body {
+        background-color: #fdf8ee; /* Default light theme background */
+        color: #333;
+        font-family: sans-serif;
+        padding: 2rem;
+      }
+      html[data-theme="dark"] body {
+        background-color: #0c0700; /* Dark theme background */
+        color: #e4e6eb;
+      }
+    </style>
+    
+    <!-- 3. The redirect and canonical link (no changes here) -->
+    <meta http-equiv="refresh" content="0; url=https://www.isaacbernat.com/cv.html#casestudy-subscription-model" />
+    <link rel="canonical" href="https://www.isaacbernat.com/cv.html#casestudy-subscription-model" />
+  </head>
+  <body>
+    <p>Redirecting you to the case study... If you are not redirected automatically, <a href="https://www.isaacbernat.com/cv.html#casestudy-subscription-model">click here</a>.</p>
+  </body>
+</html>

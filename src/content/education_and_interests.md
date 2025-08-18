@@ -1,7 +1,7 @@
 #### M.Sc. in Informatics Engineering, Highest Honours
 *Norwegian University of Science and Technology (NTNU) & Universitat Politècnica de Catalunya (UPC), 2011*
 - Completed a 5-year, 300+ ECTS program in Informatics Engineering at UPC, with specializations in Data Management and Software Engineering.
-- Authored a Master's Thesis on **[Test-Driven Conceptual Modelling](https://ntnuopen.ntnu.no/ntnu-xmlui/handle/11250/252845)** at NTNU, which received the highest possible grade (A with Highest Honours) from both institutions.
+- Authored a Master's Thesis on **[Test-Driven Conceptual Modelling](https://ntnuopen.ntnu.no/ntnu-xmlui/handle/11250/252845)** at NTNU as part of the **ERASMUS programme**. This received the highest possible grade (A with Highest Honours) from both institutions.
 
 ---
 
