@@ -49,6 +49,8 @@ The project was built with a focus on pragmatic and long-term value. The followi
 *   **Disciplined Git History:** All commits follow the Conventional Commits specification for a clear, readable and automated changelog.
 *   **Centralized Configuration:** Global site metadata is managed in a single configuration object within the build script.
 *   **Modular CSS:** Modern CSS with custom properties (`var(...)`) makes theming and maintenance straightforward.
+*   **Modular Build Script:** Following the Single Responsibility Principle, the build script is composed of small, single-purpose functions (e.g. `minifyJs`, `processFavicons`). This makes the build process highly readable, maintainable, and easy to extend, with a main `build()` function that acts as a clean orchestrator.
+*   **Decoupled Templates for Robustness:** To improve maintainability and adhere to the principle of Separation of Concerns, templates (`.njk` files) reference source assets (`style.css`). The build script is the single source of truth responsible for asset transformation (e.g. to `style.min.css`), making the entire system robust and simplifying future enhancements like cache-busting.
 
 #### Performance
 *   **Parallelized Build Tasks:** Independent asset minification jobs are run in parallel using `Promise.all` to accelerate the build process.
