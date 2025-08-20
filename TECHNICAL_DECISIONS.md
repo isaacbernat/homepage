@@ -78,11 +78,14 @@ This tier focuses on integrating automated checks into the CI/CD pipeline to gua
 *   **Code Linting & Formatting**
     *   **What:** Enforce a consistent code style across all JavaScript, CSS and Markdown files.
     *   **Why:** To ensure code quality, readability, and maintainability, which are hallmarks of a professional software project.
-    *   **How:** Implement **[ESLint](https://eslint.org/)** for JavaScript and **[Prettier](https://prettier.io/)** for automated formatting. Add a `lint` script to `package.json` and run it as a required check in the CI pipeline.
+    *   **How:** Implement **[ESLint](https://eslint.org/)** for JavaScript (DONE) and **[Prettier](https://prettier.io/)** for automated formatting. Add a `lint` script to `package.json` (DONE) and run it as a required check in the CI pipeline.
 
-#### Tier 2: Testing and Validation
+#### Tier 2: Lower prio than those above ;D
 
-This tier focuses on more advanced testing methodologies that demonstrate a mature approach to software reliability.
+*   **Implement Automated Cache-Busting**
+    *   **What:** Modify the build script to generate unique filenames for CSS and JavaScript assets based on their content (e.g. `style.[hash].min.css`).
+    *   **Why:** To solve the browser caching problem where users might be served stale assets after a new deployment. This ensures that every user immediately receives the latest version of the site, preventing bugs and inconsistent experiences. It's a critical feature for production reliability.
+    *   **How:** Use a Node.js package (like `md5-file` or Node's built-in `crypto` module) to generate a content hash for each asset. The build script would then rename the output files with this hash and update the references in the final HTML files accordingly. The recent refactoring to decouple templates from build artifacts makes this significantly easier to implement.
 
 *   **Build Script Unit Testing**
     *   **What:** A dedicated test suite for the `build.js` script itself.

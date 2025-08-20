@@ -51,6 +51,7 @@ The project was built with a focus on pragmatic and long-term value. The followi
 *   **Modular CSS:** Modern CSS with custom properties (`var(...)`) makes theming and maintenance straightforward.
 *   **Modular Build Script:** Following the Single Responsibility Principle, the build script is composed of small, single-purpose functions (e.g. `minifyJs`, `processFavicons`). This makes the build process highly readable, maintainable, and easy to extend, with a main `build()` function that acts as a clean orchestrator.
 *   **Decoupled Templates for Robustness:** To improve maintainability and adhere to the principle of Separation of Concerns, templates (`.njk` files) reference source assets (`style.css`). The build script is the single source of truth responsible for asset transformation (e.g. to `style.min.css`), making the entire system robust and simplifying future enhancements like cache-busting.
+*   **Automated Code Quality Enforcement:** A linting process using **[ESLint](https://eslint.org/)** has been integrated into the CI/CD pipeline. This ensures that all code merged to `main` adheres to a consistent standard.
 
 #### Performance
 *   **Parallelized Build Tasks:** Independent asset minification jobs are run in parallel using `Promise.all` to accelerate the build process.
@@ -87,10 +88,13 @@ The project was built with a focus on pragmatic and long-term value. The followi
 ### 4. Tech Stack & Tooling
 *   **Languages:** HTML5, CSS3, JavaScript (ES6+)
 *   **Templating:** [Nunjucks](https://mozilla.github.io/nunjucks/)
-*   **Markdown Parsing:** [Marked](https://marked.js.org/)
 *   **Build Scripting:** [Node.js](https://nodejs.org/)
-*   **JS/CSS/HTML Minification:** [Terser](https://terser.org/), [CleanCSS](https://github.com/clean-css/clean-css) and `html-minifier`
-*   **Image Optimization:** [sharp](https://sharp.pixelplumbing.com/), [SVGO](https://github.com/svg/svgo) and [Squoosh.app](https://squoosh.app/)
+*   **Asset Pipeline & Optimization:**
+    *   **JS/CSS/HTML Minification:** [Terser](https://terser.org/), [CleanCSS](https://github.com/clean-css/clean-css), `html-minifier`
+    *   **Image Optimization:** [sharp](https://sharp.pixelplumbing.com/), [SVGO](https://github.com/svg/svgo) and [Squoosh.app](https://squoosh.app/)
+    *   **Markdown Parsing:** [Marked](https://marked.js.org/)
+*   **Code Quality & Formatting:**
+    *   **JavaScript Linting:** [ESLint](https://eslint.org/)
 *   **Deployment:** [GitHub Actions](https://github.com/features/actions)
 
 

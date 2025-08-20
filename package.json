@@ -5,6 +5,7 @@
   "main": "script.js",
   "scripts": {
     "build": "node build.js",
+    "lint": "eslint .",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -19,8 +20,11 @@
   },
   "homepage": "https://github.com/isaacbernat/homepage#readme",
   "devDependencies": {
+    "@eslint/js": "^9.33.0",
     "clean-css-cli": "^5.6.3",
+    "eslint": "^9.33.0",
     "fs-extra": "^11.3.0",
+    "globals": "^16.3.0",
     "html-minifier": "^4.0.0",
     "marked": "^16.1.1",
     "nunjucks": "^3.2.4",
