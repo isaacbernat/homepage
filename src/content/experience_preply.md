@@ -1,5 +1,6 @@
 ##### Staff-Equivalent Backend Engineer (P7)
-*Jun 2022 – Jul 2024*
+
+_Jun 2022 – Jul 2024_
 
 I shaped the technical roadmap and led initiatives that directly influenced the company's bottom line and engineering culture.
 
@@ -11,7 +12,8 @@ I shaped the technical roadmap and led initiatives that directly influenced the 
 ---
 
 ##### Senior Backend Engineer (P6)
-*Mar 2020 – Jun 2022*
+
+_Mar 2020 – Jun 2022_
 
 As the founding backend architect for the Subscription MVP, I led the technical transition from a package-only model to a recurring revenue system that became the company's primary growth engine.
 

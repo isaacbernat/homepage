@@ -18,7 +18,7 @@ I knew that simply flagging the issue in a Slack channel would likely result in 
 
 The homepage team was receptive and ran the A/B test. The results were immediate and exceeded all expectations. The mobile user cohort that saw a new, mobile-centric hero image demonstrated a massive improvement in key metrics:
 
-*   **+27% increase in Gross Merchandise Value (GMV)**
-*   **+20% increase in total hours purchased**
+- **+27% increase in Gross Merchandise Value (GMV)**
+- **+20% increase in total hours purchased**
 
 This initiative was a powerful lesson in the value of thinking like an owner. It proved that sometimes the most significant product improvements don't come from complex, multi-month engineering epics, but from a simple, user-centric observation and the initiative to see it through. It reinforced my belief that every member of a team has the ability to drive impact if they are empowered to look beyond their next ticket.

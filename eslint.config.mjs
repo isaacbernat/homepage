@@ -1,15 +1,15 @@
-import globals from "globals";
-import js from "@eslint/js";
+import globals from 'globals';
+import js from '@eslint/js';
 
 export default [
   {
-    ignores: ["dist/", "node_modules/"],
+    ignores: ['dist/', 'node_modules/'],
   },
 
   js.configs.recommended,
 
   {
-    files: ["build.js", "aggregate_code.js"],
+    files: ['build.js', 'aggregate_code.js'],
     languageOptions: {
       globals: {
         ...globals.node,
@@ -18,11 +18,13 @@ export default [
   },
 
   {
-    files: ["src/script.js"],
+    files: ['src/script.js'],
     languageOptions: {
       globals: {
         ...globals.browser,
       },
     },
   },
+
+  prettier,
 ];

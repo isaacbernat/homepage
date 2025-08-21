@@ -1,184 +1,196 @@
-:root {  /* Light mode Palette */
-    --gradient-top: #fdf8ee;
-    --gradient-bottom: #fbf1e6;
+:root {
+  /* Light mode Palette */
+  --gradient-top: #fdf8ee;
+  --gradient-bottom: #fbf1e6;
 
-    --color-text: #333;
-    --color-text-strong: #000;
+  --color-text: #333;
+  --color-text-strong: #000;
 
-    --color-text-rgb: 51, 51, 51;
-    --color-text-strong-rgb: 0, 0, 0;
+  --color-text-rgb: 51, 51, 51;
+  --color-text-strong-rgb: 0, 0, 0;
 }
 
-html[data-theme="dark"] {  /* Dark mode Palette */
-    --gradient-top: #0c0700;
-    --gradient-bottom: #150d02;
+html[data-theme='dark'] {
+  /* Dark mode Palette */
+  --gradient-top: #0c0700;
+  --gradient-bottom: #150d02;
 
-    --color-text: #e4e6eb;
-    --color-text-strong: #fff;
+  --color-text: #e4e6eb;
+  --color-text-strong: #fff;
 
-    --color-text-rgb: 228, 230, 235;
-    --color-text-strong-rgb: 255, 255, 255;
+  --color-text-rgb: 228, 230, 235;
+  --color-text-strong-rgb: 255, 255, 255;
 }
 
-body, html {
-    margin: 0;
-    padding: 0;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+body,
+html {
+  margin: 0;
+  padding: 0;
+  font-family:
+    -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial,
+    sans-serif;
 }
 
 /* --- Layout: Using Flexbox to center the content --- */
 body {
-    display: flex;
-    flex-direction: column; /* Stack header and main content vertically */
-    min-height: 100vh;
+  display: flex;
+  flex-direction: column; /* Stack header and main content vertically */
+  min-height: 100vh;
 
-    color: var(--color-text);
-    background-image: linear-gradient(
-        to bottom,
-        var(--gradient-top) 0%,      /* Start with top color */
-        var(--gradient-top) calc(50% - 15vw),     /* Keep top color until upper third of image */
-        var(--gradient-bottom) calc(50% + 15vw),  /* Start blending to bottom color at lower third of image */
-        var(--gradient-bottom) 100%  /* Finish with bottom color */
-    );
-    background-repeat: no-repeat;
-    background-attachment: fixed; /* Keeps gradient stationary during scroll */
-    transition: color 0.3s ease;
+  color: var(--color-text);
+  background-image: linear-gradient(
+    to bottom,
+    var(--gradient-top) 0%,
+    /* Start with top color */ var(--gradient-top) calc(50% - 15vw),
+    /* Keep top color until upper third of image */ var(--gradient-bottom)
+      calc(50% + 15vw),
+    /* Start blending to bottom color at lower third of image */
+      var(--gradient-bottom) 100% /* Finish with bottom color */
+  );
+  background-repeat: no-repeat;
+  background-attachment: fixed; /* Keeps gradient stationary during scroll */
+  transition: color 0.3s ease;
 }
 
 /* --- Header & Navigation Tabs --- */
 header {
-    width: 100%;
-    padding: 1rem 0;
-    display: flex;
-    justify-content: center; /* Center the nav menu */
-    position: absolute; /* Position it on top of the main content */
-    top: 0;
-    left: 0;
-    z-index: 10;
+  width: 100%;
+  padding: 1rem 0;
+  display: flex;
+  justify-content: center; /* Center the nav menu */
+  position: absolute; /* Position it on top of the main content */
+  top: 0;
+  left: 0;
+  z-index: 10;
 }
 
 nav ul {
-    margin: 0;
-    list-style: none;
-    display: flex;
-    gap: 2rem; /* Space between tabs */
-    padding: 0.75rem 1.5rem;
+  margin: 0;
+  list-style: none;
+  display: flex;
+  gap: 2rem; /* Space between tabs */
+  padding: 0.75rem 1.5rem;
 }
 
 nav a {
-    text-decoration: none;
-    color: var(--color-text);
-    font-weight: 500;
-    display: inline-block;
-    transition: color 0.3s ease, transform 0.2s ease-in-out;
+  text-decoration: none;
+  color: var(--color-text);
+  font-weight: 500;
+  display: inline-block;
+  transition:
+    color 0.3s ease,
+    transform 0.2s ease-in-out;
 }
 
 nav a:hover {
-    color: var(--color-text-strong);
-    transform: scale(1.05);
+  color: var(--color-text-strong);
+  transform: scale(1.05);
 }
 
 /* --- Main Content & Image Styling --- */
 main {
-    flex-grow: 1;
-    display: grid;
-    place-items: center;
-    overflow: hidden; /* Prevents scrollbars if image is slightly too large during loading */
+  flex-grow: 1;
+  display: grid;
+  place-items: center;
+  overflow: hidden; /* Prevents scrollbars if image is slightly too large during loading */
 }
 
 main > picture {
-    width: 100%;  /* This ensures the image inside has a full-width container to fill */
+  width: 100%; /* This ensures the image inside has a full-width container to fill */
 }
 
 .main-image {
-    width: 100%;     /* Stretch the image to 100% of the container's width */
-    height: auto;    /* Maintain the aspect ratio */
-    display: block;  /* Removes tiny space below the image */
-    transition: filter 2s ease-in-out; /* Smooth transition for the blur effect */
-    aspect-ratio: 2.88;  /* 3840 / 1334; */
+  width: 100%; /* Stretch the image to 100% of the container's width */
+  height: auto; /* Maintain the aspect ratio */
+  display: block; /* Removes tiny space below the image */
+  transition: filter 2s ease-in-out; /* Smooth transition for the blur effect */
+  aspect-ratio: 2.88; /* 3840 / 1334; */
 
-    mask-image: linear-gradient(
-        to bottom,
-        transparent,
-        black 4vw, /* Fade-in height is 2% of the screen width */
-        black calc(100% - 3vw), /* Stay solid until 3vw from the bottom */
-        transparent
+  mask-image:
+    linear-gradient(
+      to bottom,
+      transparent,
+      black 4vw,
+      /* Fade-in height is 2% of the screen width */ black calc(100% - 3vw),
+      /* Stay solid until 3vw from the bottom */ transparent
     ),
     linear-gradient(
-        to right,
-        transparent,
-        black 1.5vw,
-        black calc(100% - 2vw),
-        transparent
+      to right,
+      transparent,
+      black 1.5vw,
+      black calc(100% - 2vw),
+      transparent
     );
 
-    -webkit-mask-image: linear-gradient(  /* A vendor prefix for older WebKit browsers (like older Safari) */
-        to bottom,
-        transparent,
-        black 4vw,
-        black calc(100% - 3vw),
-        transparent
+  -webkit-mask-image:
+    linear-gradient(
+      /* A vendor prefix for older WebKit browsers (like older Safari) */ to
+        bottom,
+      transparent,
+      black 4vw,
+      black calc(100% - 3vw),
+      transparent
     ),
     linear-gradient(
-        to right,
-        transparent,
-        black 1.5vw,
-        black calc(100% - 2vw),
-        transparent
+      to right,
+      transparent,
+      black 1.5vw,
+      black calc(100% - 2vw),
+      transparent
     );
-    -webkit-mask-composite: source-in;
-    mask-composite: intersect;
+  -webkit-mask-composite: source-in;
+  mask-composite: intersect;
 }
 
 .main-image.lazy-load {
-    filter: blur(2px);  /* Make the low-res image blurry to hide artifacts */
+  filter: blur(2px); /* Make the low-res image blurry to hide artifacts */
 }
 
 .theme-toggle {
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 0.5rem;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: static;
-    transition: transform 0.2s ease-in-out;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: static;
+  transition: transform 0.2s ease-in-out;
 }
 
 .theme-toggle:hover {
-    transform: scale(1.1);
+  transform: scale(1.1);
 }
 
 .theme-toggle .icon {
-    width: 24px;
-    height: 24px;
-    stroke: var(--color-text-strong);
+  width: 24px;
+  height: 24px;
+  stroke: var(--color-text-strong);
 }
 
 /* Logic to show/hide the correct icon */
 .icon-moon,
-html[data-theme="dark"] .icon-sun {
-    display: none;
+html[data-theme='dark'] .icon-sun {
+  display: none;
 }
 
-html[data-theme="dark"] .icon-moon {
-    display: block;
+html[data-theme='dark'] .icon-moon {
+  display: block;
 }
 
-html[data-theme="dark"] .main-image {
-    filter: saturate(0.5);
+html[data-theme='dark'] .main-image {
+  filter: saturate(0.5);
 }
 
 noscript .main-image {
-    position: absolute;  /* Image to position itself relative to the <main> container. */
-    /* Move the top-left corner of the image to the exact center of the container. */
-    top: 50%;
-    left: 50%;
+  position: absolute; /* Image to position itself relative to the <main> container. */
+  /* Move the top-left corner of the image to the exact center of the container. */
+  top: 50%;
+  left: 50%;
 
-    /* This is the key: Shift the image back up by half of its own height,
+  /* This is the key: Shift the image back up by half of its own height,
        and back left by half of its own width. This perfectly aligns its center
        with the container's center. */
-    transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
 }

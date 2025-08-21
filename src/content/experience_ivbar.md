@@ -1,5 +1,6 @@
 ##### Fullstack Engineer
-*Jan 2019 – Mar 2020*
+
+_Jan 2019 – Mar 2020_
 
 Stepped into a fullstack role to meet team needs, contributing to both a Python backend and a React-based frontend for visualizing complex healthcare data.
 
@@ -7,7 +8,8 @@ Stepped into a fullstack role to meet team needs, contributing to both a Python 
 - **Data Visualization:** Engineered the UI to display complex medical case-mix decision trees, empowering healthcare professionals to better understand and analyze treatment pathways.
 
 ##### Backend Engineer
-*Mar 2018 – Jan 2019*
+
+_Mar 2018 – Jan 2019_
 
 Developed data processing systems focused on data integrity and patient privacy.
 

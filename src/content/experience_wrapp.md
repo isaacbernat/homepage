@@ -1,7 +1,8 @@
 Progressed from an early Backend Engineer to a key Fullstack Tech Lead during a major company pivot and technical transformation from a legacy Python 2.7 (Twisted) monolith to a modern Go/Python microservice architecture. I was also selected to speak at the inaugural **[PyCon Sweden 2014](https://github.com/isaacbernat/pycrastinate)**.
 
 ##### Fullstack Engineer & Tech Lead
-*Sep 2014 – Jun 2016*
+
+_Sep 2014 – Jun 2016_
 
 As a Tech Lead during the company's pivot to "Wrapp 2.0", I helped guide the technical transformation from a legacy Python 2.7/Twisted monolith to a modern Go/Python 3 microservice architecture.
 
@@ -10,7 +11,8 @@ As a Tech Lead during the company's pivot to "Wrapp 2.0", I helped guide the tec
 - **Microservice Ownership:** Created and maintained critical microservices in both Python (`users`) and Go (`offers`), coordinating with multiple contributors to ensure stability and performance.
 
 ##### Career Progression & Key Contributions
-*Oct 2012 – Sep 2014*
+
+_Oct 2012 – Sep 2014_
 
 As an early engineer in a fast-growing startup, I demonstrated high versatility by taking on roles across the stack to meet evolving business needs.
 
