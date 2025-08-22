@@ -22,6 +22,11 @@ html[data-theme='dark'] {
   --color-text-strong-rgb: 255, 255, 255;
 }
 
+html {
+    color: var(--color-text);
+    background-color: var(--gradient-bottom);
+}
+
 body,
 html {
   margin: 0;
@@ -37,7 +42,6 @@ body {
   flex-direction: column; /* Stack header and main content vertically */
   min-height: 100vh;
 
-  color: var(--color-text);
   background-image: linear-gradient(
     to bottom,
     var(--gradient-top) 0%,

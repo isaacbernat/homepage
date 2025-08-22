@@ -3,7 +3,7 @@
 ![Build and Deploy Status](https://github.com/isaacbernat/homepage/actions/workflows/deploy.yml/badge.svg)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-This repository contains the source code for my personal homepage, which serves as a minimalist portfolio and interactive CV, available at **[isaacbernat.com](https://www.isaacbernat.com)** .
+This repository contains the source code for my personal homepage and interactive CV, available at **[isaacbernat.com](https://www.isaacbernat.com)**. It serves as a public demonstration of my engineering philosophy, featuring deep-dive case studies, system designs, and a codebase built on modern best practices for performance and accessibility.
 
 ---
 
@@ -22,9 +22,9 @@ This repository contains the source code for my personal homepage, which serves 
 
 ### 1. Project Overview
 
-I present this static page to showcase how I approach engineering projects. The goal was to build a simple portfolio that is technically sound, maintainable and demonstrably high-quality while being neat and visually appealing. The site is hosted on GitHub Pages but served through a custom domain for long-term URL stability.
+The goal of this project was to build a portfolio that is not just visually appealing, but also technically sound, maintainable and demonstrably high-quality. The site is hosted on GitHub Pages but served through a custom domain for long-term URL stability.
 
-The development of this robust, performant and accessible website was assisted by AI/LLMs for generating boilerplate and accelerating implementation. Every final decision (e.g. architecture, technology, code) was a deliberate choice based on my own reflections and senior engineering experience. The most relevant aspects are highlighted below.
+The development of this robust, performant and accessible website was assisted by AI/LLMs for generating boilerplate and accelerating implementation. Every final decision (e.g. from technology choices like the Jamstack architecture to the individual lines of code) was a deliberate choice based on my own reflections and senior engineering experience. The most relevant aspects are highlighted below.
 
 ### 2. Guiding Principles
 
@@ -39,9 +39,10 @@ The project was built with a focus on pragmatic and long-term value. The followi
 
 #### Development & Maintainability
 
-- **Transparent Build Process:** Powered by an extensible Node.js script that provides full control over the asset pipeline without framework lock-in.
 - **CI/CD Pipeline:** A GitHub Actions workflow automates testing, building and deploying the site to GitHub Pages on every push to `main` branch.
 - **Reproducible Builds:** The CI pipeline uses `npm ci` instead of `npm install`. This is a deliberate choice to ensure that the exact dependency versions specified in the `package-lock.json` are used on every run, eliminating "works on my machine" issues and guaranteeing a stable, predictable deployment process.
+- **Jamstack Architecture:** It uses a custom Static Site Generator (`build.js`) to pre-build the entire site into highly optimized, static Markup. This approach results in superior performance, security and scalability compared to traditional server-rendered sites, allowing for efficient hosting on a global CDN like GitHub Pages. The architectural benefits [are further explained here](https://jamstack.org/why-jamstack/).
+- **Transparent Build Process:** Powered by an extensible Node.js script that provides full control over the asset pipeline without framework lock-in.
 - **Component-Based Content with Macros:** Repetitive UI components, like project cards and experience entries, are abstracted into Nunjucks `macros`. This allows content to be rendered consistently with a single line of code, making the site radically easier to maintain and update.
 - **Content as Data:** To cleanly separate content from presentation, all narrative sections are authored in Markdown files and processed into HTML by the build script.
 - **Disciplined Git History:** All commits follow the Conventional Commits specification for a clear, readable and automated changelog.
@@ -61,6 +62,7 @@ The project was built with a focus on pragmatic and long-term value. The followi
 - **Lazy Loading (LQIP):** A tiny, blurred placeholder for the main image is loaded instantly to improve Largest Contentful Paint (LCP) and prevent layout shift (the high-resolution version is loaded in the background).
 - **"No-Flicker" Theme Script:** A critical, render-blocking inline script sets the theme before CSS is applied, preventing a "Flash of Unstyled Content" (FOUC).
 - **Seamless Theming Transitions:** The above FUOC technique is extended to intermediate redirect pages to eliminate jarring white flashes during navigation, ensuring a polished and seamless user experience from the first click.
+- **Polished Overscroll Theming:** To address the jarring white flash often seen during the browser's "rubber-band" overscroll effect, a theme-aware background color is applied directly to the root `<html>` element on a per-page basis. This ensures the visual experience remains seamless, preventing visual artifacts at the viewport edges and maintaining a polished, consistent user experience.
 - **Non-Blocking Scripts:** The main JavaScript file is loaded with the `defer` attribute.
 
 #### Accessibility (A11y), SEO & UX
@@ -89,7 +91,7 @@ The project was built with a focus on pragmatic and long-term value. The followi
 
 - **Languages:** HTML5, CSS3, JavaScript (ES6+)
 - **Templating:** [Nunjucks](https://mozilla.github.io/nunjucks/)
-- **Build Scripting:** [Node.js](https://nodejs.org/)
+- **Build Scripting (Custom SSG):** [Node.js](https://nodejs.org/)
 - **Asset Pipeline & Optimization:**
   - **JS/CSS/HTML Minification:** [Terser](https://terser.org/), [CleanCSS](https://github.com/clean-css/clean-css), `html-minifier`
   - **Image Optimization:** [sharp](https://sharp.pixelplumbing.com/), [SVGO](https://github.com/svg/svgo) and [Squoosh.app](https://squoosh.app/)
@@ -97,7 +99,7 @@ The project was built with a focus on pragmatic and long-term value. The followi
 - **Code Quality & Formatting:**
   - **JavaScript Linting:** [ESLint](https://eslint.org/)
   - **Automated Formatting:** [Prettier](https://prettier.io/)
-- **Deployment:** [GitHub Actions](https://github.com/features/actions)
+- **CI/CD & Deployment:** [GitHub Actions](https://github.com/features/actions)
 
 ### 5. Build & Deployment
 

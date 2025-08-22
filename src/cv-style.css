@@ -1,3 +1,7 @@
+html.page-cv {
+    background-color: var(--gradient-top);
+}
+
 body.page-cv {
   background: var(--gradient-top);
 }
