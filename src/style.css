@@ -23,8 +23,8 @@ html[data-theme='dark'] {
 }
 
 html {
-    color: var(--color-text);
-    background-color: var(--gradient-bottom);
+  color: var(--color-text);
+  background-color: var(--gradient-bottom);
 }
 
 body,

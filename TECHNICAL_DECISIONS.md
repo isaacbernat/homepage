@@ -76,7 +76,6 @@ This tier focuses on integrating automated checks into the CI/CD pipeline to gua
   - **Why:** To provide objective, verifiable proof of the site's high performance and to automatically prevent any future changes from causing a performance regression.
   - **How:** Implement the **[Lighthouse CI](https://github.com/GoogleChrome/lighthouse-ci)** GitHub Action. Budgets would be set (e.g. Performance score > 98, Accessibility = 100) and the build would fail if a commit causes a score to drop below these thresholds.
 
-
 #### Tier 2: Lower prio than those above ;D
 
 - **Implement Automated Cache-Busting**
