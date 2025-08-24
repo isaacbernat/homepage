@@ -5,4 +5,5 @@ An intentional period of professional development focused on deepening expertise
 - **Continued Learning:** Completed specialized courses on AI/LLM applications from DeepLearning.AI and Coursera to stay current with emerging technologies.
 
 ---
-*A curated selection of **[GitHub Projects](#personal-open-source-projects)** from this period is detailed below.*
+
+_A curated selection of **[GitHub Projects](#personal-open-source-projects)** from this period is detailed below._

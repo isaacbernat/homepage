@@ -9,8 +9,9 @@ The immediate impact was that thousands of customers were exposed to an incomple
 ### **My Role: Incident Owner and Scribe**
 
 As the owner of the feature and the person who made the mistake, I took immediate and full responsibility. My role during the incident was twofold:
-*   As the **Incident Owner**, I was responsible for coordinating the response, assessing the impact and driving the technical resolution.
-*   As the designated **Scribe**, I was responsible for maintaining a clear, timestamped log of all actions and communications, ensuring we would have a precise record for the post-mortem.
+
+- As the **Incident Owner**, I was responsible for coordinating the response, assessing the impact and driving the technical resolution.
+- As the designated **Scribe**, I was responsible for maintaining a clear, timestamped log of all actions and communications, ensuring we would have a precise record for the post-mortem.
 
 ### **The Response: A Methodical Approach Under Pressure**
 
@@ -29,8 +30,9 @@ The incident was fully resolved in **under an hour** from the time it was formal
 While we successfully corrected the immediate issue, the true value of this incident came from the blameless post-mortem process that I led. The 16-hour detection delay became the central exhibit for a crucial change in our engineering culture.
 
 The post-mortem produced several critical, long-lasting improvements:
-*   **Improved Tooling:** We filed and prioritized tickets to add clearer copy, UX warnings and a "confirmation" step to our internal experimentation framework to prevent this specific type of misconfiguration from ever happening again.
-*   **A New Engineering Rule:** We established a new, mandatory process: any high-risk feature being tested in the production environment **must** have a dedicated monitoring dashboard built and active *before* the test begins.
-*   **A Foundational Personal Learning:** I had personally made the trade-off to deprioritize the monitoring and observability tickets for the MVP to meet a tight deadline. This incident was a powerful, firsthand lesson that **observability is not a "nice-to-have" feature; it is a core, non-negotiable requirement** for any critical system. This principle has fundamentally shaped how I approach every project I've led since.
+
+- **Improved Tooling:** We filed and prioritized tickets to add clearer copy, UX warnings and a "confirmation" step to our internal experimentation framework to prevent this specific type of misconfiguration from ever happening again.
+- **A New Engineering Rule:** We established a new, mandatory process: any high-risk feature being tested in the production environment **must** have a dedicated monitoring dashboard built and active _before_ the test begins.
+- **A Foundational Personal Learning:** I had personally made the trade-off to deprioritize the monitoring and observability tickets for the MVP to meet a tight deadline. This incident was a powerful, firsthand lesson that **observability is not a "nice-to-have" feature; it is a core, non-negotiable requirement** for any critical system. This principle has fundamentally shaped how I approach every project I've led since.
 
 This incident, born from a personal mistake, became a catalyst for improving our tools, our processes and my own engineering philosophy.

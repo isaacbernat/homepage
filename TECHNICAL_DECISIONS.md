@@ -1,102 +1,101 @@
 # Technical Decisions & Roadmap
 
-This document provides a deeper look into the engineering philosophy behind this project and outlines a strategic roadmap for potential future enhancements. While the `README.md` covers *what* was built and its key features, this file explores the *why*.
+This document provides a deeper look into the engineering philosophy behind this project and outlines a strategic roadmap for potential future enhancements. While the `README.md` covers _what_ was built and its key features, this file explores the _why_.
 
 ---
 
 ### 1. Key Decisions
+
 #### 1.1. AI-Assisted Development
 
 A core principle of this project was to leverage modern Large Language Models (LLMs) as a development accelerator. This is a deliberate choice reflecting a modern engineering workflow where efficiency and quality are paramount.
 
-*   **The Role of the LLM:** The AI was used to generate boilerplate code, write initial drafts of documentation (like this one), suggest modern tooling and rapidly explore alternative implementations. This dramatically reduced the time spent on commodity tasks.
-*   **The Role of the Human (My Role):** As the senior engineer and architect, every final decision was mine. I was responsible for:
-    *   **Direction:** Guiding the AI with precise, well-scoped prompts.
-    *   **Critical Evaluation:** Reviewing every line of generated code and text for correctness, performance and alignment with the project's principles.
-    *   **Strategic Decisions:** Making all final architectural choices (examples below), even when the AI suggested alternatives did not align. I checked every tool suggested by the AI to ensure it was the right fit for the project's specific goals.
-*   **Conclusion:** This project demonstrates a powerful, modern workflow where a senior engineer directs AI tooling to produce high quality work faster than would be possible alone. It is a testament to using the right tool for the job to maximize impact.
+- **The Role of the LLM:** The AI was used to generate boilerplate code, write initial drafts of documentation (like this one), suggest modern tooling and rapidly explore alternative implementations. This dramatically reduced the time spent on commodity tasks.
+- **The Role of the Human (My Role):** As the senior engineer and architect, every final decision was mine. I was responsible for:
+  - **Direction:** Guiding the AI with precise, well-scoped prompts.
+  - **Critical Evaluation:** Reviewing every line of generated code and text for correctness, performance and alignment with the project's principles.
+  - **Strategic Decisions:** Making all final architectural choices (examples below), even when the AI suggested alternatives did not align. I checked every tool suggested by the AI to ensure it was the right fit for the project's specific goals.
+- **Conclusion:** This project demonstrates a powerful, modern workflow where a senior engineer directs AI tooling to produce high quality work faster than would be possible alone. It is a testament to using the right tool for the job to maximize impact.
 
 #### 1.2. Performance by Design
 
-*   **Static Site Generation (SSG) over a Dynamic Application:** The project deliberately avoids server-side rendering (SSR) frameworks (like Next.js) or client-side applications (like React/Vue).
-    *   **Rationale:** For a content-focused portfolio, an SSG architecture provides superior performance, enhanced security (no server-side vulnerabilities) and simplified deployment. The build process generates highly optimized, static HTML files that can be served directly from a CDN with minimal latency.
-    *   **Trade-off:** This approach is not suitable for sites requiring real-time data or user-specific dynamic content, but it is the ideal choice for this project's requirements.
+- **Static Site Generation (SSG) over a Dynamic Application:** The project deliberately avoids server-side rendering (SSR) frameworks (like Next.js) or client-side applications (like React/Vue).
+  - **Rationale:** For a content-focused portfolio, an SSG architecture provides superior performance, enhanced security (no server-side vulnerabilities) and simplified deployment. The build process generates highly optimized, static HTML files that can be served directly from a CDN with minimal latency.
+  - **Trade-off:** This approach is not suitable for sites requiring real-time data or user-specific dynamic content, but it is the ideal choice for this project's requirements.
 
-*   **Custom Build Script over a "Black Box" Framework:**
-    *   **Rationale:** While frameworks (like Eleventy or Astro) are excellent, using a custom Node.js script provides absolute transparency and control over the entire asset pipeline. This allows for fine-tuned optimizations, such as parallelized tasks and per-page CSS loading, without framework-imposed constraints or abstractions. It also demonstrates a deep understanding of the web development toolchain.
-    *   **Trade-off:** Requires more initial setup and maintenance than an off-the-shelf solution, but the trade-off is accepted for the benefit of full control and educational value.
+- **Custom Build Script over a "Black Box" Framework:**
+  - **Rationale:** While frameworks (like Eleventy or Astro) are excellent, using a custom Node.js script provides absolute transparency and control over the entire asset pipeline. This allows for fine-tuned optimizations, such as parallelized tasks and per-page CSS loading, without framework-imposed constraints or abstractions. It also demonstrates a deep understanding of the web development toolchain.
+  - **Trade-off:** Requires more initial setup and maintenance than an off-the-shelf solution, but the trade-off is accepted for the benefit of full control and educational value.
 
 #### 1.3. Content & Rendering Strategy
 
-*   **Content as Data (Headless Approach):**
-    *   **Rationale:** All long-form content is authored in Markdown (`.md`) files and stored separately from the presentation templates. This decouples content from layout, making it trivial to update a case study or project description without touching any HTML or logic. The build script ingests this Markdown, parses it to HTML and injects it into the appropriate templates.
-    *   **Benefit:** This approach enforces a clean separation of concerns and dramatically improves the site's maintainability.
+- **Content as Data (Headless Approach):**
+  - **Rationale:** All long-form content is authored in Markdown (`.md`) files and stored separately from the presentation templates. This decouples content from layout, making it trivial to update a case study or project description without touching any HTML or logic. The build script ingests this Markdown, parses it to HTML and injects it into the appropriate templates.
+  - **Benefit:** This approach enforces a clean separation of concerns and dramatically improves the site's maintainability.
 
-*   **Considered and Rejected: Asynchronous Client-Side Content Loading**
-    *   **What:** An architecture where the initial HTML is minimal and all main content (e.g. case studies) is fetched via JavaScript after the initial page load.
-    *   **Why it was considered:** Potential for a faster Time to First Byte (TTFB) and First Contentful Paint (FCP), as most content is below the fold or hidden in `<details>` elements.
-    *   **Why it was rejected:** The trade-offs were overwhelmingly negative for this project's goals.
-        1.  **SEO Degradation:** It would make the site's rich content significantly harder for search engine crawlers to index reliably, undermining a key purpose of a public portfolio.
-        2.  **Accessibility Failure:** It would render the site completely unusable for clients with JavaScript disabled, violating a core project principle. The current static approach with native `<details>` elements works perfectly without JS.
-        3.  **Unnecessary Complexity:** It would introduce significant client-side complexity (e.g. state management, error handling) to solve a performance problem that doesn't exist, as the current static build is already fast.
-    *   **Conclusion:** The current static generation approach is the superior architecture, offering the best possible balance of performance, SEO and accessibility. This decision is a prime example of pragmatic engineering.
+- **Considered and Rejected: Asynchronous Client-Side Content Loading**
+  - **What:** An architecture where the initial HTML is minimal and all main content (e.g. case studies) is fetched via JavaScript after the initial page load.
+  - **Why it was considered:** Potential for a faster Time to First Byte (TTFB) and First Contentful Paint (FCP), as most content is below the fold or hidden in `<details>` elements.
+  - **Why it was rejected:** The trade-offs were overwhelmingly negative for this project's goals.
+    1.  **SEO Degradation:** It would make the site's rich content significantly harder for search engine crawlers to index reliably, undermining a key purpose of a public portfolio.
+    2.  **Accessibility Failure:** It would render the site completely unusable for clients with JavaScript disabled, violating a core project principle. The current static approach with native `<details>` elements works perfectly without JS.
+    3.  **Unnecessary Complexity:** It would introduce significant client-side complexity (e.g. state management, error handling) to solve a performance problem that doesn't exist, as the current static build is already fast.
+  - **Conclusion:** The current static generation approach is the superior architecture, offering the best possible balance of performance, SEO and accessibility. This decision is a prime example of pragmatic engineering.
 
 #### 1.4. Technology Stack
 
-*   **Templating Engine (Nunjucks vs. Pug/Others):**
-    *   **Why Nunjucks was chosen:** Its syntax is a superset of HTML and is very similar to Jinja2, making it intuitive and easy to work with. It's powerful enough for this project's needs (layouts, macros, includes) without imposing a restrictive new syntax. This prioritizes clarity and reduces the learning curve.
-    *   **Why not Pug?** Pug's whitespace-sensitive, abstracted syntax can be less transparent and adds a higher cognitive load for what is fundamentally simple HTML generation.
+- **Templating Engine (Nunjucks vs. Pug/Others):**
+  - **Why Nunjucks was chosen:** Its syntax is a superset of HTML and is very similar to Jinja2, making it intuitive and easy to work with. It's powerful enough for this project's needs (layouts, macros, includes) without imposing a restrictive new syntax. This prioritizes clarity and reduces the learning curve.
+  - **Why not Pug?** Pug's whitespace-sensitive, abstracted syntax can be less transparent and adds a higher cognitive load for what is fundamentally simple HTML generation.
 
-*   **Styling (Vanilla CSS with Custom Properties vs. SCSS/Sass):**
-    *   **Why Vanilla CSS was chosen:** Modern CSS, with the advent of custom properties (`var(...)`) and nesting, offers much of the power of pre-processors without requiring an additional compilation step. For a project of this scale, it is simple, fast and sufficient.
-    *   **Why not SCSS/Sass?** While powerful, the added complexity of a pre-processor toolchain was not justified by the project's styling needs. The decision was made to keep the toolchain as lean as possible.
+- **Styling (Vanilla CSS with Custom Properties vs. SCSS/Sass):**
+  - **Why Vanilla CSS was chosen:** Modern CSS, with the advent of custom properties (`var(...)`) and nesting, offers much of the power of pre-processors without requiring an additional compilation step. For a project of this scale, it is simple, fast and sufficient.
+  - **Why not SCSS/Sass?** While powerful, the added complexity of a pre-processor toolchain was not justified by the project's styling needs. The decision was made to keep the toolchain as lean as possible.
 
-*   **Client-Side Scripting (Vanilla JS vs. TypeScript):**
-    *   **Why Vanilla JS was chosen:** The client-side logic is minimal and focused on simple DOM manipulation (e.g. theme toggling, image loading).
-    *   **Why not TypeScript?** TypeScript is an excellent choice for larger and more complex applications, but its benefits (static typing, improved tooling) did not outweigh the cost of added build complexity for this specific project.
+- **Client-Side Scripting (Vanilla JS vs. TypeScript):**
+  - **Why Vanilla JS was chosen:** The client-side logic is minimal and focused on simple DOM manipulation (e.g. theme toggling, image loading).
+  - **Why not TypeScript?** TypeScript is an excellent choice for larger and more complex applications, but its benefits (static typing, improved tooling) did not outweigh the cost of added build complexity for this specific project.
 
 ---
 
 ### 2. Technical Roadmap: Future Enhancements
 
-This roadmap outlines potential future work, prioritized by impact. The focus is on moving from *claiming* quality to *programmatically proving and enforcing* it through automation.
+This roadmap outlines potential future work, prioritized by impact. The focus is on moving from _claiming_ quality to _programmatically proving and enforcing_ it through automation.
 
 #### Tier 1: Automated Quality Gates
 
 This tier focuses on integrating automated checks into the CI/CD pipeline to guarantee quality and prevent regressions on every commit.
 
-*   **Automated Accessibility (a11y) Testing**
-    *   **What:** A test suite that runs on every commit to ensure the site remains WCAG compliant.
-    *   **Why:** To move from *claiming* accessibility to *programmatically enforcing* it. This makes compliance a non-negotiable part of the development process.
-    *   **How:** Integrate **[axe-core](https://github.com/dequelabs/axe-core)** using a test runner (e.g. Jest with Puppeteer). The CI script would launch a headless browser, navigate to the built HTML files, and fail the build if any accessibility violations are detected.
+- **Automated Accessibility (a11y) Testing**
+  - **What:** A test suite that runs on every commit to ensure the site remains WCAG compliant.
+  - **Why:** To move from _claiming_ accessibility to _programmatically enforcing_ it. This makes compliance a non-negotiable part of the development process.
+  - **How:** Integrate **[axe-core](https://github.com/dequelabs/axe-core)** using a test runner (e.g. Jest with Puppeteer). The CI script would launch a headless browser, navigate to the built HTML files, and fail the build if any accessibility violations are detected.
 
-*   **Automated Performance & Quality Auditing**
-    *   **What:** Integrate Google Lighthouse audits directly into the CI pipeline to enforce performance budgets.
-    *   **Why:** To provide objective, verifiable proof of the site's high performance and to automatically prevent any future changes from causing a performance regression.
-    *   **How:** Implement the **[Lighthouse CI](https://github.com/GoogleChrome/lighthouse-ci)** GitHub Action. Budgets would be set (e.g. Performance score > 98, Accessibility = 100) and the build would fail if a commit causes a score to drop below these thresholds.
+- **Automated Performance & Quality Auditing**
+  - **What:** Integrate Google Lighthouse audits directly into the CI pipeline to enforce performance budgets.
+  - **Why:** To provide objective, verifiable proof of the site's high performance and to automatically prevent any future changes from causing a performance regression.
+  - **How:** Implement the **[Lighthouse CI](https://github.com/GoogleChrome/lighthouse-ci)** GitHub Action. Budgets would be set (e.g. Performance score > 98, Accessibility = 100) and the build would fail if a commit causes a score to drop below these thresholds.
 
-*   **Code Linting & Formatting**
-    *   **What:** Enforce a consistent code style across all JavaScript, CSS and Markdown files.
-    *   **Why:** To ensure code quality, readability, and maintainability, which are hallmarks of a professional software project.
-    *   **How:** Implement **[ESLint](https://eslint.org/)** for JavaScript and **[Prettier](https://prettier.io/)** for automated formatting. Add a `lint` script to `package.json` and run it as a required check in the CI pipeline.
+#### Tier 2: Lower prio than those above ;D
 
-#### Tier 2: Testing and Validation
+- **Implement Automated Cache-Busting**
+  - **What:** Modify the build script to generate unique filenames for CSS and JavaScript assets based on their content (e.g. `style.[hash].min.css`).
+  - **Why:** To solve the browser caching problem where users might be served stale assets after a new deployment. This ensures that every user immediately receives the latest version of the site, preventing bugs and inconsistent experiences. It's a critical feature for production reliability.
+  - **How:** Use a Node.js package (like `md5-file` or Node's built-in `crypto` module) to generate a content hash for each asset. The build script would then rename the output files with this hash and update the references in the final HTML files accordingly. The recent refactoring to decouple templates from build artifacts makes this significantly easier to implement.
 
-This tier focuses on more advanced testing methodologies that demonstrate a mature approach to software reliability.
+- **Build Script Unit Testing**
+  - **What:** A dedicated test suite for the `build.js` script itself.
+  - **Why:** To treat the build process as first-class, mission-critical code. This ensures the reliability and correctness of the asset pipeline, minification process and HTML generation.
+  - **How:** Use a framework like **[Jest](https://jestjs.io/)**. Tests would assert that the `dist` directory is created correctly, that sample files are minified as expected and that the `sitemap.xml` `lastmod` date is properly updated.
 
-*   **Build Script Unit Testing**
-    *   **What:** A dedicated test suite for the `build.js` script itself.
-    *   **Why:** To treat the build process as first-class, mission-critical code. This ensures the reliability and correctness of the asset pipeline, minification process and HTML generation.
-    *   **How:** Use a framework like **[Jest](https://jestjs.io/)**. Tests would assert that the `dist` directory is created correctly, that sample files are minified as expected and that the `sitemap.xml` `lastmod` date is properly updated.
-
-*   **Visual Regression Testing**
-    *   **What:** An automated system to detect unintended visual changes in the UI.
-    *   **Why:** To prevent subtle CSS bugs or layout shifts from ever reaching production, ensuring a polished and consistent user experience. This is a sign of a highly mature frontend workflow.
-    *   **How:** Use a tool like **[Playwright's screenshot testing](https://playwright.dev/docs/test-snapshots)**. The CI would take screenshots of key pages and compare them against a "golden" baseline set. Any pixel difference would flag the build for manual review.
+- **Visual Regression Testing**
+  - **What:** An automated system to detect unintended visual changes in the UI.
+  - **Why:** To prevent subtle CSS bugs or layout shifts from ever reaching production, ensuring a polished and consistent user experience. This is a sign of a highly mature frontend workflow.
+  - **How:** Use a tool like **[Playwright's screenshot testing](https://playwright.dev/docs/test-snapshots)**. The CI would take screenshots of key pages and compare them against a "golden" baseline set. Any pixel difference would flag the build for manual review.
 
 #### Tier 3: Potential Future Migrations
 
 This tier outlines potential technology migrations that would be considered if the project's complexity were to grow significantly.
 
-*   **CSS to SCSS/Sass:** If the site's styling grows to a point where managing variables and nested rules becomes cumbersome, migrating to Sass would be evaluated to improve organization.
-*   **JavaScript to TypeScript:** Should client-side interactivity expand beyond simple DOM manipulation, migrating to TypeScript would be considered to improve long-term maintainability and code quality through static typing.
+- **CSS to SCSS/Sass:** If the site's styling grows to a point where managing variables and nested rules becomes cumbersome, migrating to Sass would be evaluated to improve organization.
+- **JavaScript to TypeScript:** Should client-side interactivity expand beyond simple DOM manipulation, migrating to TypeScript would be considered to improve long-term maintainability and code quality through static typing.

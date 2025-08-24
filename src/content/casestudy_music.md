@@ -3,8 +3,9 @@
 Our platform's primary focus was language learning. However, I observed a significant and growing user base for other subjects, particularly Music. While these were not core growth areas, they consistently ranked in our top 10 most popular subjects by hours purchased, representing a substantial, profitable revenue stream.
 
 My concern was that these users faced unnecessary friction due to product limitations. For example:
-*   **Lack of Specialization Filters:** Unlike languages (e.g. "Business English"), Music users couldn't search for "Guitar Tutor" or "Piano Tutor", forcing them to manually scroll through long lists and click into profiles.
-*   **Inflexible Subscription Frequencies:** Many adult music learners preferred bi-weekly lessons due to practice time, but our subscription plans only offered weekly frequencies, pushing them towards less convenient options or even churn.
+
+- **Lack of Specialization Filters:** Unlike languages (e.g. "Business English"), Music users couldn't search for "Guitar Tutor" or "Piano Tutor", forcing them to manually scroll through long lists and click into profiles.
+- **Inflexible Subscription Frequencies:** Many adult music learners preferred bi-weekly lessons due to practice time, but our subscription plans only offered weekly frequencies, pushing them towards less convenient options or even churn.
 
 My hypothesis was that these overlooked user experience gaps were leading to unnecessary churn and hindering growth within these valuable niche segments.
 
@@ -29,8 +30,9 @@ While the product leadership acknowledged the validity of my insights and the va
 The proposed features were not prioritized in the roadmap.
 
 This project, while not resulting in a shipped feature, provided me with a crucial lesson in **"disagree and commit."** I learned that:
-*   **Advocacy is Essential, but Strategy is King:** It's vital to advocate fiercely for what you believe is right, especially when backed by data.
-*   **Respect Broader Strategic Alignment:** Once a strategic decision is made, even if you disagree with it, it's essential to understand the rationale and align your efforts with the broader company goals.
-*   **Professional Conduct:** I documented my research and proposal in our internal knowledge base, ensuring the insights were preserved for future consideration. I then refocused my full energy on the prioritized roadmap items.
+
+- **Advocacy is Essential, but Strategy is King:** It's vital to advocate fiercely for what you believe is right, especially when backed by data.
+- **Respect Broader Strategic Alignment:** Once a strategic decision is made, even if you disagree with it, it's essential to understand the rationale and align your efforts with the broader company goals.
+- **Professional Conduct:** I documented my research and proposal in our internal knowledge base, ensuring the insights were preserved for future consideration. I then refocused my full energy on the prioritized roadmap items.
 
 This experience reinforced the importance of strategic clarity and demonstrated my ability to contribute insights, influence discussions and ultimately commit professionally to the agreed-upon direction.
