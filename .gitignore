@@ -6,3 +6,9 @@
 
 # macOS
 .DS_Store
+
+
+# Test files
+/coverage
+/test-reports
+/test-config.json
