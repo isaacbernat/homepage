@@ -56,26 +56,31 @@ npm run test:coverage
 ## Test Modules
 
 ### 1. Configuration System
+
 - Centralized test configuration with validation
 - Module-specific configuration loading
 - Environment-specific overrides
 
 ### 2. Accessibility Testing (Coming Soon)
+
 - WCAG 2.0 AA compliance verification
 - Light and dark theme testing
 - Detailed violation reporting with remediation suggestions
 
 ### 3. Performance Testing (Coming Soon)
+
 - Lighthouse audits for performance, accessibility, best practices, and SEO
 - Configurable performance budgets
 - Mobile and desktop testing
 
 ### 4. Build Script Testing (Coming Soon)
+
 - Unit tests for the custom build script
 - Asset minification verification
 - File generation and processing validation
 
 ### 5. Visual Regression Testing (Coming Soon)
+
 - Screenshot-based visual change detection
 - Multi-theme and responsive testing
 - Baseline image management

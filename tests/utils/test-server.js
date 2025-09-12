@@ -42,7 +42,7 @@ class TestServer {
           reject(err);
           return;
         }
-        
+
         this.isRunning = true;
         console.log(`Test server started on http://localhost:${this.port}`);
         resolve(this.port);
@@ -79,13 +79,13 @@ class TestServer {
    */
   handleRequest(req, res) {
     let filePath = req.url === '/' ? '/index.html' : req.url;
-    
+
     // Remove query parameters
     filePath = filePath.split('?')[0];
-    
+
     // Security: prevent directory traversal
     filePath = path.normalize(filePath).replace(/^(\.\.[\/\\])+/, '');
-    
+
     const fullPath = path.join(this.distDirectory, filePath);
 
     // Check if file exists
@@ -151,7 +151,7 @@ class TestServer {
       '.webp': 'image/webp',
       '.pdf': 'application/pdf',
       '.txt': 'text/plain',
-      '.xml': 'application/xml'
+      '.xml': 'application/xml',
     };
 
     return contentTypes[ext] || 'application/octet-stream';

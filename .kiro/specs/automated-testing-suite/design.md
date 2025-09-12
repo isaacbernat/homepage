@@ -66,17 +66,25 @@ tests/
 **Purpose:** Central coordinator that manages test execution order and configuration loading.
 
 **Key Functions:**
+
 - Load and validate test configuration
 - Coordinate test execution based on enabled modules
 - Aggregate test results and generate unified reports
 - Handle test server lifecycle for browser-based tests
 
 **Interface:**
+
 ```javascript
 class TestOrchestrator {
-  constructor(config) { /* Load configuration */ }
-  async runAllTests() { /* Execute enabled test suites */ }
-  async generateReport() { /* Create unified test report */ }
+  constructor(config) {
+    /* Load configuration */
+  }
+  async runAllTests() {
+    /* Execute enabled test suites */
+  }
+  async generateReport() {
+    /* Create unified test report */
+  }
 }
 ```
 
@@ -85,12 +93,14 @@ class TestOrchestrator {
 **Purpose:** Automated WCAG compliance verification using axe-core.
 
 **Key Features:**
+
 - Tests both light and dark themes
 - Configurable WCAG level enforcement (A, AA, AAA)
 - Detailed violation reporting with remediation suggestions
 - Integration with Puppeteer for browser automation
 
 **Configuration Options:**
+
 ```javascript
 accessibility: {
   enabled: true,
@@ -106,12 +116,14 @@ accessibility: {
 **Purpose:** Lighthouse-based performance auditing with configurable budgets.
 
 **Key Features:**
+
 - Configurable performance budgets for each Lighthouse category
 - Mobile and desktop testing
 - Performance trend tracking
 - Integration with Lighthouse CI for detailed reporting
 
 **Configuration Options:**
+
 ```javascript
 performance: {
   enabled: true,
@@ -131,12 +143,14 @@ performance: {
 **Purpose:** Unit tests for the custom build script functionality.
 
 **Key Features:**
+
 - File generation verification
 - Asset minification validation
 - Sitemap date updating verification
 - Favicon processing validation
 
 **Test Categories:**
+
 - File system operations (directory creation, file copying)
 - Asset processing (minification, optimization)
 - Template rendering and content injection
@@ -147,12 +161,14 @@ performance: {
 **Purpose:** Screenshot-based visual change detection using Playwright.
 
 **Key Features:**
+
 - Baseline screenshot management
 - Configurable pixel difference thresholds
 - Multi-theme screenshot comparison
 - Responsive breakpoint testing
 
 **Configuration Options:**
+
 ```javascript
 visual: {
   enabled: true,
@@ -176,14 +192,22 @@ const testConfig = {
     testTimeout: 30000,
     distDirectory: './dist',
     baseUrl: 'http://localhost:3000',
-    reportDirectory: './test-reports'
+    reportDirectory: './test-reports',
   },
-  
+
   // Module-specific configurations
-  accessibility: { /* ... */ },
-  performance: { /* ... */ },
-  build: { /* ... */ },
-  visual: { /* ... */ }
+  accessibility: {
+    /* ... */
+  },
+  performance: {
+    /* ... */
+  },
+  build: {
+    /* ... */
+  },
+  visual: {
+    /* ... */
+  },
 };
 ```
 
@@ -199,9 +223,9 @@ const testResult = {
     testsPassed: 5,
     testsFailed: 0,
     violations: [], // Detailed failure information
-    recommendations: [] // Suggested fixes
+    recommendations: [], // Suggested fixes
   },
-  timestamp: '2025-01-09T10:30:00Z'
+  timestamp: '2025-01-09T10:30:00Z',
 };
 ```
 
@@ -243,15 +267,18 @@ const testResult = {
 ### Incremental Implementation Strategy
 
 **Phase 1: Foundation**
+
 - Test orchestrator and configuration system
 - Build script unit tests
 - Basic CI integration
 
 **Phase 2: Browser Testing**
+
 - Accessibility testing with axe-core
 - Basic performance testing with Lighthouse
 
 **Phase 3: Advanced Features**
+
 - Visual regression testing
 - Performance budgeting and trend tracking
 - Enhanced reporting and notifications

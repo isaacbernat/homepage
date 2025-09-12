@@ -11,18 +11,14 @@ const lighthouseConfig = {
   settings: {
     // Run in headless mode for CI
     chromeFlags: ['--headless', '--no-sandbox', '--disable-dev-shm-usage'],
-    
+
     // Optimize for CI environment
     maxWaitForFcp: 15 * 1000,
     maxWaitForLoad: 35 * 1000,
-    
+
     // Skip certain audits that may be flaky in CI
-    skipAudits: [
-      'uses-http2',
-      'uses-long-cache-ttl',
-      'uses-text-compression'
-    ],
-    
+    skipAudits: ['uses-http2', 'uses-long-cache-ttl', 'uses-text-compression'],
+
     // Throttling settings for consistent results
     throttlingMethod: 'simulate',
     throttling: {
@@ -31,38 +27,38 @@ const lighthouseConfig = {
       cpuSlowdownMultiplier: 1,
       requestLatencyMs: 0,
       downloadThroughputKbps: 0,
-      uploadThroughputKbps: 0
+      uploadThroughputKbps: 0,
     },
-    
+
     // Screen emulation
     screenEmulation: {
       mobile: false,
       width: 1350,
       height: 940,
       deviceScaleFactor: 1,
-      disabled: false
-    }
+      disabled: false,
+    },
   },
-  
+
   // Categories to audit
   categories: {
     performance: {
       title: 'Performance',
-      weight: 1
+      weight: 1,
     },
     accessibility: {
       title: 'Accessibility',
-      weight: 1
+      weight: 1,
     },
     'best-practices': {
       title: 'Best Practices',
-      weight: 1
+      weight: 1,
     },
     seo: {
       title: 'SEO',
-      weight: 1
-    }
-  }
+      weight: 1,
+    },
+  },
 };
 
 /**
@@ -78,7 +74,7 @@ const mobileLighthouseConfig = {
       width: 375,
       height: 667,
       deviceScaleFactor: 2,
-      disabled: false
+      disabled: false,
     },
     throttling: {
       rttMs: 150,
@@ -86,9 +82,9 @@ const mobileLighthouseConfig = {
       cpuSlowdownMultiplier: 4,
       requestLatencyMs: 0,
       downloadThroughputKbps: 0,
-      uploadThroughputKbps: 0
-    }
-  }
+      uploadThroughputKbps: 0,
+    },
+  },
 };
 
 /**
@@ -104,9 +100,9 @@ const desktopLighthouseConfig = {
       width: 1350,
       height: 940,
       deviceScaleFactor: 1,
-      disabled: false
-    }
-  }
+      disabled: false,
+    },
+  },
 };
 
 /**
@@ -129,5 +125,5 @@ module.exports = {
   lighthouseConfig,
   mobileLighthouseConfig,
   desktopLighthouseConfig,
-  getLighthouseConfig
+  getLighthouseConfig,
 };

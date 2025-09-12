@@ -37,10 +37,10 @@ class ReportGenerator {
         passedModules: 0,
         failedModules: 0,
         skippedModules: 0,
-        totalDuration: 0
+        totalDuration: 0,
       },
       modules: {},
-      recommendations: []
+      recommendations: [],
     };
 
     // Process each test result
@@ -65,7 +65,8 @@ class ReportGenerator {
     }
 
     // Overall status
-    report.summary.overallStatus = report.summary.failedModules > 0 ? 'failed' : 'passed';
+    report.summary.overallStatus =
+      report.summary.failedModules > 0 ? 'failed' : 'passed';
 
     return report;
   }
@@ -99,8 +100,9 @@ class ReportGenerator {
    * @returns {string} HTML content
    */
   generateHtmlReport(report) {
-    const statusColor = report.summary.overallStatus === 'passed' ? '#28a745' : '#dc3545';
-    
+    const statusColor =
+      report.summary.overallStatus === 'passed' ? '#28a745' : '#dc3545';
+
     return `
 <!DOCTYPE html>
 <html lang="en">
@@ -157,36 +159,53 @@ class ReportGenerator {
                 </div>
             </div>
 
-            ${Object.entries(report.modules).map(([moduleName, moduleResult]) => `
+            ${Object.entries(report.modules)
+              .map(
+                ([moduleName, moduleResult]) => `
                 <div class="module">
                     <div class="module-header">
                         <h2>${moduleName} <span class="status-${moduleResult.status}">${moduleResult.status.toUpperCase()}</span></h2>
                         <p>Duration: ${Math.round((moduleResult.duration || 0) / 1000)}s</p>
                     </div>
                     <div class="module-content">
-                        ${moduleResult.details ? `
+                        ${
+                          moduleResult.details
+                            ? `
                             <p><strong>Tests Run:</strong> ${moduleResult.details.testsRun || 'N/A'}</p>
                             <p><strong>Tests Passed:</strong> ${moduleResult.details.testsPassed || 'N/A'}</p>
                             <p><strong>Tests Failed:</strong> ${moduleResult.details.testsFailed || 'N/A'}</p>
-                            ${moduleResult.details.violations && moduleResult.details.violations.length > 0 ? `
+                            ${
+                              moduleResult.details.violations &&
+                              moduleResult.details.violations.length > 0
+                                ? `
                                 <h4>Violations:</h4>
                                 <ul>
-                                    ${moduleResult.details.violations.map(violation => `<li>${violation}</li>`).join('')}
+                                    ${moduleResult.details.violations.map((violation) => `<li>${violation}</li>`).join('')}
                                 </ul>
-                            ` : ''}
-                        ` : '<p>No detailed results available</p>'}
+                            `
+                                : ''
+                            }
+                        `
+                            : '<p>No detailed results available</p>'
+                        }
                     </div>
                 </div>
-            `).join('')}
+            `,
+              )
+              .join('')}
 
-            ${report.recommendations.length > 0 ? `
+            ${
+              report.recommendations.length > 0
+                ? `
                 <div class="recommendations">
                     <h3>Recommendations</h3>
                     <ul>
-                        ${report.recommendations.map(rec => `<li>${rec}</li>`).join('')}
+                        ${report.recommendations.map((rec) => `<li>${rec}</li>`).join('')}
                     </ul>
                 </div>
-            ` : ''}
+            `
+                : ''
+            }
         </div>
     </div>
 </body>
@@ -202,19 +221,36 @@ class ReportGenerator {
     console.log('TEST REPORT SUMMARY');
     console.log('='.repeat(60));
     console.log(`Generated: ${new Date(report.timestamp).toLocaleString()}`);
-    console.log(`Overall Status: ${report.summary.overallStatus.toUpperCase()}`);
-    console.log(`Total Duration: ${Math.round(report.summary.totalDuration / 1000)}s`);
+    console.log(
+      `Overall Status: ${report.summary.overallStatus.toUpperCase()}`,
+    );
+    console.log(
+      `Total Duration: ${Math.round(report.summary.totalDuration / 1000)}s`,
+    );
     console.log('');
-    console.log(`Modules: ${report.summary.totalModules} total, ${report.summary.passedModules} passed, ${report.summary.failedModules} failed, ${report.summary.skippedModules} skipped`);
+    console.log(
+      `Modules: ${report.summary.totalModules} total, ${report.summary.passedModules} passed, ${report.summary.failedModules} failed, ${report.summary.skippedModules} skipped`,
+    );
     console.log('');
 
     // Module details
     for (const [moduleName, moduleResult] of Object.entries(report.modules)) {
-      const statusSymbol = moduleResult.status === 'passed' ? '✓' : moduleResult.status === 'failed' ? '✗' : '○';
-      console.log(`${statusSymbol} ${moduleName}: ${moduleResult.status.toUpperCase()} (${Math.round((moduleResult.duration || 0) / 1000)}s)`);
-      
-      if (moduleResult.details && moduleResult.details.violations && moduleResult.details.violations.length > 0) {
-        moduleResult.details.violations.forEach(violation => {
+      const statusSymbol =
+        moduleResult.status === 'passed'
+          ? '✓'
+          : moduleResult.status === 'failed'
+            ? '✗'
+            : '○';
+      console.log(
+        `${statusSymbol} ${moduleName}: ${moduleResult.status.toUpperCase()} (${Math.round((moduleResult.duration || 0) / 1000)}s)`,
+      );
+
+      if (
+        moduleResult.details &&
+        moduleResult.details.violations &&
+        moduleResult.details.violations.length > 0
+      ) {
+        moduleResult.details.violations.forEach((violation) => {
           console.log(`  - ${violation}`);
         });
       }
