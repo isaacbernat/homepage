@@ -252,7 +252,7 @@ function isModuleEnabled(module, configPath = null) {
   try {
     const moduleConfig = getModuleConfig(module, configPath);
     return moduleConfig.enabled === true;
-  } catch (error) {
+  } catch {
     return false;
   }
 }

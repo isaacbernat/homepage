@@ -6,7 +6,6 @@
 const http = require('http');
 const path = require('path');
 const fs = require('fs');
-const { promisify } = require('util');
 
 /**
  * Simple HTTP server for serving static files during tests
@@ -84,7 +83,7 @@ class TestServer {
     filePath = filePath.split('?')[0];
 
     // Security: prevent directory traversal
-    filePath = path.normalize(filePath).replace(/^(\.\.[\/\\])+/, '');
+    filePath = path.normalize(filePath).replace(/^(\.\.[/\\])+/, '');
 
     const fullPath = path.join(this.distDirectory, filePath);
 
@@ -125,7 +124,7 @@ class TestServer {
       const content = fs.readFileSync(filePath);
       res.writeHead(200, { 'Content-Type': contentType });
       res.end(content);
-    } catch (error) {
+    } catch {
       res.writeHead(500, { 'Content-Type': 'text/plain' });
       res.end('Internal server error');
     }
