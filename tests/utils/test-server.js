@@ -77,28 +77,41 @@ class TestServer {
    * @param {http.ServerResponse} res - Response object
    */
   handleRequest(req, res) {
-    let filePath = req.url === '/' ? '/index.html' : req.url;
+    // Decode URL, remove query params, and normalize.
+    const unsafePath = decodeURIComponent(req.url.split('?')[0]);
+    let relativePath = path.normalize(unsafePath);
 
-    // Remove query parameters
-    filePath = filePath.split('?')[0];
+    // If it's the root, serve index.html. Otherwise, make path relative.
+    if (relativePath === '/') {
+      relativePath = 'index.html';
+    } else if (relativePath.startsWith('/')) {
+      relativePath = relativePath.substring(1);
+    }
 
-    // Security: prevent directory traversal
-    filePath = path.normalize(filePath).replace(/^(\.\.[/\\])+/, '');
+    const fullPath = path.join(this.distDirectory, relativePath);
 
-    const fullPath = path.join(this.distDirectory, filePath);
+    // Security: Resolve the absolute path and verify it's within the dist directory.
+    const resolvedPath = path.resolve(fullPath);
+    const resolvedDistDir = path.resolve(this.distDirectory);
+
+    if (!resolvedPath.startsWith(resolvedDistDir)) {
+      res.writeHead(403, { 'Content-Type': 'text/plain' });
+      res.end('Forbidden');
+      return;
+    }
 
     // Check if file exists
-    if (!fs.existsSync(fullPath)) {
+    if (!fs.existsSync(resolvedPath)) {
       res.writeHead(404, { 'Content-Type': 'text/plain' });
       res.end('File not found');
       return;
     }
 
     // Check if it's a directory
-    const stats = fs.statSync(fullPath);
+    const stats = fs.statSync(resolvedPath);
     if (stats.isDirectory()) {
       // Try to serve index.html from the directory
-      const indexPath = path.join(fullPath, 'index.html');
+      const indexPath = path.join(resolvedPath, 'index.html');
       if (fs.existsSync(indexPath)) {
         this.serveFile(indexPath, res);
       } else {
@@ -108,7 +121,7 @@ class TestServer {
       return;
     }
 
-    this.serveFile(fullPath, res);
+    this.serveFile(resolvedPath, res);
   }
 
   /**
