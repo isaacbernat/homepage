@@ -8,6 +8,8 @@ const IGNORE_DIRS = new Set([
   '.git',
   'node_modules',
   'dist',
+  'coverage',
+  'test-reports',
   '__pycache__',
   '.vscode',
   'venv',

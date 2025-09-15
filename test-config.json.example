@@ -1,0 +1,41 @@
+{
+  "global": {
+    "testTimeout": 30000,
+    "distDirectory": "./dist",
+    "baseUrl": "http://localhost:3000",
+    "reportDirectory": "./test-reports"
+  },
+  "accessibility": {
+    "enabled": true,
+    "wcagLevel": ["wcag2a", "wcag2aa"],
+    "testBothThemes": true,
+    "excludeRules": [],
+    "timeout": 30000
+  },
+  "performance": {
+    "enabled": true,
+    "budgets": {
+      "performance": 95,
+      "accessibility": 100,
+      "bestPractices": 95,
+      "seo": 95
+    },
+    "testMobile": true,
+    "testDesktop": true,
+    "timeout": 60000
+  },
+  "build": {
+    "enabled": true,
+    "timeout": 15000
+  },
+  "visual": {
+    "enabled": true,
+    "threshold": 0.2,
+    "updateBaseline": false,
+    "viewports": [
+      { "width": 1920, "height": 1080 },
+      { "width": 768, "height": 1024 }
+    ],
+    "timeout": 45000
+  }
+}

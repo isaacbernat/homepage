@@ -56,6 +56,13 @@ A core principle of this project was to leverage modern Large Language Models (L
   - **Why Vanilla JS was chosen:** The client-side logic is minimal and focused on simple DOM manipulation (e.g. theme toggling, image loading).
   - **Why not TypeScript?** TypeScript is an excellent choice for larger and more complex applications, but its benefits (static typing, improved tooling) did not outweigh the cost of added build complexity for this specific project.
 
+#### 1.5. A Programmatically Enforced Quality Standard
+
+This project moves beyond simply _claiming_ quality to _programmatically proving and enforcing_ it through a comprehensive, automated testing suite built with Jest.
+
+- **Foundation First:** The initial implementation focuses on creating a robust foundation, including a modular and configurable test runner and unit tests for the critical build pipeline (`build.js`). This treats the build process as first-class, mission-critical code.
+- **A Living Roadmap:** The testing suite is designed to be extensible, with a clear roadmap to incorporate automated accessibility, performance and visual regression testing directly into the CI/CD quality gates. The full plan can be reviewed in the project's [design documents](./.kiro/specs/automated-testing-suite/design.md).
+
 ---
 
 ### 2. Technical Roadmap: Future Enhancements
