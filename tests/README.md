@@ -21,7 +21,9 @@ tests/
 
 ## Configuration
 
-The testing suite uses a centralized configuration system. Test settings may be customized by creating a `test-config.json` file in the project root. See `test-config.json.example` for available options.
+The testing suite uses a centralized configuration system that merges settings from multiple sources. For customization, create a `test-config.json` file in the project root to provide high-level overrides. These values will be merged with more detailed, tool-specific defaults defined in files like `visual-config.js` and `lighthouse-config.js`.
+
+See `test-config.json.example` for all available override options.
 
 ### Configuration Options
 
