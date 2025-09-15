@@ -6,6 +6,17 @@
 const fs = require('fs');
 const path = require('path');
 
+
+function escapeHtml(unsafe) {
+  return String(unsafe)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+
+
 /**
  * Test report generator
  */
@@ -180,7 +191,7 @@ class ReportGenerator {
                                 ? `
                                 <h4>Violations:</h4>
                                 <ul>
-                                    ${moduleResult.details.violations.map((violation) => `<li>${violation}</li>`).join('')}
+                                ${moduleResult.details.violations.map(violation => `<li>${escapeHtml(violation)}</li>`).join('')}
                                 </ul>
                             `
                                 : ''
@@ -200,7 +211,7 @@ class ReportGenerator {
                 <div class="recommendations">
                     <h3>Recommendations</h3>
                     <ul>
-                        ${report.recommendations.map((rec) => `<li>${rec}</li>`).join('')}
+                    ${report.recommendations.map(rec => `<li>${escapeHtml(rec)}</li>`).join('')}
                     </ul>
                 </div>
             `
