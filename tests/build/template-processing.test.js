@@ -16,7 +16,7 @@ describe('Template Rendering and Content Processing', () => {
     tempDir = await testUtils.createTempDir('template-test-');
     srcDir = path.join(tempDir, 'src');
     distDir = path.join(tempDir, 'dist');
-    
+
     await fs.ensureDir(srcDir);
     await fs.ensureDir(distDir);
   });
@@ -53,8 +53,12 @@ describe('Template Rendering and Content Processing', () => {
       await fs.writeFile(path.join(pagesDir, 'test.njk'), templateContent);
 
       // Create test markdown content
-      const markdownContent = '# Test Content\n\nThis is **test** content with *emphasis*.';
-      await fs.writeFile(path.join(contentDir, 'test_content.md'), markdownContent);
+      const markdownContent =
+        '# Test Content\n\nThis is **test** content with *emphasis*.';
+      await fs.writeFile(
+        path.join(contentDir, 'test_content.md'),
+        markdownContent,
+      );
 
       // Setup Nunjucks environment
       nunjucks.configure(srcDir, { autoescape: true });
@@ -70,8 +74,8 @@ describe('Template Rendering and Content Processing', () => {
         siteDescription: 'Test site description',
         siteUrl: 'https://test.example.com/',
         content: {
-          test_content: processedContent
-        }
+          test_content: processedContent,
+        },
       };
 
       // Render template
@@ -107,7 +111,7 @@ describe('Template Rendering and Content Processing', () => {
 
       const templateData = {
         title: 'Test Page',
-        content: {} // Empty content object
+        content: {}, // Empty content object
       };
 
       const renderedHtml = nunjucks.render('pages/test.njk', templateData);
@@ -126,7 +130,7 @@ describe('Template Rendering and Content Processing', () => {
       const contentFiles = {
         'intro.md': '# Introduction\n\nWelcome to the site.',
         'about.md': '## About\n\nThis is the about section.',
-        'contact.md': '### Contact\n\nReach out to us.'
+        'contact.md': '### Contact\n\nReach out to us.',
       };
 
       for (const [filename, content] of Object.entries(contentFiles)) {
@@ -135,9 +139,10 @@ describe('Template Rendering and Content Processing', () => {
 
       // Process all markdown files (mocked for testing)
       const processedContent = {
-        'intro': '<h1 id="introduction">Introduction</h1>\n<p>Welcome to the site.</p>',
-        'about': '<h2 id="about">About</h2>\n<p>This is the about section.</p>',
-        'contact': '<h3 id="contact">Contact</h3>\n<p>Reach out to us.</p>'
+        intro:
+          '<h1 id="introduction">Introduction</h1>\n<p>Welcome to the site.</p>',
+        about: '<h2 id="about">About</h2>\n<p>This is the about section.</p>',
+        contact: '<h3 id="contact">Contact</h3>\n<p>Reach out to us.</p>',
       };
 
       // Validate processed content
@@ -145,9 +150,13 @@ describe('Template Rendering and Content Processing', () => {
       expect(processedContent).toHaveProperty('about');
       expect(processedContent).toHaveProperty('contact');
 
-      expect(processedContent.intro).toContain('<h1 id="introduction">Introduction</h1>');
+      expect(processedContent.intro).toContain(
+        '<h1 id="introduction">Introduction</h1>',
+      );
       expect(processedContent.about).toContain('<h2 id="about">About</h2>');
-      expect(processedContent.contact).toContain('<h3 id="contact">Contact</h3>');
+      expect(processedContent.contact).toContain(
+        '<h3 id="contact">Contact</h3>',
+      );
     });
   });
 
@@ -187,7 +196,7 @@ describe('Template Rendering and Content Processing', () => {
 
       // All dates should be updated to today
       expect(dates).toHaveLength(2);
-      dates.forEach(date => {
+      dates.forEach((date) => {
         expect(testUtils.isToday(date)).toBe(true);
       });
 
@@ -227,7 +236,7 @@ describe('Template Rendering and Content Processing', () => {
 
       // All three dates should be updated to today
       expect(dates).toHaveLength(3);
-      dates.forEach(date => {
+      dates.forEach((date) => {
         expect(testUtils.isToday(date)).toBe(true);
       });
     });
@@ -237,7 +246,7 @@ describe('Template Rendering and Content Processing', () => {
       expect(await fs.pathExists(nonExistentSitemap)).toBe(false);
 
       const buildMock = new BuildScriptMock(srcDir, distDir);
-      
+
       // Should not throw error for missing sitemap
       await expect(buildMock.processSitemap()).resolves.not.toThrow();
 
@@ -268,13 +277,13 @@ describe('Template Rendering and Content Processing', () => {
       // Perform asset path replacement
       let processedHtml = originalHtml.replace(
         new RegExp(JS_FILE, 'g'),
-        JS_FILE.replace('.js', '.min.js')
+        JS_FILE.replace('.js', '.min.js'),
       );
 
       CSS_FILES.forEach((cssFile) => {
         processedHtml = processedHtml.replace(
           new RegExp(cssFile, 'g'),
-          cssFile.replace('.css', '.min.css')
+          cssFile.replace('.css', '.min.css'),
         );
       });
 
@@ -311,13 +320,13 @@ describe('Template Rendering and Content Processing', () => {
       // Perform asset path replacement
       let processedHtml = htmlWithoutAssets.replace(
         new RegExp(JS_FILE, 'g'),
-        JS_FILE.replace('.js', '.min.js')
+        JS_FILE.replace('.js', '.min.js'),
       );
 
       CSS_FILES.forEach((cssFile) => {
         processedHtml = processedHtml.replace(
           new RegExp(cssFile, 'g'),
-          cssFile.replace('.css', '.min.css')
+          cssFile.replace('.css', '.min.css'),
         );
       });
 
@@ -330,14 +339,24 @@ describe('Template Rendering and Content Processing', () => {
 <link rel="stylesheet" href="cv-style.min.css">
 <script src="script.min.js"></script>`;
 
-      const expectedAssets = ['style.min.css', 'cv-style.min.css', 'script.min.js'];
-      
-      const hasAllAssets = testUtils.verifyMinifiedAssetReferences(htmlContent, expectedAssets);
+      const expectedAssets = [
+        'style.min.css',
+        'cv-style.min.css',
+        'script.min.js',
+      ];
+
+      const hasAllAssets = testUtils.verifyMinifiedAssetReferences(
+        htmlContent,
+        expectedAssets,
+      );
       expect(hasAllAssets).toBe(true);
 
       // Test with missing asset
       const incompleteHtml = `<link rel="stylesheet" href="style.min.css">`;
-      const hasMissingAssets = testUtils.verifyMinifiedAssetReferences(incompleteHtml, expectedAssets);
+      const hasMissingAssets = testUtils.verifyMinifiedAssetReferences(
+        incompleteHtml,
+        expectedAssets,
+      );
       expect(hasMissingAssets).toBe(false);
     });
   });
@@ -394,13 +413,13 @@ This is the **homepage** content with a [link](https://example.com).
 
       // Setup Nunjucks and render
       nunjucks.configure(srcDir, { autoescape: true });
-      
+
       const templateData = {
         title: 'Test Homepage',
         siteDescription: 'A test homepage',
         content: {
-          homepage: processedMarkdown
-        }
+          homepage: processedMarkdown,
+        },
       };
 
       let renderedHtml = nunjucks.render('pages/index.njk', templateData);

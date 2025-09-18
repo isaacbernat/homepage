@@ -8,4 +8,4 @@ This is a sample markdown file for testing content processing.
 - HTML generation
 - Content injection
 
-**Bold text** and *italic text* should be preserved.
+**Bold text** and _italic text_ should be preserved.

@@ -34,7 +34,7 @@ class TestUtils {
           // Ignore cleanup errors
           console.warn(`Failed to cleanup temp dir ${dir}:`, error.message);
         }
-      })
+      }),
     );
     this.tempDirs = [];
   }
@@ -50,11 +50,11 @@ class TestUtils {
     await fs.ensureDir(srcDir);
 
     const fixturesDir = path.join(__dirname, 'fixtures');
-    
+
     for (const fixture of fixtures) {
       const srcPath = path.join(fixturesDir, fixture);
       const destPath = path.join(srcDir, fixture);
-      
+
       // Ensure destination directory exists
       await fs.ensureDir(path.dirname(destPath));
       await fs.copy(srcPath, destPath);
@@ -73,7 +73,7 @@ class TestUtils {
     try {
       const [content1, content2] = await Promise.all([
         fs.readFile(file1Path, 'utf8'),
-        fs.readFile(file2Path, 'utf8')
+        fs.readFile(file2Path, 'utf8'),
       ]);
       return content1 === content2;
     } catch (error) {
@@ -118,9 +118,9 @@ class TestUtils {
   async isMinified(originalPath, minifiedPath) {
     const [originalSize, minifiedSize] = await Promise.all([
       this.getFileSize(originalPath),
-      this.getFileSize(minifiedPath)
+      this.getFileSize(minifiedPath),
     ]);
-    
+
     return minifiedSize > 0 && minifiedSize < originalSize;
   }
 
@@ -155,15 +155,15 @@ class TestUtils {
    */
   async getFilesInDirectory(dirPath) {
     const files = [];
-    
+
     async function traverse(currentPath, relativePath = '') {
       const items = await fs.readdir(currentPath);
-      
+
       for (const item of items) {
         const fullPath = path.join(currentPath, item);
         const relativeItemPath = path.join(relativePath, item);
         const stats = await fs.stat(fullPath);
-        
+
         if (stats.isFile()) {
           files.push(relativeItemPath);
         } else if (stats.isDirectory()) {
@@ -171,7 +171,7 @@ class TestUtils {
         }
       }
     }
-    
+
     try {
       await traverse(dirPath);
       return files.sort();
@@ -187,7 +187,7 @@ class TestUtils {
    * @returns {boolean} True if all expected assets are referenced
    */
   verifyMinifiedAssetReferences(htmlContent, expectedAssets) {
-    return expectedAssets.every(asset => htmlContent.includes(asset));
+    return expectedAssets.every((asset) => htmlContent.includes(asset));
   }
 
   /**
@@ -199,11 +199,11 @@ class TestUtils {
     const dateRegex = /<lastmod>(.*?)<\/lastmod>/g;
     const dates = [];
     let match;
-    
+
     while ((match = dateRegex.exec(sitemapContent)) !== null) {
       dates.push(match[1]);
     }
-    
+
     return dates;
   }
 

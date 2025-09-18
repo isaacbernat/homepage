@@ -8,7 +8,11 @@ const sharp = require('sharp');
 const toIco = require('to-ico');
 
 const TestUtils = require('./test-utils');
-const { BuildScriptMock, FileSystemValidators, TestDataGenerators } = require('./fs-test-helpers');
+const {
+  BuildScriptMock,
+  FileSystemValidators,
+  TestDataGenerators,
+} = require('./fs-test-helpers');
 
 describe('Build Script Core Functionality', () => {
   let testUtils;
@@ -21,7 +25,7 @@ describe('Build Script Core Functionality', () => {
     tempDir = await testUtils.createTempDir('build-core-test-');
     srcDir = path.join(tempDir, 'src');
     distDir = path.join(tempDir, 'dist');
-    
+
     await fs.ensureDir(srcDir);
     await fs.ensureDir(distDir);
   });
@@ -35,9 +39,11 @@ describe('Build Script Core Functionality', () => {
       // Setup: Create some files in dist directory
       await fs.writeFile(path.join(distDir, 'old-file.txt'), 'old content');
       await fs.ensureDir(path.join(distDir, 'old-dir'));
-      
+
       // Verify files exist before cleaning
-      expect(await fs.pathExists(path.join(distDir, 'old-file.txt'))).toBe(true);
+      expect(await fs.pathExists(path.join(distDir, 'old-file.txt'))).toBe(
+        true,
+      );
       expect(await fs.pathExists(path.join(distDir, 'old-dir'))).toBe(true);
 
       // Execute cleaning
@@ -45,7 +51,8 @@ describe('Build Script Core Functionality', () => {
       await buildMock.cleanDist();
 
       // Validate directory was cleaned
-      const validation = await FileSystemValidators.validateDirectoryCleaning(distDir);
+      const validation =
+        await FileSystemValidators.validateDirectoryCleaning(distDir);
       expect(validation.exists).toBe(true);
       expect(validation.isEmpty).toBe(true);
       expect(validation.isValid).toBe(true);
@@ -61,7 +68,8 @@ describe('Build Script Core Functionality', () => {
       await buildMock.cleanDist();
 
       // Validate directory was created
-      const validation = await FileSystemValidators.validateDirectoryCleaning(distDir);
+      const validation =
+        await FileSystemValidators.validateDirectoryCleaning(distDir);
       expect(validation.exists).toBe(true);
       expect(validation.isEmpty).toBe(true);
       expect(validation.isValid).toBe(true);
@@ -85,7 +93,7 @@ describe('Build Script Core Functionality', () => {
             return x + y;
           };
         `;
-        
+
         const srcJsPath = path.join(srcDir, 'script.js');
         await fs.writeFile(srcJsPath, jsContent);
 
@@ -100,7 +108,7 @@ describe('Build Script Core Functionality', () => {
 
         const distJsPath = path.join(distDir, 'script.min.js');
         const mapPath = path.join(distDir, 'script.min.js.map');
-        
+
         await fs.writeFile(distJsPath, terserResult.code);
         await fs.writeFile(mapPath, terserResult.map);
 
@@ -113,7 +121,7 @@ describe('Build Script Core Functionality', () => {
         const minifiedContent = await fs.readFile(distJsPath, 'utf8');
         expect(minifiedContent).not.toContain('// This is a comment');
         expect(minifiedContent).not.toContain('// Another comment');
-        
+
         // Validate source map is valid JSON
         const sourceMap = await testUtils.readJsonFile(mapPath);
         expect(sourceMap).toHaveProperty('version');
@@ -157,7 +165,7 @@ describe('Build Script Core Functionality', () => {
             height: auto;
           }
         `;
-        
+
         const srcCssPath = path.join(srcDir, 'style.css');
         await fs.writeFile(srcCssPath, cssContent);
 
@@ -169,7 +177,7 @@ describe('Build Script Core Functionality', () => {
 
         const distCssPath = path.join(distDir, 'style.min.css');
         const mapPath = path.join(distDir, 'style.min.css.map');
-        
+
         await fs.writeFile(distCssPath, result.styles);
         await fs.writeFile(mapPath, result.sourceMap.toString());
 
@@ -180,9 +188,11 @@ describe('Build Script Core Functionality', () => {
 
         // Validate minified content doesn't contain comments
         const minifiedContent = await fs.readFile(distCssPath, 'utf8');
-        expect(minifiedContent).not.toContain('/* This comment should be removed */');
+        expect(minifiedContent).not.toContain(
+          '/* This comment should be removed */',
+        );
         expect(minifiedContent).not.toContain('/* Another comment */');
-        
+
         // Validate CSS properties are preserved
         expect(minifiedContent).toContain('margin:0');
         expect(minifiedContent).toContain('padding:20px');
@@ -190,11 +200,11 @@ describe('Build Script Core Functionality', () => {
 
       test('should handle non-existent CSS file gracefully', async () => {
         const nonExistentPath = path.join(srcDir, 'non-existent.css');
-        
+
         // This should not throw an error
         const exists = await fs.pathExists(nonExistentPath);
         expect(exists).toBe(false);
-        
+
         // Minification should be skipped for non-existent files
         // This simulates the behavior in the actual build script
       });
@@ -233,10 +243,14 @@ describe('Build Script Core Functionality', () => {
 
         // Validate minification
         expect(minifiedHtml.length).toBeLessThan(htmlContent.length);
-        expect(minifiedHtml).not.toContain('<!-- This comment should be removed -->');
+        expect(minifiedHtml).not.toContain(
+          '<!-- This comment should be removed -->',
+        );
         expect(minifiedHtml).not.toContain('    extra    spaces');
         expect(minifiedHtml).toContain('<h1>Test Heading</h1>');
-        expect(minifiedHtml).toContain('<p>This is a test paragraph with extra spaces.</p>');
+        expect(minifiedHtml).toContain(
+          '<p>This is a test paragraph with extra spaces.</p>',
+        );
       });
     });
   });
@@ -251,7 +265,7 @@ describe('Build Script Core Functionality', () => {
         { src: 'images', dest: 'images' },
         { src: 'case-study', dest: 'case-study' },
         { src: 'assets', dest: 'assets' },
-        { src: 'robots.txt', dest: 'robots.txt' }
+        { src: 'robots.txt', dest: 'robots.txt' },
       ];
 
       // Execute copying
@@ -262,30 +276,37 @@ describe('Build Script Core Functionality', () => {
       const expectedFiles = [
         { dest: 'robots.txt' },
         { dest: 'images/test.jpg' },
-        { dest: 'assets/test.pdf' }
+        { dest: 'assets/test.pdf' },
       ];
 
-      const validation = await FileSystemValidators.validateFileCopying(expectedFiles, distDir);
+      const validation = await FileSystemValidators.validateFileCopying(
+        expectedFiles,
+        distDir,
+      );
       expect(validation.allValid).toBe(true);
       expect(validation.validCount).toBe(expectedFiles.length);
 
       // Validate directory structure
       const expectedDirs = ['images', 'assets', 'case-study'];
-      const dirValidation = await FileSystemValidators.validateDirectoryStructure(distDir, expectedDirs);
+      const dirValidation =
+        await FileSystemValidators.validateDirectoryStructure(
+          distDir,
+          expectedDirs,
+        );
       expect(dirValidation.allValid).toBe(true);
     });
 
     test('should handle missing source directories gracefully', async () => {
       const assets = [
         { src: 'non-existent-dir', dest: 'non-existent-dir' },
-        { src: 'another-missing-dir', dest: 'another-missing-dir' }
+        { src: 'another-missing-dir', dest: 'another-missing-dir' },
       ];
 
       const buildMock = new BuildScriptMock(srcDir, distDir);
-      
+
       // This should not throw an error
       await expect(buildMock.copyStaticAssets(assets)).resolves.not.toThrow();
-      
+
       // Dist directory should remain empty (except for the directory itself)
       const files = await testUtils.getFilesInDirectory(distDir);
       expect(files).toHaveLength(0);
@@ -300,7 +321,7 @@ describe('Build Script Core Functionality', () => {
         <circle cx="50" cy="50" r="40" fill="#007acc" />
         <text x="50" y="60" text-anchor="middle" fill="white">T</text>
       </svg>`;
-      
+
       const srcSvgPath = path.join(srcDir, 'favicon.svg');
       await fs.writeFile(srcSvgPath, svgContent);
 
@@ -314,16 +335,18 @@ describe('Build Script Core Functionality', () => {
       expect(await testUtils.isMinified(srcSvgPath, distSvgPath)).toBe(true);
 
       const optimizedContent = await fs.readFile(distSvgPath, 'utf8');
-      expect(optimizedContent).not.toContain('<!-- This comment should be removed -->');
+      expect(optimizedContent).not.toContain(
+        '<!-- This comment should be removed -->',
+      );
     });
 
     test('should generate ICO from SVG', async () => {
       // Setup test SVG
       const svgContent = await fs.readFile(
-        path.join(__dirname, 'fixtures', 'sample-favicon.svg'), 
-        'utf8'
+        path.join(__dirname, 'fixtures', 'sample-favicon.svg'),
+        'utf8',
       );
-      
+
       const srcSvgPath = path.join(srcDir, 'favicon.svg');
       await fs.writeFile(srcSvgPath, svgContent);
 
@@ -331,30 +354,30 @@ describe('Build Script Core Functionality', () => {
       const svgBuffer = await fs.readFile(srcSvgPath);
       const sizes = [16, 32, 48];
       const pngBuffers = await Promise.all(
-        sizes.map((size) => sharp(svgBuffer).resize(size).png().toBuffer())
+        sizes.map((size) => sharp(svgBuffer).resize(size).png().toBuffer()),
       );
       const icoBuffer = await toIco(pngBuffers);
-      
+
       const icoPath = path.join(distDir, 'favicon.ico');
       await fs.writeFile(icoPath, icoBuffer);
 
       // Validate ICO generation
       expect(await testUtils.fileExistsWithContent(icoPath)).toBe(true);
-      
+
       const icoSize = await testUtils.getFileSize(icoPath);
       expect(icoSize).toBeGreaterThan(0);
-      
+
       // ICO files should be larger than individual PNGs due to multiple sizes
       expect(icoSize).toBeGreaterThan(1000); // Reasonable minimum for multi-size ICO
     });
 
     test('should handle missing SVG favicon gracefully', async () => {
       const nonExistentSvg = path.join(srcDir, 'non-existent-favicon.svg');
-      
+
       // This should not throw an error
       const exists = await fs.pathExists(nonExistentSvg);
       expect(exists).toBe(false);
-      
+
       // Processing should be skipped for non-existent files
       // This simulates the behavior in the actual build script
     });

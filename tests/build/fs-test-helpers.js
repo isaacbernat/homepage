@@ -28,7 +28,7 @@ class BuildScriptMock {
     for (const asset of assets) {
       const srcPath = path.join(this.srcDir, asset.src);
       const destPath = path.join(this.distDir, asset.dest);
-      
+
       if (await fs.pathExists(srcPath)) {
         await fs.ensureDir(path.dirname(destPath));
         await fs.copy(srcPath, destPath);
@@ -42,14 +42,14 @@ class BuildScriptMock {
   async processSitemap(sitemapFile = 'sitemap.xml') {
     const srcPath = path.join(this.srcDir, sitemapFile);
     const distPath = path.join(this.distDir, sitemapFile);
-    
+
     if (!(await fs.pathExists(srcPath))) return;
 
     const formattedDate = new Date().toISOString().slice(0, 10);
     let sitemapContent = await fs.readFile(srcPath, 'utf8');
     sitemapContent = sitemapContent.replace(
       /<lastmod>.*<\/lastmod>/g,
-      `<lastmod>${formattedDate}</lastmod>`
+      `<lastmod>${formattedDate}</lastmod>`,
     );
 
     await fs.writeFile(distPath, sitemapContent, 'utf8');
@@ -68,11 +68,11 @@ class FileSystemValidators {
   static async validateDirectoryCleaning(dirPath) {
     const exists = await fs.pathExists(dirPath);
     const isEmpty = exists ? (await fs.readdir(dirPath)).length === 0 : false;
-    
+
     return {
       exists,
       isEmpty,
-      isValid: exists && isEmpty
+      isValid: exists && isEmpty,
     };
   }
 
@@ -84,27 +84,27 @@ class FileSystemValidators {
    */
   static async validateFileCopying(expectedFiles, baseDir) {
     const results = [];
-    
+
     for (const file of expectedFiles) {
       const destPath = path.join(baseDir, file.dest);
       const exists = await fs.pathExists(destPath);
       const isFile = exists ? (await fs.stat(destPath)).isFile() : false;
-      
+
       results.push({
         file: file.dest,
         exists,
         isFile,
-        isValid: exists && isFile
+        isValid: exists && isFile,
       });
     }
-    
-    const allValid = results.every(r => r.isValid);
-    
+
+    const allValid = results.every((r) => r.isValid);
+
     return {
       results,
       allValid,
-      validCount: results.filter(r => r.isValid).length,
-      totalCount: results.length
+      validCount: results.filter((r) => r.isValid).length,
+      totalCount: results.length,
     };
   }
 
@@ -116,27 +116,29 @@ class FileSystemValidators {
    */
   static async validateDirectoryStructure(baseDir, expectedDirs) {
     const results = [];
-    
+
     for (const dir of expectedDirs) {
       const dirPath = path.join(baseDir, dir);
       const exists = await fs.pathExists(dirPath);
-      const isDirectory = exists ? (await fs.stat(dirPath)).isDirectory() : false;
-      
+      const isDirectory = exists
+        ? (await fs.stat(dirPath)).isDirectory()
+        : false;
+
       results.push({
         directory: dir,
         exists,
         isDirectory,
-        isValid: exists && isDirectory
+        isValid: exists && isDirectory,
       });
     }
-    
-    const allValid = results.every(r => r.isValid);
-    
+
+    const allValid = results.every((r) => r.isValid);
+
     return {
       results,
       allValid,
-      validCount: results.filter(r => r.isValid).length,
-      totalCount: results.length
+      validCount: results.filter((r) => r.isValid).length,
+      totalCount: results.length,
     };
   }
 
@@ -148,15 +150,21 @@ class FileSystemValidators {
   static async validateFilePermissions(filePath) {
     try {
       const stats = await fs.stat(filePath);
-      const isReadable = await fs.access(filePath, fs.constants.R_OK).then(() => true).catch(() => false);
-      const isWritable = await fs.access(filePath, fs.constants.W_OK).then(() => true).catch(() => false);
-      
+      const isReadable = await fs
+        .access(filePath, fs.constants.R_OK)
+        .then(() => true)
+        .catch(() => false);
+      const isWritable = await fs
+        .access(filePath, fs.constants.W_OK)
+        .then(() => true)
+        .catch(() => false);
+
       return {
         exists: true,
         isReadable,
         isWritable,
         size: stats.size,
-        isValid: isReadable && stats.size > 0
+        isValid: isReadable && stats.size > 0,
       };
     } catch (error) {
       return {
@@ -165,7 +173,7 @@ class FileSystemValidators {
         isWritable: false,
         size: 0,
         isValid: false,
-        error: error.message
+        error: error.message,
       };
     }
   }
@@ -185,10 +193,13 @@ class TestDataGenerators {
       directories: ['images', 'assets', 'case-study', 'content', 'pages'],
       files: [
         { path: 'robots.txt', content: 'User-agent: *\nAllow: /' },
-        { path: 'sitemap.xml', content: '<?xml version="1.0"?><urlset></urlset>' },
+        {
+          path: 'sitemap.xml',
+          content: '<?xml version="1.0"?><urlset></urlset>',
+        },
         { path: 'images/test.jpg', content: 'fake-image-data' },
-        { path: 'assets/test.pdf', content: 'fake-pdf-data' }
-      ]
+        { path: 'assets/test.pdf', content: 'fake-pdf-data' },
+      ],
     };
 
     // Create directories
@@ -212,8 +223,8 @@ class TestDataGenerators {
    */
   static generateTestContent() {
     return {
-      'test_content': '# Test Content\n\nThis is **test** content.',
-      'another_content': '## Another Section\n\nWith some *italic* text.'
+      test_content: '# Test Content\n\nThis is **test** content.',
+      another_content: '## Another Section\n\nWith some *italic* text.',
     };
   }
 }
@@ -221,5 +232,5 @@ class TestDataGenerators {
 module.exports = {
   BuildScriptMock,
   FileSystemValidators,
-  TestDataGenerators
+  TestDataGenerators,
 };
