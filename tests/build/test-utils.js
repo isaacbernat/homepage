@@ -76,7 +76,7 @@ class TestUtils {
         fs.readFile(file2Path, 'utf8'),
       ]);
       return content1 === content2;
-    } catch (error) {
+    } catch {
       return false;
     }
   }
@@ -90,7 +90,7 @@ class TestUtils {
     try {
       const stats = await fs.stat(filePath);
       return stats.isFile() && stats.size > 0;
-    } catch (error) {
+    } catch {
       return false;
     }
   }
@@ -104,7 +104,7 @@ class TestUtils {
     try {
       const stats = await fs.stat(filePath);
       return stats.size;
-    } catch (error) {
+    } catch {
       return 0;
     }
   }
@@ -143,7 +143,7 @@ class TestUtils {
     try {
       const files = await fs.readdir(dirPath);
       return files.length > 0;
-    } catch (error) {
+    } catch {
       return false;
     }
   }
@@ -175,7 +175,7 @@ class TestUtils {
     try {
       await traverse(dirPath);
       return files.sort();
-    } catch (error) {
+    } catch {
       return [];
     }
   }
