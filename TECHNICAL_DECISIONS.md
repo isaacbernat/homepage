@@ -60,7 +60,7 @@ A core principle of this project was to leverage modern Large Language Models (L
 
 This project moves beyond simply _claiming_ quality to _programmatically proving and enforcing_ it through a comprehensive, automated testing suite built with Jest.
 
-- **Foundation First:** The initial implementation focuses on creating a robust foundation, including a modular and configurable test runner and unit tests for the critical build pipeline (`build.js`). This treats the build process as first-class, mission-critical code.
+- **Unit-Tested Build Pipeline:** The foundation of the testing suite is a robust set of **30+ unit tests** for the critical build pipeline (`build.js`). This treats the build process as first-class, mission-critical code, with tests covering asset minification, content processing, sitemap generation and file system operations.
 - **A Living Roadmap:** The testing suite is designed to be extensible, with a clear roadmap to incorporate automated accessibility, performance and visual regression testing directly into the CI/CD quality gates. The full plan can be reviewed in the project's [design documents](./.kiro/specs/automated-testing-suite/design.md).
 
 ---
@@ -89,11 +89,6 @@ This tier focuses on integrating automated checks into the CI/CD pipeline to gua
   - **What:** Modify the build script to generate unique filenames for CSS and JavaScript assets based on their content (e.g. `style.[hash].min.css`).
   - **Why:** To solve the browser caching problem where users might be served stale assets after a new deployment. This ensures that every user immediately receives the latest version of the site, preventing bugs and inconsistent experiences. It's a critical feature for production reliability.
   - **How:** Use a Node.js package (like `md5-file` or Node's built-in `crypto` module) to generate a content hash for each asset. The build script would then rename the output files with this hash and update the references in the final HTML files accordingly. The recent refactoring to decouple templates from build artifacts makes this significantly easier to implement.
-
-- **Build Script Unit Testing**
-  - **What:** A dedicated test suite for the `build.js` script itself.
-  - **Why:** To treat the build process as first-class, mission-critical code. This ensures the reliability and correctness of the asset pipeline, minification process and HTML generation.
-  - **How:** Use a framework like **[Jest](https://jestjs.io/)**. Tests would assert that the `dist` directory is created correctly, that sample files are minified as expected and that the `sitemap.xml` `lastmod` date is properly updated.
 
 - **Visual Regression Testing**
   - **What:** An automated system to detect unintended visual changes in the UI.
