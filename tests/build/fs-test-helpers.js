@@ -23,7 +23,7 @@ class FileSystemValidators {
 
   /**
    * Validate that files were copied correctly
-   * @param {Array<Object>} expectedFiles - Array of {src, dest} file mappings
+   * @param {Array<Object>} expectedFiles - Array of objects with a 'dest' property for the destination file path
    * @param {string} baseDir - Base directory for relative paths
    * @returns {Promise<Object>} Validation result
    */
