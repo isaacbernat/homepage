@@ -128,7 +128,16 @@ async function processSitemap() {
 }
 
 async function compileHtml() {
-  const { marked } = await import('marked');
+  // Use dynamic import for production, but allow mocking in tests
+  let marked;
+  if (process.env.NODE_ENV === 'test') {
+    // Use require for testing to allow mocking
+    marked = require('marked').marked;
+  } else {
+    // Use dynamic import for production
+    const markedModule = await import('marked');
+    marked = markedModule.marked;
+  }
   console.log('Compiling HTML from Nunjucks templates...');
 
   const contentDir = path.join(SRC_DIR, 'content');
@@ -222,4 +231,19 @@ async function build() {
   }
 }
 
-build();
+
+module.exports = {
+    cleanDist,
+    minifyJs,
+    minifyCss,
+    processFavicons,
+    copyStaticAssets,
+    processSitemap,
+    compileHtml,
+    build,
+  };
+
+
+  if (require.main === module) {
+    build();
+  }

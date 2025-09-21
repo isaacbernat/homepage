@@ -1,58 +1,62 @@
 const fs = require('fs-extra');
 const path = require('path');
-const Terser = require('terser');
-const CleanCSS = require('clean-css');
-const { minify } = require('html-minifier');
-const svgo = require('svgo');
-const sharp = require('sharp');
-const toIco = require('to-ico');
 
 const TestUtils = require('./test-utils');
+const { FileSystemValidators, TestDataGenerators } = require('./fs-test-helpers');
+
+// Import the actual build script functions
 const {
-  BuildScriptMock,
-  FileSystemValidators,
-  TestDataGenerators,
-} = require('./fs-test-helpers');
+  cleanDist,
+  minifyJs,
+  minifyCss,
+  processFavicons,
+  copyStaticAssets,
+  processSitemap
+} = require('../../build.js');
 
 describe('Build Script Core Functionality', () => {
   let testUtils;
   let tempDir;
-  let srcDir;
-  let distDir;
+  let originalCwd;
+  let originalSrcDir;
+  let originalDistDir;
 
   beforeEach(async () => {
     testUtils = new TestUtils();
     tempDir = await testUtils.createTempDir('build-core-test-');
-    srcDir = path.join(tempDir, 'src');
-    distDir = path.join(tempDir, 'dist');
-
-    await fs.ensureDir(srcDir);
-    await fs.ensureDir(distDir);
+    
+    // Store original working directory
+    originalCwd = process.cwd();
+    
+    // Change to temp directory for testing
+    process.chdir(tempDir);
+    
+    // Create src and dist directories in temp location
+    await fs.ensureDir('src');
+    await fs.ensureDir('dist');
   });
 
   afterEach(async () => {
+    // Restore original working directory
+    process.chdir(originalCwd);
     await testUtils.cleanupTempDirs();
   });
 
   describe('Directory Cleaning and Creation', () => {
     test('should clean and recreate dist directory', async () => {
       // Setup: Create some files in dist directory
-      await fs.writeFile(path.join(distDir, 'old-file.txt'), 'old content');
-      await fs.ensureDir(path.join(distDir, 'old-dir'));
-
+      await fs.writeFile('dist/old-file.txt', 'old content');
+      await fs.ensureDir('dist/old-dir');
+      
       // Verify files exist before cleaning
-      expect(await fs.pathExists(path.join(distDir, 'old-file.txt'))).toBe(
-        true,
-      );
-      expect(await fs.pathExists(path.join(distDir, 'old-dir'))).toBe(true);
+      expect(await fs.pathExists('dist/old-file.txt')).toBe(true);
+      expect(await fs.pathExists('dist/old-dir')).toBe(true);
 
-      // Execute cleaning
-      const buildMock = new BuildScriptMock(srcDir, distDir);
-      await buildMock.cleanDist();
+      // Execute actual cleanDist function
+      await cleanDist();
 
       // Validate directory was cleaned
-      const validation =
-        await FileSystemValidators.validateDirectoryCleaning(distDir);
+      const validation = await FileSystemValidators.validateDirectoryCleaning('dist');
       expect(validation.exists).toBe(true);
       expect(validation.isEmpty).toBe(true);
       expect(validation.isValid).toBe(true);
@@ -60,261 +64,161 @@ describe('Build Script Core Functionality', () => {
 
     test('should handle non-existent dist directory', async () => {
       // Remove dist directory
-      await fs.remove(distDir);
-      expect(await fs.pathExists(distDir)).toBe(false);
+      await fs.remove('dist');
+      expect(await fs.pathExists('dist')).toBe(false);
 
-      // Execute cleaning
-      const buildMock = new BuildScriptMock(srcDir, distDir);
-      await buildMock.cleanDist();
+      // Execute actual cleanDist function
+      await cleanDist();
 
       // Validate directory was created
-      const validation =
-        await FileSystemValidators.validateDirectoryCleaning(distDir);
+      const validation = await FileSystemValidators.validateDirectoryCleaning('dist');
       expect(validation.exists).toBe(true);
       expect(validation.isEmpty).toBe(true);
       expect(validation.isValid).toBe(true);
     });
   });
 
-  describe('Asset Minification', () => {
-    describe('JavaScript Minification', () => {
-      test('should minify JavaScript and create source map', async () => {
-        // Setup test JavaScript file
-        const jsContent = `
-          // This is a comment that should be removed
-          function testFunction(param) {
-            console.log('Testing minification');
-            const variable = param || 'default';
-            return variable.toUpperCase();
-          }
-          
-          // Another comment
-          const arrowFunc = (x, y) => {
-            return x + y;
-          };
-        `;
+  describe('JavaScript Minification', () => {
+    test('should minify JavaScript and create source map', async () => {
+      // Setup test JavaScript file
+      const jsContent = `
+        // This is a comment that should be removed
+        function testFunction(param) {
+          console.log('Testing minification');
+          const variable = param || 'default';
+          return variable.toUpperCase();
+        }
+        
+        // Another comment
+        const arrowFunc = (x, y) => {
+          return x + y;
+        };
+      `;
 
-        const srcJsPath = path.join(srcDir, 'script.js');
-        await fs.writeFile(srcJsPath, jsContent);
+      await fs.writeFile('src/script.js', jsContent);
 
-        // Execute minification
-        const code = await fs.readFile(srcJsPath, 'utf8');
-        const terserResult = await Terser.minify(code, {
-          sourceMap: {
-            filename: 'script.min.js',
-            url: 'script.min.js.map',
-          },
-        });
+      // Execute actual minifyJs function
+      await minifyJs();
 
-        const distJsPath = path.join(distDir, 'script.min.js');
-        const mapPath = path.join(distDir, 'script.min.js.map');
+      // Validate minification results
+      expect(await testUtils.fileExistsWithContent('dist/script.min.js')).toBe(true);
+      expect(await testUtils.fileExistsWithContent('dist/script.min.js.map')).toBe(true);
+      expect(await testUtils.isMinified('src/script.js', 'dist/script.min.js')).toBe(true);
 
-        await fs.writeFile(distJsPath, terserResult.code);
-        await fs.writeFile(mapPath, terserResult.map);
-
-        // Validate minification
-        expect(await testUtils.fileExistsWithContent(distJsPath)).toBe(true);
-        expect(await testUtils.fileExistsWithContent(mapPath)).toBe(true);
-        expect(await testUtils.isMinified(srcJsPath, distJsPath)).toBe(true);
-
-        // Validate minified content doesn't contain comments
-        const minifiedContent = await fs.readFile(distJsPath, 'utf8');
-        expect(minifiedContent).not.toContain('// This is a comment');
-        expect(minifiedContent).not.toContain('// Another comment');
-
-        // Validate source map is valid JSON
-        const sourceMap = await testUtils.readJsonFile(mapPath);
-        expect(sourceMap).toHaveProperty('version');
-        expect(sourceMap).toHaveProperty('sources');
-        expect(sourceMap).toHaveProperty('mappings');
-      });
-
-      test('should handle empty JavaScript file', async () => {
-        const srcJsPath = path.join(srcDir, 'empty.js');
-        await fs.writeFile(srcJsPath, '');
-
-        const code = await fs.readFile(srcJsPath, 'utf8');
-        const terserResult = await Terser.minify(code, {
-          sourceMap: {
-            filename: 'empty.min.js',
-            url: 'empty.min.js.map',
-          },
-        });
-
-        expect(terserResult.code).toBeDefined();
-        expect(terserResult.map).toBeDefined();
-      });
+      // Validate minified content doesn't contain comments
+      const minifiedContent = await fs.readFile('dist/script.min.js', 'utf8');
+      expect(minifiedContent).not.toContain('// This is a comment');
+      expect(minifiedContent).not.toContain('// Another comment');
+      
+      // Validate source map is valid JSON
+      const sourceMap = await testUtils.readJsonFile('dist/script.min.js.map');
+      expect(sourceMap).toHaveProperty('version');
+      expect(sourceMap).toHaveProperty('sources');
+      expect(sourceMap).toHaveProperty('mappings');
     });
 
-    describe('CSS Minification', () => {
-      test('should minify CSS and create source map', async () => {
-        // Setup test CSS file
-        const cssContent = `
-          /* This comment should be removed */
-          body {
-            margin: 0;
-            padding: 20px;
-            font-family: Arial, sans-serif;
-            background-color: #ffffff;
-          }
-          
-          .test-class {
-            display: block;
-            width: 100%;
-            /* Another comment */
-            height: auto;
-          }
-        `;
+    test('should handle missing JavaScript file gracefully', async () => {
+      // Don't create the script.js file
+      expect(await fs.pathExists('src/script.js')).toBe(false);
 
-        const srcCssPath = path.join(srcDir, 'style.css');
-        await fs.writeFile(srcCssPath, cssContent);
+      // This should throw an error since the build script expects the file
+      await expect(minifyJs()).rejects.toThrow();
+    });
+  });
 
-        // Execute minification
-        const code = await fs.readFile(srcCssPath, 'utf8');
-        const result = new CleanCSS({ sourceMap: true }).minify({
-          'style.css': { styles: code },
-        });
+  describe('CSS Minification', () => {
+    test('should minify CSS and create source map', async () => {
+      // Setup test CSS file
+      const cssContent = `
+        /* This comment should be removed */
+        body {
+          margin: 0;
+          padding: 20px;
+          font-family: Arial, sans-serif;
+          background-color: #ffffff;
+        }
+        
+        .test-class {
+          display: block;
+          width: 100%;
+          /* Another comment */
+          height: auto;
+        }
+      `;
 
-        const distCssPath = path.join(distDir, 'style.min.css');
-        const mapPath = path.join(distDir, 'style.min.css.map');
+      await fs.writeFile('src/style.css', cssContent);
 
-        await fs.writeFile(distCssPath, result.styles);
-        await fs.writeFile(mapPath, result.sourceMap.toString());
+      // Execute actual minifyCss function
+      await minifyCss('style.css');
 
-        // Validate minification
-        expect(await testUtils.fileExistsWithContent(distCssPath)).toBe(true);
-        expect(await testUtils.fileExistsWithContent(mapPath)).toBe(true);
-        expect(await testUtils.isMinified(srcCssPath, distCssPath)).toBe(true);
+      // Validate minification results
+      expect(await testUtils.fileExistsWithContent('dist/style.min.css')).toBe(true);
+      expect(await testUtils.fileExistsWithContent('dist/style.min.css.map')).toBe(true);
+      expect(await testUtils.isMinified('src/style.css', 'dist/style.min.css')).toBe(true);
 
-        // Validate minified content doesn't contain comments
-        const minifiedContent = await fs.readFile(distCssPath, 'utf8');
-        expect(minifiedContent).not.toContain(
-          '/* This comment should be removed */',
-        );
-        expect(minifiedContent).not.toContain('/* Another comment */');
-
-        // Validate CSS properties are preserved
-        expect(minifiedContent).toContain('margin:0');
-        expect(minifiedContent).toContain('padding:20px');
-      });
-
-      test('should handle non-existent CSS file gracefully', async () => {
-        const nonExistentPath = path.join(srcDir, 'non-existent.css');
-
-        // This should not throw an error
-        const exists = await fs.pathExists(nonExistentPath);
-        expect(exists).toBe(false);
-
-        // Minification should be skipped for non-existent files
-        // This simulates the behavior in the actual build script
-      });
+      // Validate minified content doesn't contain comments
+      const minifiedContent = await fs.readFile('dist/style.min.css', 'utf8');
+      expect(minifiedContent).not.toContain('/* This comment should be removed */');
+      expect(minifiedContent).not.toContain('/* Another comment */');
+      
+      // Validate CSS properties are preserved
+      expect(minifiedContent).toContain('margin:0');
+      expect(minifiedContent).toContain('padding:20px');
     });
 
-    describe('HTML Minification', () => {
-      test('should minify HTML content', async () => {
-        const htmlContent = `
-          <!DOCTYPE html>
-          <html lang="en">
-          <head>
-              <!-- This comment should be removed -->
-              <meta charset="UTF-8">
-              <title>Test Page</title>
-              <style>
-                  body { margin: 0; }
-              </style>
-          </head>
-          <body>
-              <h1>Test Heading</h1>
-              <p>This is a test paragraph with    extra    spaces.</p>
-              <script>
-                  console.log('test');
-              </script>
-          </body>
-          </html>
-        `;
+    test('should handle non-existent CSS file gracefully', async () => {
+      // Don't create the CSS file
+      expect(await fs.pathExists('src/non-existent.css')).toBe(false);
 
-        const minifiedHtml = minify(htmlContent, {
-          removeAttributeQuotes: true,
-          collapseWhitespace: true,
-          removeComments: true,
-          minifyCSS: true,
-          minifyJS: true,
-        });
-
-        // Validate minification
-        expect(minifiedHtml.length).toBeLessThan(htmlContent.length);
-        expect(minifiedHtml).not.toContain(
-          '<!-- This comment should be removed -->',
-        );
-        expect(minifiedHtml).not.toContain('    extra    spaces');
-        expect(minifiedHtml).toContain('<h1>Test Heading</h1>');
-        expect(minifiedHtml).toContain(
-          '<p>This is a test paragraph with extra spaces.</p>',
-        );
-      });
+      // This should not throw an error - the function should return early
+      await expect(minifyCss('non-existent.css')).resolves.not.toThrow();
+      
+      // No minified file should be created
+      expect(await fs.pathExists('dist/non-existent.min.css')).toBe(false);
     });
   });
 
   describe('Static Asset Copying', () => {
     test('should copy static assets correctly', async () => {
       // Setup test file structure
-      await TestDataGenerators.generateTestFileStructure(srcDir);
+      await TestDataGenerators.generateTestFileStructure('src');
 
-      // Define assets to copy (matching build script configuration)
-      const assets = [
-        { src: 'images', dest: 'images' },
-        { src: 'case-study', dest: 'case-study' },
-        { src: 'assets', dest: 'assets' },
-        { src: 'robots.txt', dest: 'robots.txt' },
-      ];
+      // Execute actual copyStaticAssets function
+      await copyStaticAssets();
 
-      // Execute copying
-      const buildMock = new BuildScriptMock(srcDir, distDir);
-      await buildMock.copyStaticAssets(assets);
-
-      // Validate file copying
+      // Validate file copying (based on build script's ROOT_FILES_TO_COPY and asset directories)
       const expectedFiles = [
         { dest: 'robots.txt' },
         { dest: 'images/test.jpg' },
-        { dest: 'assets/test.pdf' },
+        { dest: 'assets/test.pdf' }
       ];
 
-      const validation = await FileSystemValidators.validateFileCopying(
-        expectedFiles,
-        distDir,
-      );
+      const validation = await FileSystemValidators.validateFileCopying(expectedFiles, 'dist');
       expect(validation.allValid).toBe(true);
       expect(validation.validCount).toBe(expectedFiles.length);
 
       // Validate directory structure
       const expectedDirs = ['images', 'assets', 'case-study'];
-      const dirValidation =
-        await FileSystemValidators.validateDirectoryStructure(
-          distDir,
-          expectedDirs,
-        );
+      const dirValidation = await FileSystemValidators.validateDirectoryStructure('dist', expectedDirs);
       expect(dirValidation.allValid).toBe(true);
     });
 
     test('should handle missing source directories gracefully', async () => {
-      const assets = [
-        { src: 'non-existent-dir', dest: 'non-existent-dir' },
-        { src: 'another-missing-dir', dest: 'another-missing-dir' },
-      ];
+      // Don't create any source directories
+      expect(await fs.pathExists('src/images')).toBe(false);
+      expect(await fs.pathExists('src/assets')).toBe(false);
 
-      const buildMock = new BuildScriptMock(srcDir, distDir);
+      // Execute actual copyStaticAssets function
+      await expect(copyStaticAssets()).resolves.not.toThrow();
 
-      // This should not throw an error
-      await expect(buildMock.copyStaticAssets(assets)).resolves.not.toThrow();
-
-      // Dist directory should remain empty (except for the directory itself)
-      const files = await testUtils.getFilesInDirectory(distDir);
+      // Dist directory should remain empty (no assets copied)
+      const files = await testUtils.getFilesInDirectory('dist');
       expect(files).toHaveLength(0);
     });
   });
 
   describe('Favicon Processing', () => {
-    test('should optimize SVG favicon', async () => {
+    test('should optimize SVG favicon and generate ICO', async () => {
       // Setup test SVG
       const svgContent = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
         <!-- This comment should be removed -->
@@ -322,64 +226,125 @@ describe('Build Script Core Functionality', () => {
         <text x="50" y="60" text-anchor="middle" fill="white">T</text>
       </svg>`;
 
-      const srcSvgPath = path.join(srcDir, 'favicon.svg');
-      await fs.writeFile(srcSvgPath, svgContent);
+      await fs.writeFile('src/favicon.svg', svgContent);
 
-      // Execute SVG optimization
-      const result = svgo.optimize(svgContent, { path: srcSvgPath });
-      const distSvgPath = path.join(distDir, 'favicon.svg');
-      await fs.writeFile(distSvgPath, result.data);
+      // Execute actual processFavicons function
+      await processFavicons();
 
-      // Validate optimization
-      expect(await testUtils.fileExistsWithContent(distSvgPath)).toBe(true);
-      expect(await testUtils.isMinified(srcSvgPath, distSvgPath)).toBe(true);
+      // Validate SVG optimization
+      expect(await testUtils.fileExistsWithContent('dist/favicon.svg')).toBe(true);
+      expect(await testUtils.isMinified('src/favicon.svg', 'dist/favicon.svg')).toBe(true);
 
-      const optimizedContent = await fs.readFile(distSvgPath, 'utf8');
-      expect(optimizedContent).not.toContain(
-        '<!-- This comment should be removed -->',
-      );
-    });
-
-    test('should generate ICO from SVG', async () => {
-      // Setup test SVG
-      const svgContent = await fs.readFile(
-        path.join(__dirname, 'fixtures', 'sample-favicon.svg'),
-        'utf8',
-      );
-
-      const srcSvgPath = path.join(srcDir, 'favicon.svg');
-      await fs.writeFile(srcSvgPath, svgContent);
-
-      // Execute ICO generation
-      const svgBuffer = await fs.readFile(srcSvgPath);
-      const sizes = [16, 32, 48];
-      const pngBuffers = await Promise.all(
-        sizes.map((size) => sharp(svgBuffer).resize(size).png().toBuffer()),
-      );
-      const icoBuffer = await toIco(pngBuffers);
-
-      const icoPath = path.join(distDir, 'favicon.ico');
-      await fs.writeFile(icoPath, icoBuffer);
+      const optimizedContent = await fs.readFile('dist/favicon.svg', 'utf8');
+      expect(optimizedContent).not.toContain('<!-- This comment should be removed -->');
 
       // Validate ICO generation
-      expect(await testUtils.fileExistsWithContent(icoPath)).toBe(true);
-
-      const icoSize = await testUtils.getFileSize(icoPath);
+      expect(await testUtils.fileExistsWithContent('dist/favicon.ico')).toBe(true);
+      
+      const icoSize = await testUtils.getFileSize('dist/favicon.ico');
       expect(icoSize).toBeGreaterThan(0);
-
-      // ICO files should be larger than individual PNGs due to multiple sizes
-      expect(icoSize).toBeGreaterThan(1000); // Reasonable minimum for multi-size ICO
+      // ICO files should be reasonably sized for multi-size ICO
+      expect(icoSize).toBeGreaterThan(1000);
     });
 
     test('should handle missing SVG favicon gracefully', async () => {
-      const nonExistentSvg = path.join(srcDir, 'non-existent-favicon.svg');
+      // Don't create the favicon.svg file
+      expect(await fs.pathExists('src/favicon.svg')).toBe(false);
 
-      // This should not throw an error
-      const exists = await fs.pathExists(nonExistentSvg);
-      expect(exists).toBe(false);
+      // Execute actual processFavicons function
+      await expect(processFavicons()).resolves.not.toThrow();
 
-      // Processing should be skipped for non-existent files
-      // This simulates the behavior in the actual build script
+      // No favicon files should be created
+      expect(await fs.pathExists('dist/favicon.svg')).toBe(false);
+      expect(await fs.pathExists('dist/favicon.ico')).toBe(false);
+    });
+  });
+
+  describe('Sitemap Processing', () => {
+    test('should update sitemap.xml with current date', async () => {
+      // Setup test sitemap
+      const originalSitemap = `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://www.example.com/</loc>
+    <lastmod>2023-01-01</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://www.example.com/cv</loc>
+    <lastmod>2023-01-01</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+</urlset>`;
+
+      await fs.writeFile('src/sitemap.xml', originalSitemap);
+
+      // Execute actual processSitemap function
+      await processSitemap();
+
+      // Validate sitemap was processed
+      expect(await testUtils.fileExistsWithContent('dist/sitemap.xml')).toBe(true);
+
+      // Read and validate updated content
+      const updatedSitemap = await fs.readFile('dist/sitemap.xml', 'utf8');
+      const dates = testUtils.extractSitemapDates(updatedSitemap);
+
+      // All dates should be updated to today
+      expect(dates).toHaveLength(2);
+      dates.forEach(date => {
+        expect(testUtils.isToday(date)).toBe(true);
+      });
+
+      // Validate structure is preserved
+      expect(updatedSitemap).toContain('<loc>https://www.example.com/</loc>');
+      expect(updatedSitemap).toContain('<loc>https://www.example.com/cv</loc>');
+      expect(updatedSitemap).toContain('<changefreq>monthly</changefreq>');
+      expect(updatedSitemap).toContain('<priority>1.0</priority>');
+    });
+
+    test('should handle missing sitemap file gracefully', async () => {
+      // Don't create the sitemap.xml file
+      expect(await fs.pathExists('src/sitemap.xml')).toBe(false);
+
+      // Execute actual processSitemap function
+      await expect(processSitemap()).resolves.not.toThrow();
+
+      // No sitemap should be created in dist
+      expect(await fs.pathExists('dist/sitemap.xml')).toBe(false);
+    });
+
+    test('should handle sitemap with multiple lastmod entries', async () => {
+      const sitemapWithMultipleDates = `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://www.example.com/page1</loc>
+    <lastmod>2022-12-01</lastmod>
+  </url>
+  <url>
+    <loc>https://www.example.com/page2</loc>
+    <lastmod>2023-06-15</lastmod>
+  </url>
+  <url>
+    <loc>https://www.example.com/page3</loc>
+    <lastmod>2023-11-30</lastmod>
+  </url>
+</urlset>`;
+
+      await fs.writeFile('src/sitemap.xml', sitemapWithMultipleDates);
+
+      // Execute actual processSitemap function
+      await processSitemap();
+
+      const updatedSitemap = await fs.readFile('dist/sitemap.xml', 'utf8');
+      const dates = testUtils.extractSitemapDates(updatedSitemap);
+
+      // All three dates should be updated to today
+      expect(dates).toHaveLength(3);
+      dates.forEach(date => {
+        expect(testUtils.isToday(date)).toBe(true);
+      });
     });
   });
 });

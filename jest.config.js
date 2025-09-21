@@ -6,6 +6,9 @@ module.exports = {
   // Test environment
   testEnvironment: 'node',
 
+  // Set environment variables for tests
+  setupFiles: ['<rootDir>/tests/setup.js'],
+
   // Test file patterns
   testMatch: ['<rootDir>/tests/**/*.test.js'],
 
@@ -25,6 +28,11 @@ module.exports = {
 
   // Transform configuration (if needed for ES modules)
   transform: {},
+
+  // Module name mapping for mocking ES modules
+  moduleNameMapper: {
+    '^marked$': '<rootDir>/tests/__mocks__/marked.js'
+  },
 
   // Verbose output
   verbose: true,

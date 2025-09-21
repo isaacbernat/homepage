@@ -60,7 +60,7 @@ A core principle of this project was to leverage modern Large Language Models (L
 
 This project moves beyond simply _claiming_ quality to _programmatically proving and enforcing_ it through a comprehensive, automated testing suite built with Jest.
 
-- **Unit-Tested Build Pipeline:** The foundation of the testing suite is a robust set of **30+ unit tests** for the critical build pipeline (`build.js`). This treats the build process as first-class, mission-critical code, with tests covering asset minification, content processing, sitemap generation and file system operations.
+- **Unit-Tested Build Pipeline:** The foundation of the testing suite is a robust set of unit tests for the critical build pipeline (`build.js`). This treats the build process as first-class, mission-critical code, with tests covering asset minification, content processing, sitemap generation and file system operations.
 - **A Living Roadmap:** The testing suite is designed to be extensible, with a clear roadmap to incorporate automated accessibility, performance and visual regression testing directly into the CI/CD quality gates. The full plan can be reviewed in the project's [design documents](./.kiro/specs/automated-testing-suite/design.md).
 
 ---

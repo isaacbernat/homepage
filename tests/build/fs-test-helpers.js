@@ -2,61 +2,6 @@ const fs = require('fs-extra');
 const path = require('path');
 
 /**
- * File system testing helper functions
- */
-
-/**
- * Mock build script functions for isolated testing
- */
-class BuildScriptMock {
-  constructor(srcDir, distDir) {
-    this.srcDir = srcDir;
-    this.distDir = distDir;
-  }
-
-  /**
-   * Mock version of cleanDist function
-   */
-  async cleanDist() {
-    await fs.emptyDir(this.distDir);
-  }
-
-  /**
-   * Mock version of copyStaticAssets function
-   */
-  async copyStaticAssets(assets = []) {
-    for (const asset of assets) {
-      const srcPath = path.join(this.srcDir, asset.src);
-      const destPath = path.join(this.distDir, asset.dest);
-
-      if (await fs.pathExists(srcPath)) {
-        await fs.ensureDir(path.dirname(destPath));
-        await fs.copy(srcPath, destPath);
-      }
-    }
-  }
-
-  /**
-   * Mock version of processSitemap function
-   */
-  async processSitemap(sitemapFile = 'sitemap.xml') {
-    const srcPath = path.join(this.srcDir, sitemapFile);
-    const distPath = path.join(this.distDir, sitemapFile);
-
-    if (!(await fs.pathExists(srcPath))) return;
-
-    const formattedDate = new Date().toISOString().slice(0, 10);
-    let sitemapContent = await fs.readFile(srcPath, 'utf8');
-    sitemapContent = sitemapContent.replace(
-      /<lastmod>.*<\/lastmod>/g,
-      `<lastmod>${formattedDate}</lastmod>`,
-    );
-
-    await fs.writeFile(distPath, sitemapContent, 'utf8');
-  }
-}
-
-/**
  * File system operation validators
  */
 class FileSystemValidators {
@@ -230,7 +175,6 @@ class TestDataGenerators {
 }
 
 module.exports = {
-  BuildScriptMock,
   FileSystemValidators,
   TestDataGenerators,
 };
