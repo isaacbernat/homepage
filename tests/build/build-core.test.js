@@ -1,8 +1,10 @@
 const fs = require('fs-extra');
-const path = require('path');
 
 const TestUtils = require('./test-utils');
-const { FileSystemValidators, TestDataGenerators } = require('./fs-test-helpers');
+const {
+  FileSystemValidators,
+  TestDataGenerators,
+} = require('./fs-test-helpers');
 
 // Import the actual build script functions
 const {
@@ -11,26 +13,24 @@ const {
   minifyCss,
   processFavicons,
   copyStaticAssets,
-  processSitemap
+  processSitemap,
 } = require('../../build.js');
 
 describe('Build Script Core Functionality', () => {
   let testUtils;
   let tempDir;
   let originalCwd;
-  let originalSrcDir;
-  let originalDistDir;
 
   beforeEach(async () => {
     testUtils = new TestUtils();
     tempDir = await testUtils.createTempDir('build-core-test-');
-    
+
     // Store original working directory
     originalCwd = process.cwd();
-    
+
     // Change to temp directory for testing
     process.chdir(tempDir);
-    
+
     // Create src and dist directories in temp location
     await fs.ensureDir('src');
     await fs.ensureDir('dist');
@@ -47,7 +47,7 @@ describe('Build Script Core Functionality', () => {
       // Setup: Create some files in dist directory
       await fs.writeFile('dist/old-file.txt', 'old content');
       await fs.ensureDir('dist/old-dir');
-      
+
       // Verify files exist before cleaning
       expect(await fs.pathExists('dist/old-file.txt')).toBe(true);
       expect(await fs.pathExists('dist/old-dir')).toBe(true);
@@ -56,7 +56,8 @@ describe('Build Script Core Functionality', () => {
       await cleanDist();
 
       // Validate directory was cleaned
-      const validation = await FileSystemValidators.validateDirectoryCleaning('dist');
+      const validation =
+        await FileSystemValidators.validateDirectoryCleaning('dist');
       expect(validation.exists).toBe(true);
       expect(validation.isEmpty).toBe(true);
       expect(validation.isValid).toBe(true);
@@ -71,7 +72,8 @@ describe('Build Script Core Functionality', () => {
       await cleanDist();
 
       // Validate directory was created
-      const validation = await FileSystemValidators.validateDirectoryCleaning('dist');
+      const validation =
+        await FileSystemValidators.validateDirectoryCleaning('dist');
       expect(validation.exists).toBe(true);
       expect(validation.isEmpty).toBe(true);
       expect(validation.isValid).toBe(true);
@@ -101,15 +103,21 @@ describe('Build Script Core Functionality', () => {
       await minifyJs();
 
       // Validate minification results
-      expect(await testUtils.fileExistsWithContent('dist/script.min.js')).toBe(true);
-      expect(await testUtils.fileExistsWithContent('dist/script.min.js.map')).toBe(true);
-      expect(await testUtils.isMinified('src/script.js', 'dist/script.min.js')).toBe(true);
+      expect(await testUtils.fileExistsWithContent('dist/script.min.js')).toBe(
+        true,
+      );
+      expect(
+        await testUtils.fileExistsWithContent('dist/script.min.js.map'),
+      ).toBe(true);
+      expect(
+        await testUtils.isMinified('src/script.js', 'dist/script.min.js'),
+      ).toBe(true);
 
       // Validate minified content doesn't contain comments
       const minifiedContent = await fs.readFile('dist/script.min.js', 'utf8');
       expect(minifiedContent).not.toContain('// This is a comment');
       expect(minifiedContent).not.toContain('// Another comment');
-      
+
       // Validate source map is valid JSON
       const sourceMap = await testUtils.readJsonFile('dist/script.min.js.map');
       expect(sourceMap).toHaveProperty('version');
@@ -152,15 +160,23 @@ describe('Build Script Core Functionality', () => {
       await minifyCss('style.css');
 
       // Validate minification results
-      expect(await testUtils.fileExistsWithContent('dist/style.min.css')).toBe(true);
-      expect(await testUtils.fileExistsWithContent('dist/style.min.css.map')).toBe(true);
-      expect(await testUtils.isMinified('src/style.css', 'dist/style.min.css')).toBe(true);
+      expect(await testUtils.fileExistsWithContent('dist/style.min.css')).toBe(
+        true,
+      );
+      expect(
+        await testUtils.fileExistsWithContent('dist/style.min.css.map'),
+      ).toBe(true);
+      expect(
+        await testUtils.isMinified('src/style.css', 'dist/style.min.css'),
+      ).toBe(true);
 
       // Validate minified content doesn't contain comments
       const minifiedContent = await fs.readFile('dist/style.min.css', 'utf8');
-      expect(minifiedContent).not.toContain('/* This comment should be removed */');
+      expect(minifiedContent).not.toContain(
+        '/* This comment should be removed */',
+      );
       expect(minifiedContent).not.toContain('/* Another comment */');
-      
+
       // Validate CSS properties are preserved
       expect(minifiedContent).toContain('margin:0');
       expect(minifiedContent).toContain('padding:20px');
@@ -172,7 +188,7 @@ describe('Build Script Core Functionality', () => {
 
       // This should not throw an error - the function should return early
       await expect(minifyCss('non-existent.css')).resolves.not.toThrow();
-      
+
       // No minified file should be created
       expect(await fs.pathExists('dist/non-existent.min.css')).toBe(false);
     });
@@ -190,16 +206,23 @@ describe('Build Script Core Functionality', () => {
       const expectedFiles = [
         { dest: 'robots.txt' },
         { dest: 'images/test.jpg' },
-        { dest: 'assets/test.pdf' }
+        { dest: 'assets/test.pdf' },
       ];
 
-      const validation = await FileSystemValidators.validateFileCopying(expectedFiles, 'dist');
+      const validation = await FileSystemValidators.validateFileCopying(
+        expectedFiles,
+        'dist',
+      );
       expect(validation.allValid).toBe(true);
       expect(validation.validCount).toBe(expectedFiles.length);
 
       // Validate directory structure
       const expectedDirs = ['images', 'assets', 'case-study'];
-      const dirValidation = await FileSystemValidators.validateDirectoryStructure('dist', expectedDirs);
+      const dirValidation =
+        await FileSystemValidators.validateDirectoryStructure(
+          'dist',
+          expectedDirs,
+        );
       expect(dirValidation.allValid).toBe(true);
     });
 
@@ -232,15 +255,23 @@ describe('Build Script Core Functionality', () => {
       await processFavicons();
 
       // Validate SVG optimization
-      expect(await testUtils.fileExistsWithContent('dist/favicon.svg')).toBe(true);
-      expect(await testUtils.isMinified('src/favicon.svg', 'dist/favicon.svg')).toBe(true);
+      expect(await testUtils.fileExistsWithContent('dist/favicon.svg')).toBe(
+        true,
+      );
+      expect(
+        await testUtils.isMinified('src/favicon.svg', 'dist/favicon.svg'),
+      ).toBe(true);
 
       const optimizedContent = await fs.readFile('dist/favicon.svg', 'utf8');
-      expect(optimizedContent).not.toContain('<!-- This comment should be removed -->');
+      expect(optimizedContent).not.toContain(
+        '<!-- This comment should be removed -->',
+      );
 
       // Validate ICO generation
-      expect(await testUtils.fileExistsWithContent('dist/favicon.ico')).toBe(true);
-      
+      expect(await testUtils.fileExistsWithContent('dist/favicon.ico')).toBe(
+        true,
+      );
+
       const icoSize = await testUtils.getFileSize('dist/favicon.ico');
       expect(icoSize).toBeGreaterThan(0);
       // ICO files should be reasonably sized for multi-size ICO
@@ -285,7 +316,9 @@ describe('Build Script Core Functionality', () => {
       await processSitemap();
 
       // Validate sitemap was processed
-      expect(await testUtils.fileExistsWithContent('dist/sitemap.xml')).toBe(true);
+      expect(await testUtils.fileExistsWithContent('dist/sitemap.xml')).toBe(
+        true,
+      );
 
       // Read and validate updated content
       const updatedSitemap = await fs.readFile('dist/sitemap.xml', 'utf8');
@@ -293,7 +326,7 @@ describe('Build Script Core Functionality', () => {
 
       // All dates should be updated to today
       expect(dates).toHaveLength(2);
-      dates.forEach(date => {
+      dates.forEach((date) => {
         expect(testUtils.isToday(date)).toBe(true);
       });
 
@@ -342,7 +375,7 @@ describe('Build Script Core Functionality', () => {
 
       // All three dates should be updated to today
       expect(dates).toHaveLength(3);
-      dates.forEach(date => {
+      dates.forEach((date) => {
         expect(testUtils.isToday(date)).toBe(true);
       });
     });

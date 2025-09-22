@@ -31,7 +31,7 @@ module.exports = {
 
   // Module name mapping for mocking ES modules
   moduleNameMapper: {
-    '^marked$': '<rootDir>/tests/__mocks__/marked.js'
+    '^marked$': '<rootDir>/tests/__mocks__/marked.js',
   },
 
   // Verbose output

@@ -84,9 +84,10 @@ The project was built with a focus on pragmatic and long-term value. The followi
 
 #### Repository Structure
 
-- **`.gitignore`:** The repository is configured to ignore build artifacts (`/dist`), dependencies (`/node_modules`) and OS-specific files (`.DS_Store`).
-- **Clear Licensing:** The `LICENSE` file clearly defines the usage rights for the code (MIT) and explicitly reserves rights for content and assets.
-- **Structured Documentation:** This `README.md` serves as the primary entry point, with a `TECHNICAL_DECISIONS.md` file for deeper architectural discussions.
+- **Clean Separation of Concerns:** The repository is organized with a clear separation of source code (`/src`), testing code (`/tests`), and build logic (`build.js`). This modular structure makes the project easy to navigate and maintain.
+- **Comprehensive `.gitignore`:** The repository is configured to ignore all generated artifacts, including build output (`/dist`), test reports (`/coverage`, `/test-reports`), local configurations, dependencies (`/node_modules`), and OS-specific files. This ensures the repository remains clean and focused on source code.
+- **Structured Documentation:** This `README.md` serves as the primary entry point, with `TECHNICAL_DECISIONS.md` for deep architectural discussions. The AI-assisted planning process for the testing suite is also transparently documented in the `.kiro/` directory. Furthermore, the `tests` directory has its own `README.md` file that provides a comprehensive overview of the suite, including available commands and configuration options.
+- **Clear Licensing:** The `LICENSE` file clearly defines the usage rights for the code (MIT) and explicitly reserves rights for all content and assets.
 
 ### 4. Tech Stack & Tooling
 
@@ -100,16 +101,19 @@ The project was built with a focus on pragmatic and long-term value. The followi
 - **Code Quality & Formatting:**
   - **JavaScript Linting:** [ESLint](https://eslint.org/)
   - **Automated Formatting:** [Prettier](https://prettier.io/)
+- **Testing Framework:**
+  - **Unit & Integration Testing:** [Jest](https://jestjs.io/)
 - **CI/CD & Deployment:** [GitHub Actions](https://github.com/features/actions)
 
 ### 5. Build & Deployment
 
 The project is automatically built and deployed via a GitHub Actions workflow. On every push to the `main` branch, the following steps are executed:
 
-1.  Dependencies are installed using `npm ci`.
-2.  The site is built using `npm run build`.
-3.  Automated test suites are run against the build artifacts.
-4.  If successful, the contents of `/dist` are deployed to GitHub Pages.
+1.  Dependencies are installed using `npm ci` for reproducible builds.
+2.  Code quality is verified using Prettier (formatting) and ESLint (static analysis).
+3.  The automated test suite is run with Jest to validate the build pipeline's correctness.
+4.  If all checks pass, the site is built using `npm run build`.
+5.  The final build artifacts from `/dist` are deployed to GitHub Pages.
 
 ### 6. Local Development
 

@@ -86,42 +86,6 @@ class FileSystemValidators {
       totalCount: results.length,
     };
   }
-
-  /**
-   * Validate file permissions and accessibility
-   * @param {string} filePath - Path to file
-   * @returns {Promise<Object>} Validation result
-   */
-  static async validateFilePermissions(filePath) {
-    try {
-      const stats = await fs.stat(filePath);
-      const isReadable = await fs
-        .access(filePath, fs.constants.R_OK)
-        .then(() => true)
-        .catch(() => false);
-      const isWritable = await fs
-        .access(filePath, fs.constants.W_OK)
-        .then(() => true)
-        .catch(() => false);
-
-      return {
-        exists: true,
-        isReadable,
-        isWritable,
-        size: stats.size,
-        isValid: isReadable && stats.size > 0,
-      };
-    } catch (error) {
-      return {
-        exists: false,
-        isReadable: false,
-        isWritable: false,
-        size: 0,
-        isValid: false,
-        error: error.message,
-      };
-    }
-  }
 }
 
 /**

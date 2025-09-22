@@ -231,19 +231,17 @@ async function build() {
   }
 }
 
-
 module.exports = {
-    cleanDist,
-    minifyJs,
-    minifyCss,
-    processFavicons,
-    copyStaticAssets,
-    processSitemap,
-    compileHtml,
-    build,
-  };
+  cleanDist,
+  minifyJs,
+  minifyCss,
+  processFavicons,
+  copyStaticAssets,
+  processSitemap,
+  compileHtml,
+  build,
+};
 
-
-  if (require.main === module) {
-    build();
-  }
+if (require.main === module) {
+  build();
+}

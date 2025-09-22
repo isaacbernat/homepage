@@ -1,5 +1,4 @@
 const fs = require('fs-extra');
-const path = require('path');
 
 const TestUtils = require('./test-utils');
 
@@ -14,13 +13,13 @@ describe('Template Rendering and Content Processing', () => {
   beforeEach(async () => {
     testUtils = new TestUtils();
     tempDir = await testUtils.createTempDir('template-test-');
-    
+
     // Store original working directory
     originalCwd = process.cwd();
-    
+
     // Change to temp directory for testing
     process.chdir(tempDir);
-    
+
     // Create src and dist directories in temp location
     await fs.ensureDir('src');
     await fs.ensureDir('dist');
@@ -39,7 +38,8 @@ describe('Template Rendering and Content Processing', () => {
       await fs.ensureDir('src/content');
 
       // Create test markdown content
-      const markdownContent = '# Test Content\n\nThis is **test** content with *emphasis*.';
+      const markdownContent =
+        '# Test Content\n\nThis is **test** content with *emphasis*.';
       await fs.writeFile('src/content/test_content.md', markdownContent);
 
       // Create test template
@@ -66,24 +66,26 @@ describe('Template Rendering and Content Processing', () => {
       await compileHtml();
 
       // Validate HTML was generated
-      expect(await testUtils.fileExistsWithContent('dist/test.html')).toBe(true);
+      expect(await testUtils.fileExistsWithContent('dist/test.html')).toBe(
+        true,
+      );
 
       // Read and validate generated HTML
       const generatedHtml = await fs.readFile('dist/test.html', 'utf8');
-      
+
       // Should contain processed markdown
       expect(generatedHtml).toContain('<h1 id=test-content>Test Content</h1>');
       expect(generatedHtml).toContain('<strong>test</strong>');
       expect(generatedHtml).toContain('<em>emphasis</em>');
-      
+
       // Should have minified asset references (quotes removed by minifier)
       expect(generatedHtml).toContain('href=style.min.css');
       expect(generatedHtml).toContain('src=script.min.js');
-      
+
       // Should not contain original asset references
       expect(generatedHtml).not.toContain('style.css');
       expect(generatedHtml).not.toContain('script.js');
-      
+
       // Should be minified (no extra whitespace)
       expect(generatedHtml).not.toContain('\n    ');
       expect(generatedHtml).not.toContain('  ');
@@ -95,8 +97,14 @@ describe('Template Rendering and Content Processing', () => {
       await fs.ensureDir('src/content');
 
       // Create multiple markdown files
-      await fs.writeFile('src/content/intro.md', '# Introduction\n\nWelcome to the site.');
-      await fs.writeFile('src/content/about.md', '## About\n\nThis is the about section.');
+      await fs.writeFile(
+        'src/content/intro.md',
+        '# Introduction\n\nWelcome to the site.',
+      );
+      await fs.writeFile(
+        'src/content/about.md',
+        '## About\n\nThis is the about section.',
+      );
 
       // Create multiple templates
       const indexTemplate = `<!DOCTYPE html>
@@ -118,8 +126,12 @@ describe('Template Rendering and Content Processing', () => {
       await compileHtml();
 
       // Validate both HTML files were generated
-      expect(await testUtils.fileExistsWithContent('dist/index.html')).toBe(true);
-      expect(await testUtils.fileExistsWithContent('dist/about.html')).toBe(true);
+      expect(await testUtils.fileExistsWithContent('dist/index.html')).toBe(
+        true,
+      );
+      expect(await testUtils.fileExistsWithContent('dist/about.html')).toBe(
+        true,
+      );
 
       // Validate content processing
       const indexHtml = await fs.readFile('dist/index.html', 'utf8');
@@ -160,7 +172,9 @@ describe('Template Rendering and Content Processing', () => {
       await compileHtml();
 
       // Validate HTML was generated
-      expect(await testUtils.fileExistsWithContent('dist/static.html')).toBe(true);
+      expect(await testUtils.fileExistsWithContent('dist/static.html')).toBe(
+        true,
+      );
 
       const generatedHtml = await fs.readFile('dist/static.html', 'utf8');
       expect(generatedHtml).toContain('<h1>Static Page</h1>');
@@ -229,7 +243,7 @@ Another paragraph with some text.`;
 
       // Validate complex content processing
       const generatedHtml = await fs.readFile('dist/complex.html', 'utf8');
-      
+
       expect(generatedHtml).toContain('<h1 id=main-heading>Main Heading</h1>');
       expect(generatedHtml).toContain('<h2 id=subheading>Subheading</h2>');
       expect(generatedHtml).toContain('<strong>bold</strong>');
@@ -270,8 +284,15 @@ Another paragraph with some text.`;
       const generatedHtml = await fs.readFile('dist/assets.html', 'utf8');
 
       // Validate all asset paths were replaced
-      const expectedAssets = ['style.min.css', 'cv-style.min.css', 'script.min.js'];
-      const hasAllAssets = testUtils.verifyMinifiedAssetReferences(generatedHtml, expectedAssets);
+      const expectedAssets = [
+        'style.min.css',
+        'cv-style.min.css',
+        'script.min.js',
+      ];
+      const hasAllAssets = testUtils.verifyMinifiedAssetReferences(
+        generatedHtml,
+        expectedAssets,
+      );
       expect(hasAllAssets).toBe(true);
 
       // Validate original paths are not present
@@ -321,10 +342,12 @@ Another paragraph with some text.`;
       const generatedHtml = await fs.readFile('dist/minify-test.html', 'utf8');
 
       // Validate minification
-      expect(generatedHtml).not.toContain('<!-- This comment should be removed -->');
+      expect(generatedHtml).not.toContain(
+        '<!-- This comment should be removed -->',
+      );
       expect(generatedHtml).not.toContain('\n    '); // No extra indentation
       expect(generatedHtml).not.toContain('  '); // No double spaces
-      
+
       // But content should still be present
       expect(generatedHtml).toContain('<h1 id=test-content>Test Content</h1>');
       expect(generatedHtml).toContain('console.log');
@@ -350,7 +373,9 @@ Another paragraph with some text.`;
       await processSitemap();
 
       // Validate sitemap was processed
-      expect(await testUtils.fileExistsWithContent('dist/sitemap.xml')).toBe(true);
+      expect(await testUtils.fileExistsWithContent('dist/sitemap.xml')).toBe(
+        true,
+      );
 
       // Read and validate updated content
       const updatedSitemap = await fs.readFile('dist/sitemap.xml', 'utf8');
@@ -384,8 +409,14 @@ Another paragraph with some text.`;
       await fs.ensureDir('src/content');
 
       // Create multiple content files
-      await fs.writeFile('src/content/home.md', '# Welcome\n\nThis is the homepage.');
-      await fs.writeFile('src/content/about.md', '## About Us\n\nWe are awesome.');
+      await fs.writeFile(
+        'src/content/home.md',
+        '# Welcome\n\nThis is the homepage.',
+      );
+      await fs.writeFile(
+        'src/content/about.md',
+        '## About Us\n\nWe are awesome.',
+      );
 
       // Create multiple page templates
       const indexTemplate = `<!DOCTYPE html>
@@ -422,8 +453,12 @@ Another paragraph with some text.`;
       await compileHtml();
 
       // Validate both pages were generated
-      expect(await testUtils.fileExistsWithContent('dist/index.html')).toBe(true);
-      expect(await testUtils.fileExistsWithContent('dist/about.html')).toBe(true);
+      expect(await testUtils.fileExistsWithContent('dist/index.html')).toBe(
+        true,
+      );
+      expect(await testUtils.fileExistsWithContent('dist/about.html')).toBe(
+        true,
+      );
 
       // Validate content and asset processing
       const indexHtml = await fs.readFile('dist/index.html', 'utf8');
@@ -441,7 +476,7 @@ Another paragraph with some text.`;
 
       // Check site data injection
       expect(indexHtml).toContain('Portfolio of Isaac Bernat');
-      
+
       // Check minification (no extra whitespace)
       expect(indexHtml).not.toContain('\n    ');
       expect(aboutHtml).not.toContain('\n    ');
