@@ -1,0 +1,25 @@
+/* Sample CSS for testing minification */
+body {
+  margin: 0;
+  padding: 20px;
+  font-family: Arial, sans-serif;
+  background-color: #ffffff;
+}
+
+.content {
+  max-width: 800px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+h1 {
+  color: #333333;
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+/* This comment should be removed during minification */
+.test-class {
+  display: block;
+  width: 100%;
+}

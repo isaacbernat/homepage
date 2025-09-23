@@ -6,20 +6,20 @@
   - Create centralized test configuration loader with validation
   - _Requirements: 6.1, 6.2, 6.3, 6.4_
 
-- [ ] 2. Implement build script unit tests
-  - [ ] 2.1 Create build script test fixtures and utilities
+- [x] 2. Implement build script unit tests
+  - [x] 2.1 Create build script test fixtures and utilities
     - Set up test fixtures with sample source files
     - Create utilities for temporary directory management and file comparison
     - Write helper functions for testing file system operations
     - _Requirements: 3.1, 3.2_
 
-  - [ ] 2.2 Write core build script functionality tests
+  - [x] 2.2 Write core build script functionality tests
     - Test directory cleaning and creation functionality
     - Test asset minification (CSS, JS, HTML) with before/after comparisons
     - Test static asset copying and favicon processing
     - _Requirements: 3.1, 3.2, 3.4_
 
-  - [ ] 2.3 Test template rendering and content processing
+  - [x] 2.3 Test template rendering and content processing
     - Test Nunjucks template compilation with mock content
     - Test sitemap.xml date updating functionality
     - Test asset path replacement in rendered HTML
