@@ -32,7 +32,7 @@
     - Add test result aggregation and unified reporting
     - _Requirements: 5.1, 5.4_
 
-  - [ ] 3.2 Build test server utilities
+  - [x] 3.2 Build test server utilities
     - Create local HTTP server for serving built files during tests
     - Implement server lifecycle management (start/stop/cleanup)
     - Add port management and availability checking
