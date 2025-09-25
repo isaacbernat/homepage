@@ -51,7 +51,11 @@ The project was built with a focus on pragmatic and long-term value. The followi
 - **Modular Build Script:** Following the Single Responsibility Principle, the build script is composed of small, single-purpose functions (e.g. `minifyJs`, `processFavicons`). This makes the build process highly readable, maintainable, and easy to extend, with a main `build()` function that acts as a clean orchestrator.
 - **Decoupled Templates for Robustness:** To improve maintainability and adhere to the principle of Separation of Concerns, templates (`.njk` files) reference source assets (`style.css`). The build script is the single source of truth responsible for asset transformation (e.g. to `style.min.css`), making the entire system robust and simplifying future enhancements like cache-busting.
 - **Automated Code Quality & Formatting:** A comprehensive quality gate is integrated into the CI/CD pipeline. Prettier enforces a consistent idiomatic code style and ESLint checks for potential bugs and logical errors.
-  **Unit-Tested Build Process:** To guarantee reliability and prevent regressions, the custom build script is covered by a comprehensive suite of unit tests using Jest. This ensures that the asset pipeline—from minification to template rendering—works flawlessly on every commit. The full testing roadmap includes automated accessibility and performance validation.
+
+* **Comprehensive Automated Testing:** To guarantee reliability, the project is supported by a professional-grade testing suite built with Jest. This includes:
+  - **Unit tests** covering the entire build pipeline to prevent regressions.
+  - A **secure and resilient test server** to enable robust, browser-based testing.
+  - A full roadmap for adding automated **accessibility** and **performance** validation.
 
 #### Performance
 
