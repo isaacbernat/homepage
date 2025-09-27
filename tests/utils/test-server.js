@@ -6,7 +6,32 @@
 const http = require('http');
 const path = require('path');
 const fs = require('fs');
-const { promisify } = require('util');
+
+/**
+ * Utility function to check if a port is available
+ * @param {number} port - Port number to check
+ * @returns {Promise<boolean>} True if port is available
+ */
+async function isPortAvailable(port) {
+  return new Promise((resolve) => {
+    const server = http.createServer();
+
+    const timeout = setTimeout(() => {
+      server.close();
+      resolve(false);
+    }, 1000);
+
+    server.listen(port, () => {
+      clearTimeout(timeout);
+      server.close(() => resolve(true));
+    });
+
+    server.on('error', () => {
+      clearTimeout(timeout);
+      resolve(false);
+    });
+  });
+}
 
 /**
  * Simple HTTP server for serving static files during tests
@@ -30,7 +55,9 @@ class TestServer {
 
     // Verify dist directory exists
     if (!fs.existsSync(this.distDirectory)) {
-      throw new Error(`Distribution directory does not exist: ${this.distDirectory}`);
+      throw new Error(
+        `Distribution directory does not exist: ${this.distDirectory}`,
+      );
     }
 
     // Find an available port
@@ -47,7 +74,11 @@ class TestServer {
 
       this.server.listen(this.port, (err) => {
         if (err) {
-          reject(new Error(`Failed to start test server on port ${this.port}: ${err.message}`));
+          reject(
+            new Error(
+              `Failed to start test server on port ${this.port}: ${err.message}`,
+            ),
+          );
           return;
         }
 
@@ -77,7 +108,7 @@ class TestServer {
     return new Promise((resolve, reject) => {
       // Force close any remaining connections
       this.server.closeAllConnections?.();
-      
+
       const timeout = setTimeout(() => {
         reject(new Error('Test server failed to stop within timeout'));
       }, 5000);
@@ -86,7 +117,7 @@ class TestServer {
         clearTimeout(timeout);
         this.isRunning = false;
         this.server = null;
-        
+
         if (err) {
           reject(new Error(`Failed to stop test server: ${err.message}`));
           return;
@@ -124,7 +155,10 @@ class TestServer {
     const resolvedDistDir = path.resolve(this.distDirectory);
 
     // Check if the resolved path is outside the dist directory
-    if (!resolvedPath.startsWith(resolvedDistDir + path.sep) && resolvedPath !== resolvedDistDir) {
+    if (
+      !resolvedPath.startsWith(resolvedDistDir + path.sep) &&
+      resolvedPath !== resolvedDistDir
+    ) {
       res.writeHead(403, { 'Content-Type': 'text/plain' });
       res.end('Forbidden');
       return;
@@ -165,12 +199,12 @@ class TestServer {
 
     try {
       const content = fs.readFileSync(filePath);
-      res.writeHead(200, { 
+      res.writeHead(200, {
         'Content-Type': contentType,
-        'Content-Length': content.length
+        'Content-Length': content.length,
       });
       res.end(content);
-    } catch (error) {
+    } catch {
       res.writeHead(500, { 'Content-Type': 'text/plain' });
       res.end('Internal server error');
     }
@@ -208,30 +242,9 @@ class TestServer {
    * @returns {Promise<number>} Available port number
    */
   async findAvailablePort(startPort) {
-    const isPortAvailable = (port) => {
-      return new Promise((resolve) => {
-        const server = http.createServer();
-        
-        const timeout = setTimeout(() => {
-          server.close();
-          resolve(false);
-        }, 1000);
-
-        server.listen(port, () => {
-          clearTimeout(timeout);
-          server.close(() => resolve(true));
-        });
-        
-        server.on('error', () => {
-          clearTimeout(timeout);
-          resolve(false);
-        });
-      });
-    };
-
     let port = startPort;
     const maxPort = startPort + 100;
-    
+
     while (port < maxPort) {
       if (await isPortAvailable(port)) {
         return port;
@@ -239,7 +252,9 @@ class TestServer {
       port++;
     }
 
-    throw new Error(`No available port found in range ${startPort}-${maxPort - 1}`);
+    throw new Error(
+      `No available port found in range ${startPort}-${maxPort - 1}`,
+    );
   }
 
   /**
@@ -280,7 +295,7 @@ class TestServer {
     }
 
     const startTime = Date.now();
-    
+
     while (Date.now() - startTime < timeout) {
       try {
         const available = await this.checkServerHealth();
@@ -290,8 +305,8 @@ class TestServer {
       } catch {
         // Continue waiting
       }
-      
-      await new Promise(resolve => setTimeout(resolve, 100));
+
+      await new Promise((resolve) => setTimeout(resolve, 100));
     }
 
     throw new Error(`Server did not become ready within ${timeout}ms`);
@@ -347,32 +362,6 @@ async function createTestServer(options = {}) {
   const server = new TestServer(options);
   await server.start();
   return server;
-}
-
-/**
- * Utility function to check if a port is available
- * @param {number} port - Port number to check
- * @returns {Promise<boolean>} True if port is available
- */
-async function isPortAvailable(port) {
-  return new Promise((resolve) => {
-    const server = http.createServer();
-    
-    const timeout = setTimeout(() => {
-      server.close();
-      resolve(false);
-    }, 1000);
-
-    server.listen(port, () => {
-      clearTimeout(timeout);
-      server.close(() => resolve(true));
-    });
-    
-    server.on('error', () => {
-      clearTimeout(timeout);
-      resolve(false);
-    });
-  });
 }
 
 module.exports = TestServer;
