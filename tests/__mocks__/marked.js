@@ -39,7 +39,10 @@ const marked = {
 
     // Convert lists
     html = html.replace(/^- (.+)$/gm, '<li>$1</li>');
-    html = html.replace(/(<li>.*<\/li>)/s, '<ul>$1</ul>');
+    // Wrap consecutive <li> items in a <ul> tag
+    html = html.replace(/(<li>(?:.|\n)*?<\/li>\s*)+/g, (match) => {
+      return `<ul>\n${match.trim()}\n</ul>`;
+    });
 
     // Convert paragraphs (simple implementation)
     const lines = html.split('\n').filter((line) => line.trim());
