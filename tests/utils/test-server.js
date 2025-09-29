@@ -8,6 +8,32 @@ const path = require('path');
 const fs = require('fs');
 
 /**
+ * Utility function to check if a port is available
+ * @param {number} port - Port number to check
+ * @returns {Promise<boolean>} True if port is available
+ */
+async function isPortAvailable(port) {
+  return new Promise((resolve) => {
+    const server = http.createServer();
+
+    const timeout = setTimeout(() => {
+      server.close();
+      resolve(false);
+    }, 1000);
+
+    server.listen(port, () => {
+      clearTimeout(timeout);
+      server.close(() => resolve(true));
+    });
+
+    server.on('error', () => {
+      clearTimeout(timeout);
+      resolve(false);
+    });
+  });
+}
+
+/**
  * Simple HTTP server for serving static files during tests
  */
 class TestServer {
@@ -27,6 +53,13 @@ class TestServer {
       return this.port;
     }
 
+    // Verify dist directory exists
+    if (!fs.existsSync(this.distDirectory)) {
+      throw new Error(
+        `Distribution directory does not exist: ${this.distDirectory}`,
+      );
+    }
+
     // Find an available port
     const availablePort = await this.findAvailablePort(this.port);
     this.port = availablePort;
@@ -36,19 +69,29 @@ class TestServer {
         this.handleRequest(req, res);
       });
 
+      // Set server timeout to prevent hanging connections
+      this.server.timeout = 30000;
+
       this.server.listen(this.port, (err) => {
         if (err) {
-          reject(err);
+          reject(
+            new Error(
+              `Failed to start test server on port ${this.port}: ${err.message}`,
+            ),
+          );
           return;
         }
 
         this.isRunning = true;
-        console.log(`Test server started on http://localhost:${this.port}`);
+        if (process.env.NODE_ENV !== 'test') {
+          console.log(`Test server started on http://localhost:${this.port}`);
+        }
         resolve(this.port);
       });
 
       this.server.on('error', (err) => {
-        reject(err);
+        this.isRunning = false;
+        reject(new Error(`Test server error: ${err.message}`));
       });
     });
   }
@@ -62,10 +105,27 @@ class TestServer {
       return;
     }
 
-    return new Promise((resolve) => {
-      this.server.close(() => {
+    return new Promise((resolve, reject) => {
+      // Force close any remaining connections
+      this.server.closeAllConnections?.();
+
+      const timeout = setTimeout(() => {
+        reject(new Error('Test server failed to stop within timeout'));
+      }, 5000);
+
+      this.server.close((err) => {
+        clearTimeout(timeout);
         this.isRunning = false;
-        console.log('Test server stopped');
+        this.server = null;
+
+        if (err) {
+          reject(new Error(`Failed to stop test server: ${err.message}`));
+          return;
+        }
+
+        if (process.env.NODE_ENV !== 'test') {
+          console.log('Test server stopped');
+        }
         resolve();
       });
     });
@@ -94,7 +154,11 @@ class TestServer {
     const resolvedPath = path.resolve(fullPath);
     const resolvedDistDir = path.resolve(this.distDirectory);
 
-    if (!resolvedPath.startsWith(resolvedDistDir)) {
+    // Check if the resolved path is outside the dist directory
+    if (
+      !resolvedPath.startsWith(resolvedDistDir + path.sep) &&
+      resolvedPath !== resolvedDistDir
+    ) {
       res.writeHead(403, { 'Content-Type': 'text/plain' });
       res.end('Forbidden');
       return;
@@ -135,7 +199,10 @@ class TestServer {
 
     try {
       const content = fs.readFileSync(filePath);
-      res.writeHead(200, { 'Content-Type': contentType });
+      res.writeHead(200, {
+        'Content-Type': contentType,
+        'Content-Length': content.length,
+      });
       res.end(content);
     } catch {
       res.writeHead(500, { 'Content-Type': 'text/plain' });
@@ -175,25 +242,19 @@ class TestServer {
    * @returns {Promise<number>} Available port number
    */
   async findAvailablePort(startPort) {
-    const isPortAvailable = (port) => {
-      return new Promise((resolve) => {
-        const server = http.createServer();
-        server.listen(port, () => {
-          server.close(() => resolve(true));
-        });
-        server.on('error', () => resolve(false));
-      });
-    };
-
     let port = startPort;
-    while (port < startPort + 100) {
+    const maxPort = startPort + 100;
+
+    while (port < maxPort) {
       if (await isPortAvailable(port)) {
         return port;
       }
       port++;
     }
 
-    throw new Error(`No available port found starting from ${startPort}`);
+    throw new Error(
+      `No available port found in range ${startPort}-${maxPort - 1}`,
+    );
   }
 
   /**
@@ -201,8 +262,108 @@ class TestServer {
    * @returns {string} Base URL
    */
   getBaseUrl() {
+    if (!this.isRunning) {
+      throw new Error('Test server is not running');
+    }
     return `http://localhost:${this.port}`;
+  }
+
+  /**
+   * Checks if the server is currently running
+   * @returns {boolean} True if server is running
+   */
+  isServerRunning() {
+    return this.isRunning;
+  }
+
+  /**
+   * Gets the current port number
+   * @returns {number} Port number
+   */
+  getPort() {
+    return this.port;
+  }
+
+  /**
+   * Waits for the server to be ready to accept connections
+   * @param {number} timeout - Timeout in milliseconds (default: 5000)
+   * @returns {Promise<void>}
+   */
+  async waitForReady(timeout = 5000) {
+    if (!this.isRunning) {
+      throw new Error('Server is not running');
+    }
+
+    const startTime = Date.now();
+
+    while (Date.now() - startTime < timeout) {
+      try {
+        const available = await this.checkServerHealth();
+        if (available) {
+          return;
+        }
+      } catch {
+        // Continue waiting
+      }
+
+      await new Promise((resolve) => setTimeout(resolve, 100));
+    }
+
+    throw new Error(`Server did not become ready within ${timeout}ms`);
+  }
+
+  /**
+   * Performs a health check on the server
+   * @returns {Promise<boolean>} True if server is healthy
+   */
+  async checkServerHealth() {
+    if (!this.isRunning) {
+      return false;
+    }
+
+    return new Promise((resolve) => {
+      const req = http.get(`http://localhost:${this.port}/`, (res) => {
+        resolve(res.statusCode < 500);
+      });
+
+      req.on('error', () => {
+        resolve(false);
+      });
+
+      req.setTimeout(1000, () => {
+        req.destroy();
+        resolve(false);
+      });
+    });
+  }
+
+  /**
+   * Cleanup method to ensure proper resource disposal
+   * @returns {Promise<void>}
+   */
+  async cleanup() {
+    try {
+      await this.stop();
+    } catch (error) {
+      // Force cleanup even if stop fails
+      this.isRunning = false;
+      this.server = null;
+      throw error;
+    }
   }
 }
 
+/**
+ * Creates and manages a test server instance with automatic cleanup
+ * @param {Object} options - Server options
+ * @returns {Promise<TestServer>} Started test server instance
+ */
+async function createTestServer(options = {}) {
+  const server = new TestServer(options);
+  await server.start();
+  return server;
+}
+
 module.exports = TestServer;
+module.exports.createTestServer = createTestServer;
+module.exports.isPortAvailable = isPortAvailable;
