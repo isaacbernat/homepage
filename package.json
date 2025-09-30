@@ -15,7 +15,8 @@
     "test:build": "jest tests/build",
     "test:visual": "jest tests/visual",
     "test:watch": "jest --watch",
-    "test:coverage": "jest --coverage"
+    "test:coverage": "jest --coverage",
+    "install:accessibility-deps": "node install-accessibility-deps.js"
   },
   "repository": {
     "type": "git",
@@ -30,6 +31,7 @@
   "homepage": "https://github.com/isaacbernat/homepage#readme",
   "devDependencies": {
     "@eslint/js": "^9.33.0",
+    "axe-core": "^4.10.3",
     "clean-css-cli": "^5.6.3",
     "eslint": "^9.33.0",
     "eslint-config-prettier": "^10.1.8",
@@ -41,6 +43,7 @@
     "marked": "^16.1.1",
     "nunjucks": "^3.2.4",
     "prettier": "^3.6.2",
+    "puppeteer": "^23.11.1",
     "sharp": "^0.34.2",
     "svgo": "^4.0.0",
     "terser": "^5.43.1",
