@@ -3,45 +3,15 @@
  * Verifies that the accessibility testing infrastructure is working correctly
  */
 
-const { checkDependencies } = require('./helpers/dependency-check');
-
-// Check if dependencies are available before running tests
-const dependencyStatus = checkDependencies();
-
-// Conditionally import modules based on availability
-let AccessibilityTestHelper, getBrowserManager, injectAxe, createAxeConfig;
-
-if (dependencyStatus.allAvailable) {
-  const helpers = require('./helpers');
-  AccessibilityTestHelper = helpers.AccessibilityTestHelper;
-
-  const browserManager = require('./helpers/browser-manager');
-  getBrowserManager = browserManager.getBrowserManager;
-
-  const axeSetup = require('./helpers/axe-setup');
-  injectAxe = axeSetup.injectAxe;
-  createAxeConfig = axeSetup.createAxeConfig;
-}
+const { AccessibilityTestHelper } = require('./helpers');
+const { getBrowserManager } = require('./helpers/browser-manager');
+const { injectAxe, createAxeConfig } = require('./helpers/axe-setup');
 
 describe('Puppeteer and axe-core Integration', () => {
   let browserManager;
   let accessibilityHelper;
 
   beforeAll(async () => {
-    // Skip tests if dependencies are not available
-    if (!dependencyStatus.allAvailable) {
-      console.log(
-        '⚠️  Skipping accessibility integration tests - dependencies not installed',
-      );
-      console.log(
-        'Missing dependencies:',
-        !dependencyStatus.puppeteer ? 'puppeteer' : '',
-        !dependencyStatus.axeCore ? 'axe-core' : '',
-      );
-      console.log('Install with: npm install puppeteer axe-core');
-      return;
-    }
-
     // Initialize browser manager for integration tests
     browserManager = getBrowserManager({
       headless: true,
@@ -61,10 +31,6 @@ describe('Puppeteer and axe-core Integration', () => {
 
   describe('Browser Manager', () => {
     test('should launch browser successfully', async () => {
-      if (!dependencyStatus.allAvailable) {
-        console.log('⚠️  Skipping test - dependencies not available');
-        return;
-      }
       const browser = await browserManager.launch();
       expect(browser).toBeDefined();
       expect(browser.isConnected()).toBe(true);

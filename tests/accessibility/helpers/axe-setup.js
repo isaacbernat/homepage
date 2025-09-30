@@ -3,7 +3,7 @@
  * Provides utilities for WCAG compliance testing with customizable rules
  */
 
-const { getAxeCore, requireDependencies } = require('./dependency-check');
+const axeCore = require('axe-core');
 
 /**
  * Default axe-core configuration for WCAG compliance testing
@@ -122,9 +122,6 @@ function createAxeConfig(options = {}) {
  */
 async function injectAxe(page) {
   try {
-    // Check dependencies before injecting
-    requireDependencies('axe-core injection');
-
     // Inject axe-core source code into the page
     await page.addScriptTag({
       path: require.resolve('axe-core/axe.min.js'),

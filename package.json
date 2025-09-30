@@ -15,8 +15,7 @@
     "test:build": "jest tests/build",
     "test:visual": "jest tests/visual",
     "test:watch": "jest --watch",
-    "test:coverage": "jest --coverage",
-    "install:accessibility-deps": "node install-accessibility-deps.js"
+    "test:coverage": "jest --coverage"
   },
   "repository": {
     "type": "git",

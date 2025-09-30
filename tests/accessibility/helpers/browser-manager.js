@@ -3,7 +3,7 @@
  * Provides centralized browser lifecycle management for accessibility testing
  */
 
-const { getPuppeteer, requireDependencies } = require('./dependency-check');
+const puppeteer = require('puppeteer');
 
 /**
  * Default Puppeteer launch options optimized for testing
@@ -66,10 +66,6 @@ class BrowserManager {
    */
   async launch() {
     try {
-      // Check dependencies before launching
-      requireDependencies('browser management');
-      const puppeteer = getPuppeteer();
-
       if (this.browser) {
         console.log('⚠️  Browser already launched, reusing existing instance');
         return this.browser;

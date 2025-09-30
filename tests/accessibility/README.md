@@ -133,25 +133,11 @@ The accessibility testing module requires the following npm packages:
 
 ### Installation
 
-**Option 1: Automatic Installation**
-
-```bash
-npm run install:accessibility-deps
-```
-
-**Option 2: Manual Installation**
-
 ```bash
 npm install puppeteer axe-core
 ```
 
-**Option 3: Check Current Status**
-
-```bash
-node test-dependency-check.js
-```
-
-The testing infrastructure includes graceful dependency handling - tests will skip with helpful messages if dependencies are missing.
+These dependencies are required for the accessibility testing infrastructure.
 
 ## CI/CD Integration
 
@@ -201,12 +187,54 @@ const helper = new AccessibilityTestHelper({
 });
 ```
 
-## Validation
+## CI/CD Integration
 
-Run the validation script to verify the setup:
+The accessibility tests are designed to run in CI environments with automatic headless configuration.
 
-```bash
-node validate-setup.js
+### GitHub Actions Example
+
+```yaml
+name: Accessibility Tests
+on: [push, pull_request]
+
+jobs:
+  accessibility:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+      - run: npm ci
+      - run: npm run test:accessibility
+        env:
+          CI: true
 ```
 
-This will test module imports and basic functionality without running the full test suite.
+### Docker Example
+
+```dockerfile
+FROM node:18-slim
+
+# Install Puppeteer dependencies
+RUN apt-get update && apt-get install -y \
+    ca-certificates \
+    fonts-liberation \
+    libappindicator3-1 \
+    libasound2 \
+    libatk-bridge2.0-0 \
+    libdrm2 \
+    libgtk-3-0 \
+    libnspr4 \
+    libnss3 \
+    libxss1 \
+    libxtst6 \
+    xdg-utils \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci
+COPY . .
+CMD ["npm", "run", "test:accessibility"]
+```
