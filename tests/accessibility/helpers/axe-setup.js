@@ -3,8 +3,6 @@
  * Provides utilities for WCAG compliance testing with customizable rules
  */
 
-const axeCore = require('axe-core');
-
 /**
  * Default axe-core configuration for WCAG compliance testing
  */

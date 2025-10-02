@@ -10,7 +10,7 @@ export default [
   js.configs.recommended,
 
   {
-    files: ['build.js', 'aggregate_code.js', 'jest.config.js', 'tests/**/*.js'],
+    files: ['build.js', 'aggregate_code.js', 'jest.config.js'],
     languageOptions: {
       globals: {
         ...globals.node,
@@ -32,6 +32,17 @@ export default [
     languageOptions: {
       globals: {
         ...globals.jest,
+      },
+    },
+  },
+
+  {
+    files: ['tests/**/*.js'],
+    languageOptions: {
+      globals: {
+        ...globals.node,
+        ...globals.jest,
+        ...globals.browser,
       },
     },
   },

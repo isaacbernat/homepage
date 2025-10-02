@@ -9,7 +9,7 @@ let axeCore = null;
 // Try to load puppeteer
 try {
   puppeteer = require('puppeteer');
-} catch (error) {
+} catch {
   console.warn(
     '⚠️  Puppeteer not found. Please install it with: npm install puppeteer',
   );
@@ -19,7 +19,7 @@ try {
 // Try to load axe-core
 try {
   axeCore = require('axe-core');
-} catch (error) {
+} catch {
   console.warn(
     '⚠️  Axe-core not found. Please install it with: npm install axe-core',
   );
