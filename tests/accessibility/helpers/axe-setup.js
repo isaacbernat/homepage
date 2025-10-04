@@ -58,7 +58,13 @@ const THEME_CONFIGS = {
         }
       });
       // Wait for theme transition to complete
-      await page.waitForTimeout(500);
+      await page.waitForFunction(() => {
+        // Check a CSS variable or a computed style that changes with the theme
+        const bodyColor = getComputedStyle(document.body).getPropertyValue(
+          '--color-text',
+        );
+        return bodyColor.trim() === '#333'; // Matches light theme --color-text
+      });
     },
   },
 
@@ -75,7 +81,12 @@ const THEME_CONFIGS = {
         }
       });
       // Wait for theme transition to complete
-      await page.waitForTimeout(500);
+      await page.waitForFunction(() => {
+        const bodyColor = getComputedStyle(document.body).getPropertyValue(
+          '--color-text',
+        );
+        return bodyColor.trim() === '#e4e6eb'; // Matches dark theme --color-text
+      });
     },
   },
 };

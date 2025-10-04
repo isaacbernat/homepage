@@ -122,14 +122,7 @@ const helper = new AccessibilityTestHelper({
 
 ## Dependencies
 
-The accessibility testing module requires the following npm packages:
-
-```json
-{
-  "puppeteer": "^23.10.4",
-  "axe-core": "^4.10.2"
-}
-```
+The accessibility testing module requires `puppeteer` and `axe-core`, which should be installed as dev dependencies. For the specific versions used in this project, please refer to the `package.json` file.
 
 ### Installation
 
@@ -138,19 +131,6 @@ npm install puppeteer axe-core
 ```
 
 These dependencies are required for the accessibility testing infrastructure.
-
-## CI/CD Integration
-
-The accessibility tests are designed to run in CI environments:
-
-```yaml
-- name: Run Accessibility Tests
-  run: npm run test:accessibility
-  env:
-    CI: true
-```
-
-The tests automatically configure themselves for headless operation in CI environments.
 
 ## Troubleshooting
 
