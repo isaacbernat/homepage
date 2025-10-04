@@ -42,7 +42,7 @@
     "marked": "^16.1.1",
     "nunjucks": "^3.2.4",
     "prettier": "^3.6.2",
-    "puppeteer": "^23.11.1",
+    "puppeteer": "^24.10.2",
     "sharp": "^0.34.2",
     "svgo": "^4.0.0",
     "terser": "^5.43.1",
