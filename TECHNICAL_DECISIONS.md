@@ -74,9 +74,10 @@ This roadmap outlines potential future work, prioritized by impact. The focus is
 
 This tier focuses on integrating automated checks into the CI/CD pipeline to guarantee quality and prevent regressions on every commit.
 
-- **Automated Accessibility (a11y) Testing**
-  - **What:** A test suite that runs on every commit to ensure the site remains WCAG compliant.
-  - **Why:** To move from _claiming_ accessibility to _programmatically enforcing_ it. This makes compliance a non-negotiable part of the development process.
+- **Automated Accessibility (a11y) Testing (In Progress)**
+  - **Status:** The foundational infrastructure is complete. This includes a secure test server and a robust browser management system using Puppeteer, fully integrated with Jest.
+  - **Next Step:** Implement the test suite that uses this infrastructure to run `axe-core` against the site's pages.
+  - **Why:** To move from _claiming_ accessibility to _programmatically enforcing_ it as a non-negotiable part of the development process.
   - **How:** Integrate **[axe-core](https://github.com/dequelabs/axe-core)** using a test runner (e.g. Jest with Puppeteer). The CI script would launch a headless browser, navigate to the built HTML files, and fail the build if any accessibility violations are detected.
 
 - **Automated Performance & Quality Auditing**
