@@ -1,4 +1,4 @@
-##### Staff-Equivalent Backend Engineer
+### Staff-Equivalent Backend Engineer
 
 _Jun 2022 – Jul 2024_
 
@@ -11,7 +11,7 @@ I shaped the technical roadmap and led initiatives that directly influenced the 
 
 ---
 
-##### Senior Backend Engineer
+### Senior Backend Engineer
 
 _Mar 2020 – Jun 2022_
 

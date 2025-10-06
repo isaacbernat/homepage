@@ -2,7 +2,7 @@
 
 {% macro experienceEntry(title, location, dates, content, is_open=false) %}
 <details {% if is_open %}open{% endif %}>
-    <summary>
+    <summary aria-label="Experience at {{ title }}, {{ location }}, {{ dates }}">
         <span class="summary-title">{{ title }}</span>
         <span class="summary-meta">{{ location }}<br>{{ dates }}</span>
         <span class="summary-icon"></span>
@@ -30,14 +30,14 @@
 
 {% macro caseStudyCard(id, title, teaser, full_content, is_open=false) %}
 <details class="project-card" id="{{ id }}" {% if is_open %}open{% endif %}>
-    <summary>
+    <summary aria-label="Case study: {{ title }}">
         <span class="summary-title">{{ title }}</span>
         <span class="summary-icon"></span>
     </summary>
     <div class="details-content">
         <p>{{ teaser | safe }}</p>
         <details>
-            <summary class="link-summary">Read the full retrospective &darr;</summary>
+            <summary class="link-summary" aria-label="Read the full retrospective for {{ title }}">Read the full retrospective &darr;</summary>
             <div class="nested-details-content">{{ full_content | safe }}</div>
         </details>
     </div>

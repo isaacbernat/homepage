@@ -159,23 +159,32 @@ async function injectAxe(page) {
 async function configureAxe(page, config) {
   try {
     await page.evaluate((axeConfig) => {
-      // Configure axe with custom settings
-      if (axeConfig.disableRules && axeConfig.disableRules.length > 0) {
-        // Disable specified rules
+      // Configure rules to disable - use a simpler approach
+      if (axeConfig.disableRules && Array.isArray(axeConfig.disableRules) && axeConfig.disableRules.length > 0) {
+        // Configure each rule individually to avoid array format issues
         axeConfig.disableRules.forEach((ruleId) => {
-          window.axe.configure({
-            rules: {
-              [ruleId]: { enabled: false },
-            },
-          });
+          try {
+            window.axe.configure({
+              rules: {
+                [ruleId]: { enabled: false }
+              }
+            });
+            console.log(`✓ Disabled axe rule: ${ruleId}`);
+          } catch (ruleError) {
+            console.warn(`Failed to disable rule ${ruleId}:`, ruleError.message);
+          }
         });
       }
 
-      // Set global timeout
+      // Set global timeout separately
       if (axeConfig.timeout) {
-        window.axe.configure({
-          timeout: axeConfig.timeout,
-        });
+        try {
+          window.axe.configure({
+            timeout: axeConfig.timeout
+          });
+        } catch (timeoutError) {
+          console.warn('Failed to set timeout:', timeoutError.message);
+        }
       }
     }, config);
 
