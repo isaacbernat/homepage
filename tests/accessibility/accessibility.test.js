@@ -248,101 +248,52 @@ describe('Accessibility Test Suite', () => {
           },
         });
 
-        // Filter out heading-order violations for CV page (known issue with complex content)
+        // Filter out heading-order violations for CV page (complex content structure)
         const filterHeadingOrderViolations = (violations) => {
-          if (!violations || !Array.isArray(violations)) {
-            console.warn('Invalid violations array passed to filter:', violations);
-            return [];
-          }
-          const filtered = violations.filter(v => v && v.id !== 'heading-order');
-          console.log(`Filtering: ${violations.length} violations → ${filtered.length} after removing heading-order`);
-          return filtered;
+          if (!violations || !Array.isArray(violations)) return [];
+          return violations.filter(v => v && v.id !== 'heading-order');
         };
 
-        // Apply filtering to results
-        let filteredResults = { ...results };
-        if (config.testBothThemes !== false) {
-          if (results.results.light) {
-            filteredResults.results.light = {
-              ...results.results.light,
-              violations: filterHeadingOrderViolations(results.results.light.violations)
-            };
-          }
-          if (results.results.dark) {
-            filteredResults.results.dark = {
-              ...results.results.dark,
-              violations: filterHeadingOrderViolations(results.results.dark.violations)
-            };
-          }
-        } else {
-          if (results.results.current) {
-            filteredResults.results.current = {
-              ...results.results.current,
-              violations: filterHeadingOrderViolations(results.results.current.violations)
-            };
-          }
-        }
+        // Helper to apply filtering to theme results
+        const applyFiltering = (themeResults) => ({
+          ...themeResults,
+          violations: filterHeadingOrderViolations(themeResults?.violations || [])
+        });
 
-        // Update success status based on filtered results
-        const remainingViolationCount = config.testBothThemes !== false 
+        // Create filtered results
+        const testBothThemes = config.testBothThemes !== false;
+        const filteredResults = {
+          ...results,
+          results: testBothThemes 
+            ? {
+                light: applyFiltering(results.results.light),
+                dark: applyFiltering(results.results.dark)
+              }
+            : {
+                current: applyFiltering(results.results.current)
+              }
+        };
+
+        // Calculate remaining violations and update success status
+        const remainingViolationCount = testBothThemes
           ? (filteredResults.results.light?.violations?.length || 0) + (filteredResults.results.dark?.violations?.length || 0)
           : (filteredResults.results.current?.violations?.length || 0);
         
         filteredResults.success = remainingViolationCount === 0;
 
-        // Log violations for debugging (showing original violations but testing filtered ones)
-        let violationDetails = '';
-        if (config.testBothThemes !== false) {
-          if (results.results.light && results.results.light.violations.length > 0) {
-            console.error('CV page light theme violations (original):', JSON.stringify(results.results.light.violations, null, 2));
-            violationDetails += `Light theme violations: ${results.results.light.violations.map(v => `${v.id} (${v.impact}): ${v.description}`).join('; ')}. `;
-          }
-          if (results.results.dark && results.results.dark.violations.length > 0) {
-            console.error('CV page dark theme violations (original):', JSON.stringify(results.results.dark.violations, null, 2));
-            violationDetails += `Dark theme violations: ${results.results.dark.violations.map(v => `${v.id} (${v.impact}): ${v.description}`).join('; ')}. `;
-          }
-        } else {
-          if (results.results.current && results.results.current.violations.length > 0) {
-            console.error('CV page violations (original):', JSON.stringify(results.results.current.violations, null, 2));
-            violationDetails += `Violations: ${results.results.current.violations.map(v => `${v.id} (${v.impact}): ${v.description}`).join('; ')}. `;
-          }
+        // Log filtering results (only if there were original violations)
+        const originalViolationCount = testBothThemes
+          ? (results.results.light?.violations?.length || 0) + (results.results.dark?.violations?.length || 0)
+          : (results.results.current?.violations?.length || 0);
+
+        if (originalViolationCount > 0) {
+          console.log(`CV page: ${originalViolationCount} original violations → ${remainingViolationCount} after filtering heading-order`);
         }
 
-        // Log filtered results with detailed information
-        console.log(`CV page: Filtered out heading-order violations. Remaining violations: ${remainingViolationCount}`);
-        if (config.testBothThemes !== false) {
-          console.log(`Light theme: ${results.results.light?.violations?.length || 0} original → ${filteredResults.results.light?.violations?.length || 0} filtered`);
-          console.log(`Dark theme: ${results.results.dark?.violations?.length || 0} original → ${filteredResults.results.dark?.violations?.length || 0} filtered`);
-        } else {
-          console.log(`Current theme: ${results.results.current?.violations?.length || 0} original → ${filteredResults.results.current?.violations?.length || 0} filtered`);
-        }
-
-        // Check filtered results instead of original
-        if (!filteredResults.success) {
-          throw new Error(`CV page accessibility test failed with ${remainingViolationCount} non-heading-order violations. ${violationDetails}Check console output above for full details.`);
-        }
-
-        // Log any remaining violations for debugging
-        if (!results.success) {
-          console.log('\n=== CV PAGE ACCESSIBILITY VIOLATIONS ===');
-          if (config.testBothThemes !== false) {
-            if (results.results.light?.violations?.length > 0) {
-              console.log('Light theme violations:', results.results.light.violations.map(v => `${v.id}: ${v.description}`));
-            }
-            if (results.results.dark?.violations?.length > 0) {
-              console.log('Dark theme violations:', results.results.dark.violations.map(v => `${v.id}: ${v.description}`));
-            }
-          } else {
-            if (results.results.current?.violations?.length > 0) {
-              console.log('Current theme violations:', results.results.current.violations.map(v => `${v.id}: ${v.description}`));
-            }
-          }
-          console.log('=== END VIOLATIONS ===\n');
-        }
-
+        // Assert on filtered results
         expect(filteredResults.success).toBe(true);
         
-        if (config.testBothThemes !== false) {
+        if (testBothThemes) {
           expect(filteredResults.results.light.violations).toHaveLength(0);
           expect(filteredResults.results.dark.violations).toHaveLength(0);
         } else {
