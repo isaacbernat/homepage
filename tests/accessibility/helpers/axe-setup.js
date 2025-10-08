@@ -144,7 +144,7 @@ async function injectAxe(page) {
       throw new Error('Failed to inject axe-core into page');
     }
 
-    console.log('✓ Axe-core successfully injected into page');
+
   } catch (error) {
     throw new Error(`Failed to inject axe-core: ${error.message}`);
   }
@@ -169,9 +169,9 @@ async function configureAxe(page, config) {
                 [ruleId]: { enabled: false }
               }
             });
-            console.log(`✓ Disabled axe rule: ${ruleId}`);
+
           } catch (ruleError) {
-            console.warn(`Failed to disable rule ${ruleId}:`, ruleError.message);
+
           }
         });
       }
@@ -183,12 +183,12 @@ async function configureAxe(page, config) {
             timeout: axeConfig.timeout
           });
         } catch (timeoutError) {
-          console.warn('Failed to set timeout:', timeoutError.message);
+
         }
       }
     }, config);
 
-    console.log('✓ Axe-core configured with custom settings');
+
   } catch (error) {
     throw new Error(`Failed to configure axe-core: ${error.message}`);
   }

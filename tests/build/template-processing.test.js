@@ -9,13 +9,23 @@ describe('Template Rendering and Content Processing', () => {
   let testUtils;
   let tempDir;
   let originalCwd;
+  let originalConsole;
 
   beforeEach(async () => {
     testUtils = new TestUtils();
     tempDir = await testUtils.createTempDir('template-test-');
 
-    // Store original working directory
+    // Store original working directory and console methods
     originalCwd = process.cwd();
+    originalConsole = {
+      log: console.log,
+      warn: console.warn,
+      error: console.error
+    };
+
+    // Suppress console output during build tests (except errors)
+    console.log = () => {};
+    console.warn = () => {};
 
     // Change to temp directory for testing
     process.chdir(tempDir);
@@ -26,8 +36,11 @@ describe('Template Rendering and Content Processing', () => {
   });
 
   afterEach(async () => {
-    // Restore original working directory
+    // Restore original working directory and console methods
     process.chdir(originalCwd);
+    console.log = originalConsole.log;
+    console.warn = originalConsole.warn;
+    console.error = originalConsole.error;
     await testUtils.cleanupTempDirs();
   });
 

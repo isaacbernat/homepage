@@ -26,7 +26,6 @@ describe('Accessibility Test Suite', () => {
     try {
       config = getModuleConfig('accessibility');
     } catch (error) {
-      console.warn('Failed to load configuration, using defaults:', error.message);
       config = {
         distDirectory: './dist',
         wcagLevel: ['wcag2a', 'wcag2aa'],
@@ -92,19 +91,11 @@ describe('Accessibility Test Suite', () => {
         expect(results.results.light).toBeDefined();
         expect(results.results.light.violations).toHaveLength(0);
         
-        // Log any violations for debugging
-        if (results.results.light.violations.length > 0) {
-          console.error('Light theme violations:', JSON.stringify(results.results.light.violations, null, 2));
-          console.error('Remediation suggestions:', results.results.light.remediationSuggestions);
-        }
+
       } else {
         expect(results.results.current).toBeDefined();
         expect(results.results.current.violations).toHaveLength(0);
-        
-        if (results.results.current.violations.length > 0) {
-          console.error('Current theme violations:', JSON.stringify(results.results.current.violations, null, 2));
-          console.error('Remediation suggestions:', results.results.current.remediationSuggestions);
-        }
+
       }
     }, getTimeout());
 
@@ -125,11 +116,7 @@ describe('Accessibility Test Suite', () => {
       expect(results.results.dark).toBeDefined();
       expect(results.results.dark.violations).toHaveLength(0);
       
-      // Log any violations for debugging
-      if (results.results.dark.violations.length > 0) {
-        console.error('Dark theme violations:', JSON.stringify(results.results.dark.violations, null, 2));
-        console.error('Remediation suggestions:', results.results.dark.remediationSuggestions);
-      }
+
     }, getTimeout());
 
     test('should have proper color contrast in light theme', async () => {
@@ -144,10 +131,7 @@ describe('Accessibility Test Suite', () => {
       );
       
       expect(colorContrastViolations).toHaveLength(0);
-      
-      if (colorContrastViolations.length > 0) {
-        console.error('Color contrast violations in light theme:', colorContrastViolations);
-      }
+
     }, getTimeout());
 
     test('should have proper color contrast in dark theme', async () => {
@@ -164,10 +148,7 @@ describe('Accessibility Test Suite', () => {
       );
       
       expect(colorContrastViolations).toHaveLength(0);
-      
-      if (colorContrastViolations.length > 0) {
-        console.error('Color contrast violations in dark theme:', colorContrastViolations);
-      }
+
     }, getTimeout());
 
     test('should have proper heading structure', async () => {
@@ -182,10 +163,7 @@ describe('Accessibility Test Suite', () => {
       );
       
       expect(headingViolations).toHaveLength(0);
-      
-      if (headingViolations.length > 0) {
-        console.error('Heading structure violations:', headingViolations);
-      }
+
     }, getTimeout());
 
     test('should have proper landmark structure', async () => {
@@ -200,10 +178,7 @@ describe('Accessibility Test Suite', () => {
       );
       
       expect(landmarkViolations).toHaveLength(0);
-      
-      if (landmarkViolations.length > 0) {
-        console.error('Landmark structure violations:', landmarkViolations);
-      }
+
     }, getTimeout());
   });
 
@@ -286,9 +261,7 @@ describe('Accessibility Test Suite', () => {
           ? (results.results.light?.violations?.length || 0) + (results.results.dark?.violations?.length || 0)
           : (results.results.current?.violations?.length || 0);
 
-        if (originalViolationCount > 0) {
-          console.log(`CV page: ${originalViolationCount} original violations → ${remainingViolationCount} after filtering heading-order`);
-        }
+
 
         // Assert on filtered results
         expect(filteredResults.success).toBe(true);

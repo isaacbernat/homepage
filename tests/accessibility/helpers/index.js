@@ -35,9 +35,9 @@ class AccessibilityTestHelper {
    */
   async initialize() {
     try {
-      console.log('🔧 Initializing accessibility testing environment...');
+
       await this.browserManager.launch();
-      console.log('✓ Accessibility testing environment ready');
+
     } catch (error) {
       throw new Error(
         `Failed to initialize accessibility testing: ${error.message}`,
@@ -55,7 +55,7 @@ class AccessibilityTestHelper {
     let page = null;
 
     try {
-      console.log(`🧪 Testing accessibility for: ${url}`);
+
 
       // Create and configure page
       page = await this.browserManager.createPage(options.pageOptions);
@@ -106,7 +106,7 @@ class AccessibilityTestHelper {
    */
   async testTheme(page, themeName, options = {}) {
     try {
-      console.log(`🎨 Testing ${themeName} theme...`);
+
 
       const themeConfig = THEME_CONFIGS[themeName];
       if (!themeConfig) {
@@ -145,9 +145,7 @@ class AccessibilityTestHelper {
           generateRemediationSuggestions(axeResults.violations);
       }
 
-      console.log(
-        `✓ ${themeName} theme test completed: ${formattedResults.violations.length} violations found`,
-      );
+
 
       return formattedResults;
     } catch (error) {
@@ -163,7 +161,7 @@ class AccessibilityTestHelper {
    */
   async runSingleTest(page, options = {}) {
     try {
-      console.log('🧪 Running accessibility analysis...');
+
 
       // Take screenshot if configured
       if (this.testConfig.takeScreenshots) {
@@ -193,9 +191,7 @@ class AccessibilityTestHelper {
           generateRemediationSuggestions(axeResults.violations);
       }
 
-      console.log(
-        `✓ Accessibility test completed: ${formattedResults.violations.length} violations found`,
-      );
+
 
       return formattedResults;
     } catch (error) {
@@ -213,14 +209,14 @@ class AccessibilityTestHelper {
     const results = [];
 
     try {
-      console.log(`🧪 Testing ${urls.length} pages for accessibility...`);
+
 
       for (const url of urls) {
         try {
           const result = await this.testPage(url, options);
           results.push(result);
         } catch (error) {
-          console.error(`Failed to test ${url}: ${error.message}`);
+
           results.push({
             url,
             timestamp: new Date().toISOString(),
@@ -301,9 +297,9 @@ class AccessibilityTestHelper {
   async cleanup() {
     try {
       await this.browserManager.close();
-      console.log('✓ Accessibility test helper cleaned up');
+
     } catch (error) {
-      console.error(`Cleanup failed: ${error.message}`);
+
     }
   }
 }
