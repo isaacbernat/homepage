@@ -52,10 +52,10 @@ The project was built with a focus on pragmatic and long-term value. The followi
 - **Decoupled Templates for Robustness:** To improve maintainability and adhere to the principle of Separation of Concerns, templates (`.njk` files) reference source assets (`style.css`). The build script is the single source of truth responsible for asset transformation (e.g. to `style.min.css`), making the entire system robust and simplifying future enhancements like cache-busting.
 - **Automated Code Quality & Formatting:** A comprehensive quality gate is integrated into the CI/CD pipeline. Prettier enforces a consistent idiomatic code style and ESLint checks for potential bugs and logical errors.
 
-* **Comprehensive Automated Testing:** The project is supported by a professional-grade testing suite built with Jest. This currently includes:
-  - **Unit Tests:** A comprehensive suite covering the entire build pipeline to prevent regressions.
-  - **Browser-Testing Foundation:** A secure test server and a robust Puppeteer integration are in place, providing the infrastructure for end-to-end validation.
-  - The immediate next step is to implement the **accessibility test suite**, with performance validation to follow.
+*   **Comprehensive Automated Testing:** To guarantee reliability, the project is supported by a professional-grade testing suite built with Jest. This includes:
+    *   **Unit Tests:** A comprehensive suite covering the entire build pipeline to prevent regressions.
+    *   **Accessibility Tests:** An automated suite using Puppeteer and `axe-core` programmatically enforces WCAG compliance across all pages and themes, turning accessibility into a non-negotiable quality gate.
+    *   A full roadmap for adding automated **performance** and **visual regression** validation is in place.
 
 #### Performance
 
