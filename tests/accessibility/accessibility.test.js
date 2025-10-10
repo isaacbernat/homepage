@@ -25,7 +25,7 @@ describe('Accessibility Test Suite', () => {
     // Load accessibility test configuration with error handling
     try {
       config = getModuleConfig('accessibility');
-    } catch (error) {
+    } catch {
       config = {
         distDirectory: './dist',
         wcagLevel: ['wcag2a', 'wcag2aa'],
@@ -34,7 +34,7 @@ describe('Accessibility Test Suite', () => {
         timeout: 30000,
       };
     }
-    
+
     // Start test server
     testServer = new TestServer({
       port: 3000,
@@ -47,9 +47,14 @@ describe('Accessibility Test Suite', () => {
     accessibilityHelper = new AccessibilityTestHelper({
       browserOptions: {
         headless: process.env.CI === 'true',
-        args: process.env.CI === 'true' 
-          ? ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage']
-          : [],
+        args:
+          process.env.CI === 'true'
+            ? [
+                '--no-sandbox',
+                '--disable-setuid-sandbox',
+                '--disable-dev-shm-usage',
+              ]
+            : [],
       },
       axeOptions: {
         wcagLevel: config.wcagLevel || ['wcag2a', 'wcag2aa'],
@@ -77,382 +82,458 @@ describe('Accessibility Test Suite', () => {
   });
 
   describe('Homepage Accessibility', () => {
-    test('should pass WCAG compliance tests for light theme', async () => {
-      const testUrl = `${baseUrl}/index.html`;
-      const results = await accessibilityHelper.testPage(testUrl, {
-        pageOptions: {
-          viewport: { width: 1280, height: 720 },
-        },
-      });
-
-      expect(results.success).toBe(true);
-      
-      if (config.testBothThemes !== false) {
-        expect(results.results.light).toBeDefined();
-        expect(results.results.light.violations).toHaveLength(0);
-        
-
-      } else {
-        expect(results.results.current).toBeDefined();
-        expect(results.results.current.violations).toHaveLength(0);
-
-      }
-    }, getTimeout());
-
-    test('should pass WCAG compliance tests for dark theme', async () => {
-      // Skip if theme testing is disabled
-      if (config.testBothThemes === false) {
-        return;
-      }
-
-      const testUrl = `${baseUrl}/index.html`;
-      const results = await accessibilityHelper.testPage(testUrl, {
-        pageOptions: {
-          viewport: { width: 1280, height: 720 },
-        },
-      });
-
-      expect(results.success).toBe(true);
-      expect(results.results.dark).toBeDefined();
-      expect(results.results.dark.violations).toHaveLength(0);
-      
-
-    }, getTimeout());
-
-    test('should have proper color contrast in light theme', async () => {
-      const testUrl = `${baseUrl}/index.html`;
-      const results = await accessibilityHelper.testPage(testUrl);
-      
-      const themeResults = (config.testBothThemes !== false) ? results.results.light : results.results.current;
-      
-      // Check that no color contrast violations exist
-      const colorContrastViolations = themeResults.violations.filter(
-        violation => violation.id === 'color-contrast'
-      );
-      
-      expect(colorContrastViolations).toHaveLength(0);
-
-    }, getTimeout());
-
-    test('should have proper color contrast in dark theme', async () => {
-      if (config.testBothThemes === false) {
-        return;
-      }
-
-      const testUrl = `${baseUrl}/index.html`;
-      const results = await accessibilityHelper.testPage(testUrl);
-      
-      // Check that no color contrast violations exist in dark theme
-      const colorContrastViolations = results.results.dark.violations.filter(
-        violation => violation.id === 'color-contrast'
-      );
-      
-      expect(colorContrastViolations).toHaveLength(0);
-
-    }, getTimeout());
-
-    test('should have proper heading structure', async () => {
-      const testUrl = `${baseUrl}/index.html`;
-      const results = await accessibilityHelper.testPage(testUrl);
-      
-      const themeResults = (config.testBothThemes !== false) ? results.results.light : results.results.current;
-      
-      // Check for heading-related violations
-      const headingViolations = themeResults.violations.filter(
-        violation => violation.id.includes('heading') || violation.id === 'page-has-heading-one'
-      );
-      
-      expect(headingViolations).toHaveLength(0);
-
-    }, getTimeout());
-
-    test('should have proper landmark structure', async () => {
-      const testUrl = `${baseUrl}/index.html`;
-      const results = await accessibilityHelper.testPage(testUrl);
-      
-      const themeResults = (config.testBothThemes !== false) ? results.results.light : results.results.current;
-      
-      // Check for landmark-related violations
-      const landmarkViolations = themeResults.violations.filter(
-        violation => violation.id.includes('landmark') || violation.id === 'region'
-      );
-      
-      expect(landmarkViolations).toHaveLength(0);
-
-    }, getTimeout());
-  });
-
-  describe('CV Page Accessibility', () => {
-    test('should pass WCAG compliance tests for CV page', async () => {
-      // Create a helper with specific configuration for CV page
-      const cvTestHelper = new AccessibilityTestHelper({
-        browserOptions: {
-          headless: process.env.CI === 'true',
-          args: process.env.CI === 'true' 
-            ? ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage']
-            : [],
-        },
-        axeOptions: {
-          wcagLevel: config.wcagLevel || ['wcag2a', 'wcag2aa'],
-          excludeRules: [
-            // Exclude rules that commonly cause false positives on content-heavy pages
-            'scrollable-region-focusable', // Can cause issues with long content
-            'nested-interactive', // Can cause issues with complex accordion structures
-            'heading-order', // CV pages have complex content hierarchies that don't always follow strict heading order
-          ],
-          includeBestPractices: false, // Disable best practices to avoid heading-order rule
-          timeout: getTimeout(),
-        },
-        testConfig: {
-          testBothThemes: config.testBothThemes !== false,
-          takeScreenshots: false,
-        },
-      });
-
-      await cvTestHelper.initialize();
-
-      try {
-        const testUrl = `${baseUrl}/cv.html`;
-        const results = await cvTestHelper.testPage(testUrl, {
+    test(
+      'should pass WCAG compliance tests for light theme',
+      async () => {
+        const testUrl = `${baseUrl}/index.html`;
+        const results = await accessibilityHelper.testPage(testUrl, {
           pageOptions: {
             viewport: { width: 1280, height: 720 },
           },
-          navigationOptions: {
-            waitUntil: 'networkidle0', // Wait for all network activity to finish
-            timeout: 60000, // Increase timeout for large page
+        });
+
+        expect(results.success).toBe(true);
+
+        if (config.testBothThemes !== false) {
+          expect(results.results.light).toBeDefined();
+          expect(results.results.light.violations).toHaveLength(0);
+        } else {
+          expect(results.results.current).toBeDefined();
+          expect(results.results.current.violations).toHaveLength(0);
+        }
+      },
+      getTimeout(),
+    );
+
+    test(
+      'should pass WCAG compliance tests for dark theme',
+      async () => {
+        // Skip if theme testing is disabled
+        if (config.testBothThemes === false) {
+          return;
+        }
+
+        const testUrl = `${baseUrl}/index.html`;
+        const results = await accessibilityHelper.testPage(testUrl, {
+          pageOptions: {
+            viewport: { width: 1280, height: 720 },
           },
         });
 
-        // Filter out heading-order violations for CV page (complex content structure)
-        const filterHeadingOrderViolations = (violations) => {
-          if (!violations || !Array.isArray(violations)) return [];
-          return violations.filter(v => v && v.id !== 'heading-order');
-        };
+        expect(results.success).toBe(true);
+        expect(results.results.dark).toBeDefined();
+        expect(results.results.dark.violations).toHaveLength(0);
+      },
+      getTimeout(),
+    );
 
-        // Helper to apply filtering to theme results
-        const applyFiltering = (themeResults) => ({
-          ...themeResults,
-          violations: filterHeadingOrderViolations(themeResults?.violations || [])
-        });
+    test(
+      'should have proper color contrast in light theme',
+      async () => {
+        const testUrl = `${baseUrl}/index.html`;
+        const results = await accessibilityHelper.testPage(testUrl);
 
-        // Create filtered results
-        const testBothThemes = config.testBothThemes !== false;
-        const filteredResults = {
-          ...results,
-          results: testBothThemes 
-            ? {
-                light: applyFiltering(results.results.light),
-                dark: applyFiltering(results.results.dark)
-              }
-            : {
-                current: applyFiltering(results.results.current)
-              }
-        };
+        const themeResults =
+          config.testBothThemes !== false
+            ? results.results.light
+            : results.results.current;
 
-        // Calculate remaining violations and update success status
-        const remainingViolationCount = testBothThemes
-          ? (filteredResults.results.light?.violations?.length || 0) + (filteredResults.results.dark?.violations?.length || 0)
-          : (filteredResults.results.current?.violations?.length || 0);
-        
-        filteredResults.success = remainingViolationCount === 0;
+        // Check that no color contrast violations exist
+        const colorContrastViolations = themeResults.violations.filter(
+          (violation) => violation.id === 'color-contrast',
+        );
 
-        // Log filtering results (only if there were original violations)
-        const originalViolationCount = testBothThemes
-          ? (results.results.light?.violations?.length || 0) + (results.results.dark?.violations?.length || 0)
-          : (results.results.current?.violations?.length || 0);
+        expect(colorContrastViolations).toHaveLength(0);
+      },
+      getTimeout(),
+    );
 
-
-
-        // Assert on filtered results
-        expect(filteredResults.success).toBe(true);
-        
-        if (testBothThemes) {
-          expect(filteredResults.results.light.violations).toHaveLength(0);
-          expect(filteredResults.results.dark.violations).toHaveLength(0);
-        } else {
-          expect(filteredResults.results.current.violations).toHaveLength(0);
+    test(
+      'should have proper color contrast in dark theme',
+      async () => {
+        if (config.testBothThemes === false) {
+          return;
         }
 
-      } finally {
-        await cvTestHelper.cleanup();
-      }
-    }, getTimeout());
+        const testUrl = `${baseUrl}/index.html`;
+        const results = await accessibilityHelper.testPage(testUrl);
 
-    test('should have accessible links and buttons on CV page', async () => {
-      const testUrl = `${baseUrl}/cv.html`;
-      const results = await accessibilityHelper.testPage(testUrl);
-      
-      const themeResults = config.testBothThemes ? results.results.light : results.results.current;
-      
-      // Check for link and button accessibility violations
-      const linkButtonViolations = themeResults.violations.filter(
-        violation => violation.id === 'link-name' || violation.id === 'button-name'
-      );
-      
-      expect(linkButtonViolations).toHaveLength(0);
-      
-      if (linkButtonViolations.length > 0) {
-        console.error('Link/button accessibility violations on CV page:', linkButtonViolations);
-      }
-    }, getTimeout());
+        // Check that no color contrast violations exist in dark theme
+        const colorContrastViolations = results.results.dark.violations.filter(
+          (violation) => violation.id === 'color-contrast',
+        );
+
+        expect(colorContrastViolations).toHaveLength(0);
+      },
+      getTimeout(),
+    );
+
+    test(
+      'should have proper heading structure',
+      async () => {
+        const testUrl = `${baseUrl}/index.html`;
+        const results = await accessibilityHelper.testPage(testUrl);
+
+        const themeResults =
+          config.testBothThemes !== false
+            ? results.results.light
+            : results.results.current;
+
+        // Check for heading-related violations
+        const headingViolations = themeResults.violations.filter(
+          (violation) =>
+            violation.id.includes('heading') ||
+            violation.id === 'page-has-heading-one',
+        );
+
+        expect(headingViolations).toHaveLength(0);
+      },
+      getTimeout(),
+    );
+
+    test(
+      'should have proper landmark structure',
+      async () => {
+        const testUrl = `${baseUrl}/index.html`;
+        const results = await accessibilityHelper.testPage(testUrl);
+
+        const themeResults =
+          config.testBothThemes !== false
+            ? results.results.light
+            : results.results.current;
+
+        // Check for landmark-related violations
+        const landmarkViolations = themeResults.violations.filter(
+          (violation) =>
+            violation.id.includes('landmark') || violation.id === 'region',
+        );
+
+        expect(landmarkViolations).toHaveLength(0);
+      },
+      getTimeout(),
+    );
+  });
+
+  describe('CV Page Accessibility', () => {
+    test(
+      'should pass WCAG compliance tests for CV page',
+      async () => {
+        // Create a helper with specific configuration for CV page
+        const cvTestHelper = new AccessibilityTestHelper({
+          browserOptions: {
+            headless: process.env.CI === 'true',
+            args:
+              process.env.CI === 'true'
+                ? [
+                    '--no-sandbox',
+                    '--disable-setuid-sandbox',
+                    '--disable-dev-shm-usage',
+                  ]
+                : [],
+          },
+          axeOptions: {
+            wcagLevel: config.wcagLevel || ['wcag2a', 'wcag2aa'],
+            excludeRules: [
+              // Exclude rules that commonly cause false positives on content-heavy pages
+              'scrollable-region-focusable', // Can cause issues with long content
+              'nested-interactive', // Can cause issues with complex accordion structures
+              'heading-order', // CV pages have complex content hierarchies that don't always follow strict heading order
+            ],
+            includeBestPractices: false, // Disable best practices to avoid heading-order rule
+            timeout: getTimeout(),
+          },
+          testConfig: {
+            testBothThemes: config.testBothThemes !== false,
+            takeScreenshots: false,
+          },
+        });
+
+        await cvTestHelper.initialize();
+
+        try {
+          const testUrl = `${baseUrl}/cv.html`;
+          const results = await cvTestHelper.testPage(testUrl, {
+            pageOptions: {
+              viewport: { width: 1280, height: 720 },
+            },
+            navigationOptions: {
+              waitUntil: 'networkidle0', // Wait for all network activity to finish
+              timeout: 60000, // Increase timeout for large page
+            },
+          });
+
+          // Filter out heading-order violations for CV page (complex content structure)
+          const filterHeadingOrderViolations = (violations) => {
+            if (!violations || !Array.isArray(violations)) return [];
+            return violations.filter((v) => v && v.id !== 'heading-order');
+          };
+
+          // Helper to apply filtering to theme results
+          const applyFiltering = (themeResults) => ({
+            ...themeResults,
+            violations: filterHeadingOrderViolations(
+              themeResults?.violations || [],
+            ),
+          });
+
+          // Create filtered results
+          const testBothThemes = config.testBothThemes !== false;
+          const filteredResults = {
+            ...results,
+            results: testBothThemes
+              ? {
+                  light: applyFiltering(results.results.light),
+                  dark: applyFiltering(results.results.dark),
+                }
+              : {
+                  current: applyFiltering(results.results.current),
+                },
+          };
+
+          // Calculate remaining violations and update success status
+          const remainingViolationCount = testBothThemes
+            ? (filteredResults.results.light?.violations?.length || 0) +
+              (filteredResults.results.dark?.violations?.length || 0)
+            : filteredResults.results.current?.violations?.length || 0;
+
+          filteredResults.success = remainingViolationCount === 0;
+
+          // Assert on filtered results
+          expect(filteredResults.success).toBe(true);
+
+          if (testBothThemes) {
+            expect(filteredResults.results.light.violations).toHaveLength(0);
+            expect(filteredResults.results.dark.violations).toHaveLength(0);
+          } else {
+            expect(filteredResults.results.current.violations).toHaveLength(0);
+          }
+        } finally {
+          await cvTestHelper.cleanup();
+        }
+      },
+      getTimeout(),
+    );
+
+    test(
+      'should have accessible links and buttons on CV page',
+      async () => {
+        const testUrl = `${baseUrl}/cv.html`;
+        const results = await accessibilityHelper.testPage(testUrl);
+
+        const themeResults = config.testBothThemes
+          ? results.results.light
+          : results.results.current;
+
+        // Check for link and button accessibility violations
+        const linkButtonViolations = themeResults.violations.filter(
+          (violation) =>
+            violation.id === 'link-name' || violation.id === 'button-name',
+        );
+
+        expect(linkButtonViolations).toHaveLength(0);
+
+        if (linkButtonViolations.length > 0) {
+          console.error(
+            'Link/button accessibility violations on CV page:',
+            linkButtonViolations,
+          );
+        }
+      },
+      getTimeout(),
+    );
   });
 
   describe('404 Page Accessibility', () => {
-    test('should pass WCAG compliance tests for 404 page', async () => {
-      const testUrl = `${baseUrl}/404.html`;
-      const results = await accessibilityHelper.testPage(testUrl, {
-        pageOptions: {
-          viewport: { width: 1280, height: 720 },
-        },
-      });
+    test(
+      'should pass WCAG compliance tests for 404 page',
+      async () => {
+        const testUrl = `${baseUrl}/404.html`;
+        const results = await accessibilityHelper.testPage(testUrl, {
+          pageOptions: {
+            viewport: { width: 1280, height: 720 },
+          },
+        });
 
-      expect(results.success).toBe(true);
-      
-      if (config.testBothThemes !== false) {
-        expect(results.results.light.violations).toHaveLength(0);
-        expect(results.results.dark.violations).toHaveLength(0);
-      } else {
-        expect(results.results.current.violations).toHaveLength(0);
-      }
-    }, getTimeout());
+        expect(results.success).toBe(true);
+
+        if (config.testBothThemes !== false) {
+          expect(results.results.light.violations).toHaveLength(0);
+          expect(results.results.dark.violations).toHaveLength(0);
+        } else {
+          expect(results.results.current.violations).toHaveLength(0);
+        }
+      },
+      getTimeout(),
+    );
   });
 
   describe('WCAG Level Configuration', () => {
-    test('should respect configured WCAG levels', async () => {
-      // Create a helper with specific WCAG level configuration
-      const wcagTestHelper = new AccessibilityTestHelper({
-        browserOptions: {
-          headless: process.env.CI === 'true',
-          args: process.env.CI === 'true' 
-            ? ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage']
-            : [],
-        },
-        axeOptions: {
-          wcagLevel: ['wcag2a'], // Only test Level A
-          excludeRules: config.excludeRules || [],
-          includeBestPractices: false,
-          timeout: getTimeout(),
-        },
-        testConfig: {
-          testBothThemes: false, // Simplify for this test
-          takeScreenshots: false,
-        },
-      });
+    test(
+      'should respect configured WCAG levels',
+      async () => {
+        // Create a helper with specific WCAG level configuration
+        const wcagTestHelper = new AccessibilityTestHelper({
+          browserOptions: {
+            headless: process.env.CI === 'true',
+            args:
+              process.env.CI === 'true'
+                ? [
+                    '--no-sandbox',
+                    '--disable-setuid-sandbox',
+                    '--disable-dev-shm-usage',
+                  ]
+                : [],
+          },
+          axeOptions: {
+            wcagLevel: ['wcag2a'], // Only test Level A
+            excludeRules: config.excludeRules || [],
+            includeBestPractices: false,
+            timeout: getTimeout(),
+          },
+          testConfig: {
+            testBothThemes: false, // Simplify for this test
+            takeScreenshots: false,
+          },
+        });
 
-      await wcagTestHelper.initialize();
+        await wcagTestHelper.initialize();
 
-      try {
-        const results = await wcagTestHelper.testPage(`${baseUrl}/index.html`);
-        
-        // Verify that the test ran with the correct configuration
-        expect(results).toBeDefined();
-        expect(results.results.current).toBeDefined();
-        
-        // The specific WCAG level testing is handled by axe-core internally
-        // We just verify that the test completed successfully with the configuration
-        expect(typeof results.success).toBe('boolean');
-        
-      } finally {
-        await wcagTestHelper.cleanup();
-      }
-    }, getTimeout());
+        try {
+          const results = await wcagTestHelper.testPage(
+            `${baseUrl}/index.html`,
+          );
 
-    test('should respect excluded rules configuration', async () => {
-      // Create a helper that excludes color-contrast rules
-      const excludeTestHelper = new AccessibilityTestHelper({
-        browserOptions: {
-          headless: process.env.CI === 'true',
-          args: process.env.CI === 'true' 
-            ? ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage']
-            : [],
-        },
-        axeOptions: {
-          wcagLevel: config.wcagLevel || ['wcag2a', 'wcag2aa'],
-          excludeRules: ['color-contrast'], // Exclude color contrast checks
-          includeBestPractices: true,
-          timeout: getTimeout(),
-        },
-        testConfig: {
-          testBothThemes: false,
-          takeScreenshots: false,
-        },
-      });
+          // Verify that the test ran with the correct configuration
+          expect(results).toBeDefined();
+          expect(results.results.current).toBeDefined();
 
-      await excludeTestHelper.initialize();
+          // The specific WCAG level testing is handled by axe-core internally
+          // We just verify that the test completed successfully with the configuration
+          expect(typeof results.success).toBe('boolean');
+        } finally {
+          await wcagTestHelper.cleanup();
+        }
+      },
+      getTimeout(),
+    );
 
-      try {
-        const results = await excludeTestHelper.testPage(`${baseUrl}/index.html`);
-        
-        // Verify that no color-contrast violations are reported (because they're excluded)
-        const colorContrastViolations = results.results.current.violations.filter(
-          violation => violation.id === 'color-contrast'
-        );
-        
-        expect(colorContrastViolations).toHaveLength(0);
-        
-      } finally {
-        await excludeTestHelper.cleanup();
-      }
-    }, getTimeout());
+    test(
+      'should respect excluded rules configuration',
+      async () => {
+        // Create a helper that excludes color-contrast rules
+        const excludeTestHelper = new AccessibilityTestHelper({
+          browserOptions: {
+            headless: process.env.CI === 'true',
+            args:
+              process.env.CI === 'true'
+                ? [
+                    '--no-sandbox',
+                    '--disable-setuid-sandbox',
+                    '--disable-dev-shm-usage',
+                  ]
+                : [],
+          },
+          axeOptions: {
+            wcagLevel: config.wcagLevel || ['wcag2a', 'wcag2aa'],
+            excludeRules: ['color-contrast'], // Exclude color contrast checks
+            includeBestPractices: true,
+            timeout: getTimeout(),
+          },
+          testConfig: {
+            testBothThemes: false,
+            takeScreenshots: false,
+          },
+        });
+
+        await excludeTestHelper.initialize();
+
+        try {
+          const results = await excludeTestHelper.testPage(
+            `${baseUrl}/index.html`,
+          );
+
+          // Verify that no color-contrast violations are reported (because they're excluded)
+          const colorContrastViolations =
+            results.results.current.violations.filter(
+              (violation) => violation.id === 'color-contrast',
+            );
+
+          expect(colorContrastViolations).toHaveLength(0);
+        } finally {
+          await excludeTestHelper.cleanup();
+        }
+      },
+      getTimeout(),
+    );
   });
 
   describe('Theme Switching Functionality', () => {
-    test('should properly switch between themes during testing', async () => {
-      if (config.testBothThemes === false) {
-        return;
-      }
+    test(
+      'should properly switch between themes during testing',
+      async () => {
+        if (config.testBothThemes === false) {
+          return;
+        }
 
-      const results = await accessibilityHelper.testPage(`${baseUrl}/index.html`);
-      
-      // Verify both themes were tested
-      expect(results.results.light).toBeDefined();
-      expect(results.results.dark).toBeDefined();
-      
-      // Verify theme-specific properties
-      expect(results.results.light.theme).toBe('light');
-      expect(results.results.dark.theme).toBe('dark');
-      
-      // Both themes should have test results
-      expect(typeof results.results.light.passes).toBe('number');
-      expect(typeof results.results.dark.passes).toBe('number');
-      
-      expect(Array.isArray(results.results.light.violations)).toBe(true);
-      expect(Array.isArray(results.results.dark.violations)).toBe(true);
-    }, getTimeout());
+        const results = await accessibilityHelper.testPage(
+          `${baseUrl}/index.html`,
+        );
+
+        // Verify both themes were tested
+        expect(results.results.light).toBeDefined();
+        expect(results.results.dark).toBeDefined();
+
+        // Verify theme-specific properties
+        expect(results.results.light.theme).toBe('light');
+        expect(results.results.dark.theme).toBe('dark');
+
+        // Both themes should have test results
+        expect(typeof results.results.light.passes).toBe('number');
+        expect(typeof results.results.dark.passes).toBe('number');
+
+        expect(Array.isArray(results.results.light.violations)).toBe(true);
+        expect(Array.isArray(results.results.dark.violations)).toBe(true);
+      },
+      getTimeout(),
+    );
   });
 
   describe('Multiple Page Testing', () => {
-    test('should test multiple pages and generate summary report', async () => {
-      const urls = [
-        `${baseUrl}/index.html`,
-        `${baseUrl}/cv.html`,
-        `${baseUrl}/404.html`,
-      ];
+    test(
+      'should test multiple pages and generate summary report',
+      async () => {
+        const urls = [
+          `${baseUrl}/index.html`,
+          `${baseUrl}/cv.html`,
+          `${baseUrl}/404.html`,
+        ];
 
-      const results = await accessibilityHelper.testMultiplePages(urls, {
-        pageOptions: {
-          viewport: { width: 1280, height: 720 },
-        },
-      });
+        const results = await accessibilityHelper.testMultiplePages(urls, {
+          pageOptions: {
+            viewport: { width: 1280, height: 720 },
+          },
+        });
 
-      expect(results).toHaveLength(3);
-      
-      // Verify each result has the expected structure
-      results.forEach((result, index) => {
-        expect(result.url).toBe(urls[index]);
-        expect(typeof result.success).toBe('boolean');
-        expect(result.timestamp).toBeDefined();
-        expect(result.results).toBeDefined();
-      });
+        expect(results).toHaveLength(3);
 
-      // Generate and verify summary report
-      const summary = accessibilityHelper.generateSummaryReport(results);
-      
-      expect(summary.totalPages).toBe(3);
-      expect(summary.successfulPages + summary.failedPages).toBe(3);
-      expect(typeof summary.totalViolations).toBe('number');
-      expect(typeof summary.violationsByType).toBe('object');
-      expect(summary.timestamp).toBeDefined();
-    }, getTimeout() * 3); // Allow more time for multiple pages
+        // Verify each result has the expected structure
+        results.forEach((result, index) => {
+          expect(result.url).toBe(urls[index]);
+          expect(typeof result.success).toBe('boolean');
+          expect(result.timestamp).toBeDefined();
+          expect(result.results).toBeDefined();
+        });
+
+        // Generate and verify summary report
+        const summary = accessibilityHelper.generateSummaryReport(results);
+
+        expect(summary.totalPages).toBe(3);
+        expect(summary.successfulPages + summary.failedPages).toBe(3);
+        expect(typeof summary.totalViolations).toBe('number');
+        expect(typeof summary.violationsByType).toBe('object');
+        expect(summary.timestamp).toBeDefined();
+      },
+      getTimeout() * 3,
+    ); // Allow more time for multiple pages
   });
 });

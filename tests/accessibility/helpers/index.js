@@ -35,9 +35,7 @@ class AccessibilityTestHelper {
    */
   async initialize() {
     try {
-
       await this.browserManager.launch();
-
     } catch (error) {
       throw new Error(
         `Failed to initialize accessibility testing: ${error.message}`,
@@ -55,8 +53,6 @@ class AccessibilityTestHelper {
     let page = null;
 
     try {
-
-
       // Create and configure page
       page = await this.browserManager.createPage(options.pageOptions);
 
@@ -106,8 +102,6 @@ class AccessibilityTestHelper {
    */
   async testTheme(page, themeName, options = {}) {
     try {
-
-
       const themeConfig = THEME_CONFIGS[themeName];
       if (!themeConfig) {
         throw new Error(`Unknown theme: ${themeName}`);
@@ -145,8 +139,6 @@ class AccessibilityTestHelper {
           generateRemediationSuggestions(axeResults.violations);
       }
 
-
-
       return formattedResults;
     } catch (error) {
       throw new Error(`Theme test failed for ${themeName}: ${error.message}`);
@@ -161,8 +153,6 @@ class AccessibilityTestHelper {
    */
   async runSingleTest(page, options = {}) {
     try {
-
-
       // Take screenshot if configured
       if (this.testConfig.takeScreenshots) {
         const screenshotPath = `${this.testConfig.screenshotDir}/current-theme.png`;
@@ -191,8 +181,6 @@ class AccessibilityTestHelper {
           generateRemediationSuggestions(axeResults.violations);
       }
 
-
-
       return formattedResults;
     } catch (error) {
       throw new Error(`Accessibility test failed: ${error.message}`);
@@ -209,14 +197,11 @@ class AccessibilityTestHelper {
     const results = [];
 
     try {
-
-
       for (const url of urls) {
         try {
           const result = await this.testPage(url, options);
           results.push(result);
         } catch (error) {
-
           results.push({
             url,
             timestamp: new Date().toISOString(),
@@ -297,9 +282,8 @@ class AccessibilityTestHelper {
   async cleanup() {
     try {
       await this.browserManager.close();
-
-    } catch (error) {
-
+    } catch {
+      // Silently ignore cleanup errors
     }
   }
 }

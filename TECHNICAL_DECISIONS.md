@@ -74,15 +74,15 @@ This roadmap outlines potential future work, prioritized by impact. The focus is
 
 This tier focuses on integrating automated checks into the CI/CD pipeline to guarantee quality and prevent regressions on every commit.
 
-*   ✅ **Automated Accessibility (a11y) Testing (Implemented)**
-    *   **What:** A comprehensive test suite using Jest, Puppeteer, and `axe-core` that runs on every commit to programmatically enforce WCAG compliance.
-    *   **How:** The suite launches a headless browser, navigates to each page of the site, and runs a full accessibility audit in both light and dark themes. The build will fail if any violations are detected.
-    *   **Impact:** This moves the project's commitment to accessibility from a claim in a document to a verifiable, automated, and non-negotiable quality gate.
+- ✅ **Automated Accessibility (a11y) Testing (Implemented)**
+  - **What:** A comprehensive test suite using Jest, Puppeteer, and `axe-core` that runs on every commit to programmatically enforce WCAG compliance.
+  - **How:** The suite launches a headless browser, navigates to each page of the site, and runs a full accessibility audit in both light and dark themes. The build will fail if any violations are detected.
+  - **Impact:** This moves the project's commitment to accessibility from a claim in a document to a verifiable, automated, and non-negotiable quality gate.
 
-*   🔜 **Automated Performance & Quality Auditing**
-    *   **What:** Integrate Google Lighthouse audits directly into the CI pipeline to enforce performance budgets.
-    *   **Why:** To provide objective, verifiable proof of the site's high performance and to automatically prevent any future changes from causing a performance regression.
-    *   **How:** Implement the **[Lighthouse CI](https://github.com/GoogleChrome/lighthouse-ci)** GitHub Action. Budgets would be set (e.g. Performance score > 98, Accessibility = 100) and the build would fail if a commit causes a score to drop below these thresholds.
+- 🔜 **Automated Performance & Quality Auditing**
+  - **What:** Integrate Google Lighthouse audits directly into the CI pipeline to enforce performance budgets.
+  - **Why:** To provide objective, verifiable proof of the site's high performance and to automatically prevent any future changes from causing a performance regression.
+  - **How:** Implement the **[Lighthouse CI](https://github.com/GoogleChrome/lighthouse-ci)** GitHub Action. Budgets would be set (e.g. Performance score > 98, Accessibility = 100) and the build would fail if a commit causes a score to drop below these thresholds.
 
 #### Tier 2: Lower prio than those above ;D
 

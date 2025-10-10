@@ -20,7 +20,7 @@ describe('Template Rendering and Content Processing', () => {
     originalConsole = {
       log: console.log,
       warn: console.warn,
-      error: console.error
+      error: console.error,
     };
 
     // Suppress console output during build tests (except errors)

@@ -143,8 +143,6 @@ async function injectAxe(page) {
     if (!axeExists) {
       throw new Error('Failed to inject axe-core into page');
     }
-
-
   } catch (error) {
     throw new Error(`Failed to inject axe-core: ${error.message}`);
   }
@@ -160,18 +158,21 @@ async function configureAxe(page, config) {
   try {
     await page.evaluate((axeConfig) => {
       // Configure rules to disable - use a simpler approach
-      if (axeConfig.disableRules && Array.isArray(axeConfig.disableRules) && axeConfig.disableRules.length > 0) {
+      if (
+        axeConfig.disableRules &&
+        Array.isArray(axeConfig.disableRules) &&
+        axeConfig.disableRules.length > 0
+      ) {
         // Configure each rule individually to avoid array format issues
         axeConfig.disableRules.forEach((ruleId) => {
           try {
             window.axe.configure({
               rules: {
-                [ruleId]: { enabled: false }
-              }
+                [ruleId]: { enabled: false },
+              },
             });
-
-          } catch (ruleError) {
-
+          } catch {
+            // Silently ignore rule configuration errors
           }
         });
       }
@@ -180,15 +181,13 @@ async function configureAxe(page, config) {
       if (axeConfig.timeout) {
         try {
           window.axe.configure({
-            timeout: axeConfig.timeout
+            timeout: axeConfig.timeout,
           });
-        } catch (timeoutError) {
-
+        } catch {
+          // Silently ignore timeout configuration errors
         }
       }
     }, config);
-
-
   } catch (error) {
     throw new Error(`Failed to configure axe-core: ${error.message}`);
   }
