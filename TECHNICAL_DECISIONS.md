@@ -11,11 +11,11 @@ This document provides a deeper look into the engineering philosophy behind this
 A core principle of this project was to leverage modern Large Language Models (LLMs) as a development accelerator. This is a deliberate choice reflecting a modern engineering workflow where efficiency and quality are paramount.
 
 - **The Role of the LLM:** The AI was used to generate boilerplate code, write initial drafts of documentation (like this one), suggest modern tooling and rapidly explore alternative implementations. This dramatically reduced the time spent on commodity tasks.
-- **The Role of the Human (My Role):** As the senior engineer and architect, every final decision was mine. I was responsible for:
+- **The Role of the Human (My Role):** As the architect, every final decision was mine. I was responsible for:
   - **Direction:** Guiding the AI with precise, well-scoped prompts.
   - **Critical Evaluation:** Reviewing every line of generated code and text for correctness, performance and alignment with the project's principles.
   - **Strategic Decisions:** Making all final architectural choices (examples below), even when the AI suggested alternatives did not align. I checked every tool suggested by the AI to ensure it was the right fit for the project's specific goals.
-- **Conclusion:** This project demonstrates a powerful, modern workflow where a senior engineer directs AI tooling to produce high quality work faster than would be possible alone. It is a testament to using the right tool for the job to maximize impact.
+- **Conclusion:** This project demonstrates a powerful, modern workflow where a staff engineer directs AI tooling to produce high quality work faster than would be possible alone. It is a testament to using the right tool for the job to maximize impact.
 
 #### 1.2. Performance by Design
 

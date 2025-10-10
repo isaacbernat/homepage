@@ -1,4 +1,4 @@
-### Staff-Equivalent Backend Engineer
+### Staff Backend Engineer
 
 _Jun 2022 – Jul 2024_
 

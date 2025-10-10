@@ -24,7 +24,7 @@ This repository contains the source code for my personal homepage and interactiv
 
 The goal of this project was to build a portfolio that is not just visually appealing, but also technically sound, maintainable and demonstrably high-quality. The site is hosted on GitHub Pages but served through a custom domain for long-term URL stability.
 
-The development of this robust, performant and accessible website was assisted by AI/LLMs for generating boilerplate and accelerating implementation. Every final decision (e.g. from technology choices like the Jamstack architecture to the individual lines of code) was a deliberate choice based on my own reflections and senior engineering experience. The most relevant aspects are highlighted below.
+The development of this robust, performant and accessible website was assisted by AI/LLMs for generating boilerplate and accelerating implementation. Every final decision (e.g. from technology choices like the Jamstack architecture to the individual lines of code) was a deliberate choice based on my own reflections and engineering experience. The most relevant aspects are highlighted below.
 
 ### 2. Guiding Principles
 
