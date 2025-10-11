@@ -154,12 +154,12 @@ async function compileHtml() {
   nunjucks.configure(path.join(SRC_DIR), { autoescape: true });
   const siteData = {
     siteDescription:
-      'Portfolio of Isaac Bernat, Senior Software Engineer. Explore backend (Python, Go) case studies & system designs that drive measurable business impact.',
+      'Portfolio of Isaac Bernat, Staff Software Engineer. Explore backend (Python, Go) case studies & system designs that drive measurable business impact.',
     siteUrl: 'https://www.isaacbernat.com/',
     content: markdownContent,
   };
   const pageData = {
-    'index.njk': { title: 'Isaac Bernat | Senior Software Engineer' },
+    'index.njk': { title: 'Isaac Bernat | Staff Software Engineer' },
     '404.njk': { title: '404: Page Not Found @ IsaacBernat.com' },
     'cv.njk': { title: 'CV | Isaac Bernat', page_class: 'page-cv' },
   };

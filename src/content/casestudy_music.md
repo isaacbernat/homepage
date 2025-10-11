@@ -1,6 +1,6 @@
 ### **The Challenge: Overlooking Valuable Niche User Segments**
 
-Our platform's primary focus was language learning. However, I observed a significant and growing user base for other subjects, particularly Music. While these were not core growth areas, they consistently ranked in our top 10 most popular subjects by hours purchased, representing a substantial, profitable revenue stream.
+Our platform's primary focus was language learning. However, I observed a significant and growing user base for other subjects, particularly Music. While these were not core growth areas, they consistently ranked in our top 10 most popular subjects by hours purchased. These subjects also had higher than average hourly rates, and represented substantial profitable revenue streams.
 
 My concern was that these users faced unnecessary friction due to product limitations. For example:
 
