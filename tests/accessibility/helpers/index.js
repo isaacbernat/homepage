@@ -283,7 +283,7 @@ class AccessibilityTestHelper {
     try {
       await this.browserManager.close();
     } catch {
-      // Silently ignore cleanup errors
+      console.warn(`[Cleanup Warning] Accessibility test helper cleanup failed: ${error.message}`);
     }
   }
 }

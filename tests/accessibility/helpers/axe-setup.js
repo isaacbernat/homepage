@@ -171,8 +171,9 @@ async function configureAxe(page, config) {
                 [ruleId]: { enabled: false },
               },
             });
-          } catch {
-            // Silently ignore rule configuration errors
+          } catch (e) {
+            // Log errors to aid debugging if a rule fails to be disabled.
+            console.error(`Failed to disable axe-core rule '${ruleId}':`, e);
           }
         });
       }
@@ -183,8 +184,9 @@ async function configureAxe(page, config) {
           window.axe.configure({
             timeout: axeConfig.timeout,
           });
-        } catch {
-          // Silently ignore timeout configuration errors
+        } catch (e) {
+          // Log errors to aid debugging if timeout configuration fails.
+          console.error('Failed to configure axe-core timeout:', e);
         }
       }
     }, config);

@@ -154,12 +154,12 @@ class BrowserManager {
       }
 
       // Set up error handling
-      page.on('error', () => {
-        // Error logging disabled during tests
+      page.on('error', (error) => {
+        console.error(`Puppeteer page error: ${error.message}`);
       });
 
-      page.on('pageerror', () => {
-        // Page error logging disabled during tests
+      page.on('pageerror', (error) => {
+        console.error(`Puppeteer page script error: ${error.message}`);
       });
     } catch (error) {
       throw new Error(`Failed to configure page: ${error.message}`);
@@ -213,8 +213,8 @@ class BrowserManager {
         await page.close();
         this.pages.delete(page);
       }
-    } catch {
-      // Silently ignore page close errors
+    } catch (error) {
+      console.warn(`[Cleanup Warning] Failed to close page: ${error.message}`);
     }
   }
 
