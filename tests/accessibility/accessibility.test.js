@@ -261,51 +261,14 @@ describe('Accessibility Test Suite', () => {
               timeout: 60000, // Increase timeout for large page
             },
           });
+          // Assert on the original results, relying on the axe-core configuration to exclude the 'heading-order' rule.
+          expect(results.success).toBe(true);
 
-          // Filter out heading-order violations for CV page (complex content structure)
-          const filterHeadingOrderViolations = (violations) => {
-            if (!violations || !Array.isArray(violations)) return [];
-            return violations.filter((v) => v && v.id !== 'heading-order');
-          };
-
-          // Helper to apply filtering to theme results
-          const applyFiltering = (themeResults) => ({
-            ...themeResults,
-            violations: filterHeadingOrderViolations(
-              themeResults?.violations || [],
-            ),
-          });
-
-          // Create filtered results
-          const testBothThemes = config.testBothThemes !== false;
-          const filteredResults = {
-            ...results,
-            results: testBothThemes
-              ? {
-                  light: applyFiltering(results.results.light),
-                  dark: applyFiltering(results.results.dark),
-                }
-              : {
-                  current: applyFiltering(results.results.current),
-                },
-          };
-
-          // Calculate remaining violations and update success status
-          const remainingViolationCount = testBothThemes
-            ? (filteredResults.results.light?.violations?.length || 0) +
-              (filteredResults.results.dark?.violations?.length || 0)
-            : filteredResults.results.current?.violations?.length || 0;
-
-          filteredResults.success = remainingViolationCount === 0;
-
-          // Assert on filtered results
-          expect(filteredResults.success).toBe(true);
-
-          if (testBothThemes) {
-            expect(filteredResults.results.light.violations).toHaveLength(0);
-            expect(filteredResults.results.dark.violations).toHaveLength(0);
+          if (config.testBothThemes !== false) {
+            expect(results.results.light.violations).toHaveLength(0);
+            expect(results.results.dark.violations).toHaveLength(0);
           } else {
-            expect(filteredResults.results.current.violations).toHaveLength(0);
+            expect(results.results.current.violations).toHaveLength(0);
           }
         } finally {
           await cvTestHelper.cleanup();
