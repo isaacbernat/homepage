@@ -200,7 +200,7 @@ html[data-theme='dark'] .btn {
 .details-content h3 {
   margin-top: 1.5rem;
   margin-bottom: 0.5rem;
-  font-size: 1.1rem;
+  font-size: 0.83rem;
   color: var(--color-text-strong);
 }
 .details-content ul {
@@ -252,7 +252,7 @@ html[data-theme='dark'] .btn {
   align-items: baseline;
   margin-bottom: 0.5rem;
 }
-.project-header h4 {
+.project-header h3 {
   margin: 0;
   font-size: 1.2rem;
 }
@@ -275,7 +275,7 @@ html[data-theme='dark'] .btn {
   display: flex;
   flex-direction: column;
 }
-.project-card h4 {
+.project-card h3 {
   margin: 0 0 0.5rem 0;
   font-size: 1.1rem;
 }
@@ -314,8 +314,9 @@ html[data-theme='dark'] .btn {
 .presentation-preview-image:hover {
   transform: scale(1.03);
 }
-.presentation-details h4 {
+.presentation-details h3 {
   margin: 0 0 0.5rem 0;
+  font-size: 1rem;
 }
 .presentation-details p {
   margin-top: 0;

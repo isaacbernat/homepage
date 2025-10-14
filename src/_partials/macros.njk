@@ -16,7 +16,7 @@
 {% macro featuredCaseStudy(id, title, teaser, full_content, is_open=false) %}
 <div class="featured-project-card" id="{{ id }}">
     <div class="project-header">
-        <h4>{{ title }}</h4>
+        <h3>{{ title }}</h3>
     </div>
     <div class="details-content">
         <p>{{ teaser | safe }}</p>
@@ -49,7 +49,7 @@
 {% macro featuredSystemDesign(title, teaser, pdf_link, full_content) %}
 <div class="featured-project-card">
     <div class="project-header">
-        <h4>{{ title }}</h4>
+        <h3>{{ title }}</h3>
     </div>
     <div class="details-content">
         <p>{{ teaser | safe }}</p>
@@ -67,7 +67,7 @@
 {% macro featuredProjectCard(title, content, link, link_text='View on GitHub') %}
 <div class="featured-project-card">
     <div class="project-header">
-        <h4>{{ title }}</h4>
+        <h3>{{ title }}</h3>
         <a href="{{ link }}" class="project-link" target="_blank" rel="noopener noreferrer">{{ link_text }} &rarr;</a>
     </div>
     <div class="details-content">{{ content | safe }}</div>
@@ -76,7 +76,7 @@
 
 {% macro simpleProjectCard(title, content, link, link_text='View on GitHub') %}
 <div class="project-card">
-    <h4>{{ title }}</h4>
+    <h3>{{ title }}</h3>
     <p>{{ content | safe }}</p>
     <a href="{{ link }}" class="project-link" target="_blank" rel="noopener noreferrer">{{ link_text }} &rarr;</a>
 </div>
