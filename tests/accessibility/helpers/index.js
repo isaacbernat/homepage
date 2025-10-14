@@ -282,7 +282,7 @@ class AccessibilityTestHelper {
   async cleanup() {
     try {
       await this.browserManager.close();
-    } catch {
+    } catch (error) {
       console.warn(
         `[Cleanup Warning] Accessibility test helper cleanup failed: ${error.message}`,
       );
