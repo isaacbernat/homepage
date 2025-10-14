@@ -143,8 +143,6 @@ async function injectAxe(page) {
     if (!axeExists) {
       throw new Error('Failed to inject axe-core into page');
     }
-
-    console.log('✓ Axe-core successfully injected into page');
   } catch (error) {
     throw new Error(`Failed to inject axe-core: ${error.message}`);
   }
@@ -159,27 +157,39 @@ async function injectAxe(page) {
 async function configureAxe(page, config) {
   try {
     await page.evaluate((axeConfig) => {
-      // Configure axe with custom settings
-      if (axeConfig.disableRules && axeConfig.disableRules.length > 0) {
-        // Disable specified rules
+      // Configure rules to disable - use a simpler approach
+      if (
+        axeConfig.disableRules &&
+        Array.isArray(axeConfig.disableRules) &&
+        axeConfig.disableRules.length > 0
+      ) {
+        // Configure each rule individually to avoid array format issues
         axeConfig.disableRules.forEach((ruleId) => {
-          window.axe.configure({
-            rules: {
-              [ruleId]: { enabled: false },
-            },
-          });
+          try {
+            window.axe.configure({
+              rules: {
+                [ruleId]: { enabled: false },
+              },
+            });
+          } catch (e) {
+            // Log errors to aid debugging if a rule fails to be disabled.
+            console.error(`Failed to disable axe-core rule '${ruleId}':`, e);
+          }
         });
       }
 
-      // Set global timeout
+      // Set global timeout separately
       if (axeConfig.timeout) {
-        window.axe.configure({
-          timeout: axeConfig.timeout,
-        });
+        try {
+          window.axe.configure({
+            timeout: axeConfig.timeout,
+          });
+        } catch (e) {
+          // Log errors to aid debugging if timeout configuration fails.
+          console.error('Failed to configure axe-core timeout:', e);
+        }
       }
     }, config);
-
-    console.log('✓ Axe-core configured with custom settings');
   } catch (error) {
     throw new Error(`Failed to configure axe-core: ${error.message}`);
   }

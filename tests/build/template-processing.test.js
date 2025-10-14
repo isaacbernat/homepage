@@ -14,8 +14,12 @@ describe('Template Rendering and Content Processing', () => {
     testUtils = new TestUtils();
     tempDir = await testUtils.createTempDir('template-test-');
 
-    // Store original working directory
+    // Store original working directory and console methods
     originalCwd = process.cwd();
+
+    // Suppress console output during build tests (except errors)
+    jest.spyOn(console, 'log').mockImplementation(() => {});
+    jest.spyOn(console, 'warn').mockImplementation(() => {});
 
     // Change to temp directory for testing
     process.chdir(tempDir);
@@ -26,8 +30,9 @@ describe('Template Rendering and Content Processing', () => {
   });
 
   afterEach(async () => {
-    // Restore original working directory
+    // Restore original working directory and console methods
     process.chdir(originalCwd);
+    jest.restoreAllMocks();
     await testUtils.cleanupTempDirs();
   });
 

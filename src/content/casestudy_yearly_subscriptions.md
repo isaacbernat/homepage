@@ -20,11 +20,11 @@ The feature was quickly shelved. The complex, flexible backend system I had buil
 
 The project's failure could have been predicted and avoided with a more rigorous pre-mortem and discovery phase. We jumped into building without asking the hard questions first.
 
-- **Tutor Viability:** The entire premise rested on offering a discount. We never validated if enough tutors were willing to absorb a significant portion of that discount. The handful who agreed to the pilot did so only after heavy negotiation, with the company subsidizing most of the cost—a model that was completely unscalable.
+- **Tutor Viability:** The entire premise rested on offering a discount. We never validated if enough tutors were willing to absorb a significant portion of that discount. The handful who agreed to the pilot did so only after heavy negotiation, with the company subsidizing most of the cost, a model that was completely unscalable.
 - **Logistical Complexity:** We hadn't solved the critical operational questions. What happens if a student's tutor leaves the platform six months into a yearly plan? The processes for refunds, tutor reassignment and the accounting implications were undefined, creating massive downstream risk for our Customer Support and Finance teams.
 - **Relying on Overly Optimistic Data:** I learned to be more critical of qualitative user research that isn't backed by a solid business case. I took the initial presentations at face value, without questioning the difficult financial and operational realities.
 
-This taught me to insist on a clear, data-backed validation of the **entire value chain**—not just user desire—before committing engineering resources.
+This taught me to insist on a clear, data-backed validation of the **entire value chain**, not just user desire, before committing engineering resources.
 
 #### **Learning 2: The True Meaning of YAGNI**
 

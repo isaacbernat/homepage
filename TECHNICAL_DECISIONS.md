@@ -11,11 +11,11 @@ This document provides a deeper look into the engineering philosophy behind this
 A core principle of this project was to leverage modern Large Language Models (LLMs) as a development accelerator. This is a deliberate choice reflecting a modern engineering workflow where efficiency and quality are paramount.
 
 - **The Role of the LLM:** The AI was used to generate boilerplate code, write initial drafts of documentation (like this one), suggest modern tooling and rapidly explore alternative implementations. This dramatically reduced the time spent on commodity tasks.
-- **The Role of the Human (My Role):** As the senior engineer and architect, every final decision was mine. I was responsible for:
+- **The Role of the Human (My Role):** As the architect, every final decision was mine. I was responsible for:
   - **Direction:** Guiding the AI with precise, well-scoped prompts.
   - **Critical Evaluation:** Reviewing every line of generated code and text for correctness, performance and alignment with the project's principles.
   - **Strategic Decisions:** Making all final architectural choices (examples below), even when the AI suggested alternatives did not align. I checked every tool suggested by the AI to ensure it was the right fit for the project's specific goals.
-- **Conclusion:** This project demonstrates a powerful, modern workflow where a senior engineer directs AI tooling to produce high quality work faster than would be possible alone. It is a testament to using the right tool for the job to maximize impact.
+- **Conclusion:** This project demonstrates a powerful, modern workflow where a staff engineer directs AI tooling to produce high quality work faster than would be possible alone. It is a testament to using the right tool for the job to maximize impact.
 
 #### 1.2. Performance by Design
 
@@ -74,13 +74,12 @@ This roadmap outlines potential future work, prioritized by impact. The focus is
 
 This tier focuses on integrating automated checks into the CI/CD pipeline to guarantee quality and prevent regressions on every commit.
 
-- **Automated Accessibility (a11y) Testing (In Progress)**
-  - **Status:** The foundational infrastructure is complete. This includes a secure test server and a robust browser management system using Puppeteer, fully integrated with Jest.
-  - **Next Step:** Implement the test suite that uses this infrastructure to run `axe-core` against the site's pages.
-  - **Why:** To move from _claiming_ accessibility to _programmatically enforcing_ it as a non-negotiable part of the development process.
-  - **How:** Integrate **[axe-core](https://github.com/dequelabs/axe-core)** using a test runner (e.g. Jest with Puppeteer). The CI script would launch a headless browser, navigate to the built HTML files, and fail the build if any accessibility violations are detected.
+- ✅ **Automated Accessibility (a11y) Testing (Implemented)**
+  - **What:** A comprehensive test suite using Jest, Puppeteer, and `axe-core` that runs on every commit to programmatically enforce WCAG compliance.
+  - **How:** The suite launches a headless browser, navigates to each page of the site, and runs a full accessibility audit in both light and dark themes. The build will fail if any violations are detected.
+  - **Impact:** This moves the project's commitment to accessibility from a claim in a document to a verifiable, automated, and non-negotiable quality gate.
 
-- **Automated Performance & Quality Auditing**
+- 🔜 **Automated Performance & Quality Auditing**
   - **What:** Integrate Google Lighthouse audits directly into the CI pipeline to enforce performance budgets.
   - **Why:** To provide objective, verifiable proof of the site's high performance and to automatically prevent any future changes from causing a performance regression.
   - **How:** Implement the **[Lighthouse CI](https://github.com/GoogleChrome/lighthouse-ci)** GitHub Action. Budgets would be set (e.g. Performance score > 98, Accessibility = 100) and the build would fail if a commit causes a score to drop below these thresholds.

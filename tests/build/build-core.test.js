@@ -28,6 +28,10 @@ describe('Build Script Core Functionality', () => {
     // Store original working directory
     originalCwd = process.cwd();
 
+    // Suppress console output during build tests (except errors)
+    jest.spyOn(console, 'log').mockImplementation(() => {});
+    jest.spyOn(console, 'warn').mockImplementation(() => {});
+
     // Change to temp directory for testing
     process.chdir(tempDir);
 
@@ -37,8 +41,9 @@ describe('Build Script Core Functionality', () => {
   });
 
   afterEach(async () => {
-    // Restore original working directory
+    // Restore original working directory and console methods
     process.chdir(originalCwd);
+    jest.restoreAllMocks();
     await testUtils.cleanupTempDirs();
   });
 

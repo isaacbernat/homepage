@@ -46,7 +46,7 @@ body.page-cv header {
   gap: 1rem;
   margin-bottom: 2rem;
 }
-.cv-page__identity h2 {
+.cv-page__identity h1 {
   margin: 0 0 0.25rem 0;
   font-size: 2rem;
   color: var(--color-text-strong);
@@ -67,6 +67,17 @@ body.page-cv header {
   margin-bottom: 1.5rem;
   text-align: center; /* Center the title text */
   border-bottom: none; /* Remove the old full-width border */
+  padding-bottom: 0;
+}
+
+/* Ensure h2 section titles have the same styling */
+h2.cv-section-title {
+  font-size: 1.5rem;
+  color: var(--color-text-strong);
+  margin-top: 3rem;
+  margin-bottom: 1.5rem;
+  text-align: center;
+  border-bottom: none;
   padding-bottom: 0;
 }
 
@@ -186,9 +197,11 @@ html[data-theme='dark'] .btn {
   padding: 0 1.5rem 1.5rem 1.5rem;
   line-height: 1.6;
 }
-.details-content h5 {
+.details-content h3 {
   margin-top: 1.5rem;
   margin-bottom: 0.5rem;
+  font-size: 0.83rem;
+  color: var(--color-text-strong);
 }
 .details-content ul {
   padding-left: 20px;
@@ -239,7 +252,7 @@ html[data-theme='dark'] .btn {
   align-items: baseline;
   margin-bottom: 0.5rem;
 }
-.project-header h4 {
+.project-header h3 {
   margin: 0;
   font-size: 1.2rem;
 }
@@ -262,7 +275,7 @@ html[data-theme='dark'] .btn {
   display: flex;
   flex-direction: column;
 }
-.project-card h4 {
+.project-card h3 {
   margin: 0 0 0.5rem 0;
   font-size: 1.1rem;
 }
@@ -301,8 +314,9 @@ html[data-theme='dark'] .btn {
 .presentation-preview-image:hover {
   transform: scale(1.03);
 }
-.presentation-details h4 {
+.presentation-details h3 {
   margin: 0 0 0.5rem 0;
+  font-size: 1rem;
 }
 .presentation-details p {
   margin-top: 0;

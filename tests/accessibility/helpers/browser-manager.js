@@ -67,21 +67,17 @@ class BrowserManager {
   async launch() {
     try {
       if (this.browser) {
-        console.log('⚠️  Browser already launched, reusing existing instance');
         return this.browser;
       }
 
-      console.log('🚀 Launching Puppeteer browser...');
       this.browser = await puppeteer.launch(this.launchOptions);
       this.isInitialized = true;
 
       // Set up error handling
       this.browser.on('disconnected', () => {
-        console.log('🔌 Browser disconnected');
         this.cleanup();
       });
 
-      console.log('✓ Browser launched successfully');
       return this.browser;
     } catch (error) {
       throw new Error(`Failed to launch browser: ${error.message}`);
@@ -105,7 +101,6 @@ class BrowserManager {
       // Configure page for accessibility testing
       await this.configurePage(page, options);
 
-      console.log(`✓ New page created (${this.pages.size} total pages)`);
       return page;
     } catch (error) {
       throw new Error(`Failed to create page: ${error.message}`);
@@ -153,18 +148,18 @@ class BrowserManager {
 
       // Set up console logging for debugging
       if (options.logConsole) {
-        page.on('console', (msg) => {
-          console.log(`🖥️  Page console: ${msg.text()}`);
+        page.on('console', () => {
+          // Console logging disabled during tests
         });
       }
 
       // Set up error handling
       page.on('error', (error) => {
-        console.error(`❌ Page error: ${error.message}`);
+        console.error(`Puppeteer page error: ${error.message}`);
       });
 
       page.on('pageerror', (error) => {
-        console.error(`❌ Page script error: ${error.message}`);
+        console.error(`Puppeteer page script error: ${error.message}`);
       });
     } catch (error) {
       throw new Error(`Failed to configure page: ${error.message}`);
@@ -180,8 +175,6 @@ class BrowserManager {
    */
   async navigateAndWait(page, url, options = {}) {
     try {
-      console.log(`🔗 Navigating to: ${url}`);
-
       // Navigate to the URL
       await page.goto(url, {
         waitUntil: options.waitUntil || 'networkidle0',
@@ -205,8 +198,6 @@ class BrowserManager {
       if (options.additionalWait) {
         await page.waitForTimeout(options.additionalWait);
       }
-
-      console.log('✓ Page loaded and ready for testing');
     } catch (error) {
       throw new Error(`Failed to navigate to ${url}: ${error.message}`);
     }
@@ -221,10 +212,9 @@ class BrowserManager {
       if (this.pages.has(page)) {
         await page.close();
         this.pages.delete(page);
-        console.log(`✓ Page closed (${this.pages.size} remaining)`);
       }
     } catch (error) {
-      console.error(`Failed to close page: ${error.message}`);
+      console.warn(`[Cleanup Warning] Failed to close page: ${error.message}`);
     }
   }
 
@@ -237,9 +227,8 @@ class BrowserManager {
         this.closePage(page),
       );
       await Promise.all(closePromises);
-      console.log('✓ All pages closed');
-    } catch (error) {
-      console.error(`Failed to close all pages: ${error.message}`);
+    } catch {
+      // Silently ignore errors when closing all pages
     }
   }
 
@@ -251,10 +240,9 @@ class BrowserManager {
       if (this.browser) {
         await this.closeAllPages();
         await this.browser.close();
-        console.log('✓ Browser closed successfully');
       }
-    } catch (error) {
-      console.error(`Failed to close browser: ${error.message}`);
+    } catch {
+      // Silently ignore browser close errors
     } finally {
       this.cleanup();
     }
@@ -313,9 +301,8 @@ class BrowserManager {
       };
 
       await page.screenshot(screenshotOptions);
-      console.log(`📸 Screenshot saved: ${filename}`);
-    } catch (error) {
-      console.error(`Failed to take screenshot: ${error.message}`);
+    } catch {
+      // Silently ignore screenshot errors
     }
   }
 }
