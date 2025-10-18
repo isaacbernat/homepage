@@ -262,7 +262,38 @@ describe('Accessibility Test Suite', () => {
             },
           });
           // Assert on the original results, relying on the axe-core configuration to exclude the 'heading-order' rule.
-          expect(results.success).toBe(true);
+
+          if (!results.success) {
+            // Format a detailed error message ONLY if the test fails.
+            let violationDetails = 'Accessibility violations found:\n';
+            if (
+              results.results.light &&
+              results.results.light.violations.length > 0
+            ) {
+              violationDetails += '\n--- LIGHT THEME ---\n';
+              violationDetails += JSON.stringify(
+                results.results.light.violations,
+                null,
+                2,
+              );
+            }
+            if (
+              results.results.dark &&
+              results.results.dark.violations.length > 0
+            ) {
+              violationDetails += '\n--- DARK THEME ---\n';
+              violationDetails += JSON.stringify(
+                results.results.dark.violations,
+                null,
+                2,
+              );
+            }
+            // Use the detailed message in the expect assertion.
+            expect(results.success).toBe(true, violationDetails);
+          } else {
+            // If it passes, just run the simple assertion.
+            expect(results.success).toBe(true);
+          }
 
           if (config.testBothThemes !== false) {
             expect(results.results.light.violations).toHaveLength(0);
