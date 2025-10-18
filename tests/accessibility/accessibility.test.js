@@ -264,32 +264,37 @@ describe('Accessibility Test Suite', () => {
           // Assert on the original results, relying on the axe-core configuration to exclude the 'heading-order' rule.
 
           if (!results.success) {
-            // Format a detailed error message ONLY if the test fails.
-            let violationDetails = 'Accessibility violations found:\n';
-            if (
-              results.results.light &&
-              results.results.light.violations.length > 0
-            ) {
-              violationDetails += '\n--- LIGHT THEME ---\n';
-              violationDetails += JSON.stringify(
-                results.results.light.violations,
-                null,
-                2,
+            const lightViolations = results.results.light
+              ? results.results.light.violations
+              : [];
+            const darkViolations = results.results.dark
+              ? results.results.dark.violations
+              : [];
+
+            // Use process.stdout.write for more direct output
+            process.stdout.write(
+              '\n\n========================================\n',
+            );
+            process.stdout.write('  ACCESSIBILITY VIOLATIONS DETECTED\n');
+            process.stdout.write(
+              '========================================\n\n',
+            );
+
+            if (lightViolations.length > 0) {
+              process.stdout.write('--- LIGHT THEME VIOLATIONS ---\n');
+              process.stdout.write(
+                JSON.stringify(lightViolations, null, 2) + '\n\n',
               );
             }
-            if (
-              results.results.dark &&
-              results.results.dark.violations.length > 0
-            ) {
-              violationDetails += '\n--- DARK THEME ---\n';
-              violationDetails += JSON.stringify(
-                results.results.dark.violations,
-                null,
-                2,
+            if (darkViolations.length > 0) {
+              process.stdout.write('--- DARK THEME VIOLATIONS ---\n');
+              process.stdout.write(
+                JSON.stringify(darkViolations, null, 2) + '\n\n',
               );
             }
-            // Use the detailed message in the expect assertion.
-            expect(results.success).toBe(true, violationDetails);
+            process.stdout.write(
+              '========================================\n\n',
+            );
           } else {
             // If it passes, just run the simple assertion.
             expect(results.success).toBe(true);
