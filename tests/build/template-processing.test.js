@@ -79,7 +79,7 @@ describe('Template Rendering and Content Processing', () => {
       const generatedHtml = await fs.readFile('dist/test.html', 'utf8');
 
       // Should contain processed markdown
-      expect(generatedHtml).toContain('<h1 id=test-content>Test Content</h1>');
+      expect(generatedHtml).toContain('<h1>Test Content</h1>');
       expect(generatedHtml).toContain('<strong>test</strong>');
       expect(generatedHtml).toContain('<em>emphasis</em>');
 
@@ -142,8 +142,8 @@ describe('Template Rendering and Content Processing', () => {
       const indexHtml = await fs.readFile('dist/index.html', 'utf8');
       const aboutHtml = await fs.readFile('dist/about.html', 'utf8');
 
-      expect(indexHtml).toContain('<h1 id=introduction>Introduction</h1>');
-      expect(aboutHtml).toContain('<h2 id=about>About</h2>');
+      expect(indexHtml).toContain('<h1>Introduction</h1>');
+      expect(aboutHtml).toContain('<h2>About</h2>');
 
       // Validate asset path replacement (quotes removed by minifier)
       expect(indexHtml).toContain('href=style.min.css');
@@ -249,8 +249,8 @@ Another paragraph with some text.`;
       // Validate complex content processing
       const generatedHtml = await fs.readFile('dist/complex.html', 'utf8');
 
-      expect(generatedHtml).toContain('<h1 id=main-heading>Main Heading</h1>');
-      expect(generatedHtml).toContain('<h2 id=subheading>Subheading</h2>');
+      expect(generatedHtml).toContain('<h1>Main Heading</h1>');
+      expect(generatedHtml).toContain('<h2>Subheading</h2>');
       expect(generatedHtml).toContain('<strong>bold</strong>');
       expect(generatedHtml).toContain('<em>italic</em>');
       expect(generatedHtml).toContain('<li>Item 1</li>');
@@ -354,7 +354,7 @@ Another paragraph with some text.`;
       expect(generatedHtml).not.toContain('  '); // No double spaces
 
       // But content should still be present
-      expect(generatedHtml).toContain('<h1 id=test-content>Test Content</h1>');
+      expect(generatedHtml).toContain('<h1>Test Content</h1>');
       expect(generatedHtml).toContain('console.log');
     });
   });
@@ -470,8 +470,8 @@ Another paragraph with some text.`;
       const aboutHtml = await fs.readFile('dist/about.html', 'utf8');
 
       // Check content processing
-      expect(indexHtml).toContain('<h1 id=welcome>Welcome</h1>');
-      expect(aboutHtml).toContain('<h2 id=about-us>About Us</h2>');
+      expect(indexHtml).toContain('<h1>Welcome</h1>');
+      expect(aboutHtml).toContain('<h2>About Us</h2>');
 
       // Check asset path replacement (quotes removed by minifier)
       expect(indexHtml).toContain('href=style.min.css');

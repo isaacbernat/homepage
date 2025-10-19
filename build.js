@@ -7,6 +7,7 @@ const svgo = require('svgo');
 const sharp = require('sharp');
 const toIco = require('to-ico');
 const nunjucks = require('nunjucks');
+const MarkdownIt = require('markdown-it');
 
 // --- Configuration ---
 const SRC_DIR = 'src';
@@ -128,16 +129,7 @@ async function processSitemap() {
 }
 
 async function compileHtml() {
-  // Use dynamic import for production, but allow mocking in tests
-  let marked;
-  if (process.env.NODE_ENV === 'test') {
-    // Use require for testing to allow mocking
-    marked = require('marked').marked;
-  } else {
-    // Use dynamic import for production
-    const markedModule = await import('marked');
-    marked = markedModule.marked;
-  }
+  const md = new MarkdownIt(); // Initialize the new parser
   console.log('Compiling HTML from Nunjucks templates...');
 
   const contentDir = path.join(SRC_DIR, 'content');
@@ -147,7 +139,7 @@ async function compileHtml() {
     if (path.extname(file) === '.md') {
       const contentKey = path.basename(file, '.md');
       const markdown = await fs.readFile(path.join(contentDir, file), 'utf-8');
-      markdownContent[contentKey] = marked.parse(markdown);
+      markdownContent[contentKey] = md.render(markdown); // Use .render()
     }
   }
 

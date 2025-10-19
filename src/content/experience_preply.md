@@ -9,8 +9,6 @@ I shaped the technical roadmap and led initiatives that directly influenced the 
 - **Cross-Functional Leadership:** As the engineering representative for the Subscription Experience team I held bi-weekly stakeholder meetings with Finance, Data and CRM teams to coordinate on critical projects, ensuring data models and financial reporting remained accurate during high-stakes experiments. I also supported engineering-wide quality by conducting technical interviews for multiple backend roles.
 - **Proactive System Ownership:** Identified and led the mitigation of critical bugs **outside my team's domain**, including a flaw costing over **$21k USD/week** and a celery task spamming the queue with over **1 million executions per hour**.
 
----
-
 ### Senior Backend Engineer
 
 _Mar 2020 – Jun 2022_

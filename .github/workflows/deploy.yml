@@ -3,6 +3,8 @@ name: Build and Deploy to GitHub Pages
 on:
   push:
     branches: [main]
+  pull_request:
+    branches: [main]
 
 permissions:
   contents: read
@@ -36,6 +38,13 @@ jobs:
 
       - name: Run automated tests
         run: npm test
+
+      - name: Upload dist on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist-on-failure
+          path: ./dist
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
