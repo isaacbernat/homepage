@@ -355,3 +355,19 @@ html[data-theme='dark'] .btn {
 .details-with-top-margin {
   margin-top: 1rem;
 }
+
+html[data-theme='dark'] body.page-cv,
+html[data-theme='dark'] .cv-container {
+  color: var(--color-text); /* Use the main light text color for dark mode */
+}
+
+/* Target all links EXCEPT those inside an element with the .btn class */
+html[data-theme='dark'] .cv-container a:not(.btn) {
+  color: var(
+    --color-text-strong
+  ); /* Use the strongest light text color for links */
+}
+
+html[data-theme='dark'] .cv-container a:not(.btn):hover {
+  color: var(--color-text); /* On hover, use the slightly less bright color */
+}
