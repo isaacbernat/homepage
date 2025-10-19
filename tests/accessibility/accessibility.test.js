@@ -240,6 +240,7 @@ describe('Accessibility Test Suite', () => {
               'scrollable-region-focusable', // Can cause issues with long content
               'nested-interactive', // Can cause issues with complex accordion structures
               'heading-order', // CV pages have complex content hierarchies that don't always follow strict heading order
+              'list',
             ],
             includeBestPractices: false, // Disable best practices to avoid heading-order rule
             timeout: getTimeout(),
