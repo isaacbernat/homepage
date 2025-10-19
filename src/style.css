@@ -104,6 +104,17 @@ nav a:hover {
   transform: scale(1.05);
 }
 
+/* --- Dark Mode Overrides for Navigation Links --- */
+/* This ensures header navigation links have high contrast in dark mode on ALL pages. */
+
+html[data-theme='dark'] nav a {
+  color: var(--color-text); /* Use the main light text color for dark mode */
+}
+
+html[data-theme='dark'] nav a:hover {
+  color: var(--color-text-strong); /* Use the brightest color on hover */
+}
+
 /* --- Main Content & Image Styling --- */
 main {
   flex-grow: 1;
