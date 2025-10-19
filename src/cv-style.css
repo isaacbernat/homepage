@@ -356,27 +356,30 @@ html[data-theme='dark'] .btn {
   margin-top: 1rem;
 }
 
-/* dark mode override rules, for GitHub Actions CI/CD Actions accessibility tests*/
-html[data-theme='dark'] body.page-cv,
+/* --- Dark Theme Overrides for CV Page (Targeted Fixes) --- */
+/* 
+  NOTE: The '!important' declarations below are a deliberate and surgical fix 
+  for a CI-specific rendering issue where default browser styles were overriding 
+  the theme's high-contrast colors, causing accessibility test failures. 
+  This brute-force approach ensures the correct colors are applied in all environments.
+*/
+
 html[data-theme='dark'] .cv-container {
-  color: var(--color-text); /* Use the main light text color for dark mode */
+  color: var(--color-text) !important;
 }
 
-/* Target all links EXCEPT those inside an element with the .btn class */
+/* Force color on all links in the container EXCEPT .btn links */
 html[data-theme='dark'] .cv-container a:not(.btn) {
-  color: var(
-    --color-text-strong
-  ); /* Use the strongest light text color for links */
+  color: var(--color-text-strong) !important;
 }
-
 html[data-theme='dark'] .cv-container a:not(.btn):hover {
-  color: var(--color-text); /* On hover, use the slightly less bright color */
+  color: var(--color-text) !important;
 }
 
+/* Force the color on the header navigation links specifically */
 html[data-theme='dark'] body.page-cv header nav a {
-  color: var(--color-text); /* Use the main light text color */
+  color: var(--color-text) !important;
 }
-
 html[data-theme='dark'] body.page-cv header nav a:hover {
-  color: var(--color-text-strong); /* Use the brightest color on hover */
+  color: var(--color-text-strong) !important;
 }
