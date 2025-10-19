@@ -264,41 +264,26 @@ describe('Accessibility Test Suite', () => {
           // Assert on the original results, relying on the axe-core configuration to exclude the 'heading-order' rule.
 
           if (!results.success) {
-            const lightViolations = results.results.light
-              ? results.results.light.violations
-              : [];
-            const darkViolations = results.results.dark
-              ? results.results.dark.violations
-              : [];
-
-            // Use process.stdout.write for more direct output
-            process.stdout.write(
-              '\n\n========================================\n',
-            );
-            process.stdout.write('  ACCESSIBILITY VIOLATIONS DETECTED\n');
-            process.stdout.write(
-              '========================================\n\n',
+            // If the test fails, format a highly detailed error message.
+            let violationDetails = 'Accessibility violations found:\n\n';
+            const violations = (results.results.light?.violations || []).concat(
+              results.results.dark?.violations || [],
             );
 
-            if (lightViolations.length > 0) {
-              process.stdout.write('--- LIGHT THEME VIOLATIONS ---\n');
-              process.stdout.write(
-                JSON.stringify(lightViolations, null, 2) + '\n\n',
-              );
+            if (violations.length === 0) {
+              // This case should be rare, but it's good practice to handle it.
+              violationDetails =
+                'Test failed but no violations were reported. Check test logic.';
+            } else {
+              // Use JSON.stringify for a complete, unabridged report.
+              violationDetails += JSON.stringify(violations, null, 2);
             }
-            if (darkViolations.length > 0) {
-              process.stdout.write('--- DARK THEME VIOLATIONS ---\n');
-              process.stdout.write(
-                JSON.stringify(darkViolations, null, 2) + '\n\n',
-              );
-            }
-            process.stdout.write(
-              '========================================\n\n',
-            );
-          } else {
-            // If it passes, just run the simple assertion.
-            expect(results.success).toBe(true);
+
+            // Intentionally throw a new Error with the full violation report as the message.
+            // This is much harder for Jest/CI to truncate.
+            throw new Error(violationDetails);
           }
+          expect(results.success).toBe(true);
 
           if (config.testBothThemes !== false) {
             expect(results.results.light.violations).toHaveLength(0);
