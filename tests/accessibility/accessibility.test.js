@@ -3,6 +3,7 @@
  * Tests WCAG compliance for both light and dark themes with configurable levels
  */
 
+const { build } = require('../../build.js');
 const { AccessibilityTestHelper } = require('./helpers');
 const { getModuleConfig } = require('../config/test-config');
 const TestServer = require('../utils/test-server');
@@ -34,6 +35,7 @@ describe('Accessibility Test Suite', () => {
         timeout: 30000,
       };
     }
+    await build();
 
     // Start test server
     testServer = new TestServer({
@@ -261,28 +263,6 @@ describe('Accessibility Test Suite', () => {
               timeout: 60000, // Increase timeout for large page
             },
           });
-          // Assert on the original results, relying on the axe-core configuration to exclude the 'heading-order' rule.
-
-          if (!results.success) {
-            // If the test fails, format a highly detailed error message.
-            let violationDetails = 'Accessibility violations found:\n\n';
-            const violations = (results.results.light?.violations || []).concat(
-              results.results.dark?.violations || [],
-            );
-
-            if (violations.length === 0) {
-              // This case should be rare, but it's good practice to handle it.
-              violationDetails =
-                'Test failed but no violations were reported. Check test logic.';
-            } else {
-              // Use JSON.stringify for a complete, unabridged report.
-              violationDetails += JSON.stringify(violations, null, 2);
-            }
-
-            // Intentionally throw a new Error with the full violation report as the message.
-            // This is much harder for Jest/CI to truncate.
-            throw new Error(violationDetails);
-          }
           expect(results.success).toBe(true);
 
           if (config.testBothThemes !== false) {
