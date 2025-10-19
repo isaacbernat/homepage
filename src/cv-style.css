@@ -356,6 +356,7 @@ html[data-theme='dark'] .btn {
   margin-top: 1rem;
 }
 
+/* dark mode override rules, for GitHub Actions CI/CD Actions accessibility tests*/
 html[data-theme='dark'] body.page-cv,
 html[data-theme='dark'] .cv-container {
   color: var(--color-text); /* Use the main light text color for dark mode */
@@ -370,4 +371,12 @@ html[data-theme='dark'] .cv-container a:not(.btn) {
 
 html[data-theme='dark'] .cv-container a:not(.btn):hover {
   color: var(--color-text); /* On hover, use the slightly less bright color */
+}
+
+html[data-theme='dark'] body.page-cv header nav a {
+  color: var(--color-text); /* Use the main light text color */
+}
+
+html[data-theme='dark'] body.page-cv header nav a:hover {
+  color: var(--color-text-strong); /* Use the brightest color on hover */
 }
