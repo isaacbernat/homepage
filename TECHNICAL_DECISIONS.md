@@ -56,45 +56,41 @@ A core principle of this project was to leverage modern Large Language Models (L
   - **Why Vanilla JS was chosen:** The client-side logic is minimal and focused on simple DOM manipulation (e.g. theme toggling, image loading).
   - **Why not TypeScript?** TypeScript is an excellent choice for larger and more complex applications, but its benefits (static typing, improved tooling) did not outweigh the cost of added build complexity for this specific project.
 
+- **Markdown Parser (`markdown-it` vs. `marked`):**
+  - **Why the change was made:** During the implementation of the automated accessibility test suite, it was discovered that the initial parser (`marked`) was generating non-compliant HTML for list structures, causing test failures. The project was migrated to **`markdown-it`**, a more modern and CommonMark-compliant parser, to resolve these structural issues at their root and ensure the generated HTML is always valid and accessible.
+
 #### 1.5. A Programmatically Enforced Quality Standard
 
 This project moves beyond simply _claiming_ quality to _programmatically proving and enforcing_ it through a comprehensive, automated testing suite built with Jest.
 
 - **Unit-Tested Build Pipeline:** The foundation of the testing suite is a robust set of unit tests for the critical build pipeline (`build.js`). This treats the build process as first-class, mission-critical code.
-- **Resilient Browser-Testing Infrastructure:** To enable reliable end-to-end and accessibility testing, a **secure, custom-built test server** was created. This is not just a simple file server, it includes critical production-readiness features like **directory traversal protection**, automatic port finding to prevent CI conflicts, and health checks. This robust foundation ensures that browser-based tests are stable and deterministic.
+- **Resilient Browser-Testing Infrastructure:** To enable reliable end-to-end and accessibility testing, a **secure, custom-built test server** was created. This is not just a simple file server, it includes critical production-readiness features like **directory traversal protection**, health checks and automatic port finding to prevent CI conflicts. This robust foundation ensures that browser-based tests are stable and deterministic.
 - **A Living Roadmap:** The testing suite is designed to be extensible, with a clear roadmap to incorporate automated accessibility, performance and visual regression testing directly into the CI/CD quality gates. The full plan can be reviewed in the project's [design documents](./.kiro/specs/automated-testing-suite/design.md).
 
 ---
 
 ### 2. Technical Roadmap: Future Enhancements
 
-This roadmap outlines potential future work, prioritized by impact. The focus is on moving from _claiming_ quality to _programmatically proving and enforcing_ it through automation.
+The project has successfully implemented a robust, professional-grade testing suite that programmatically enforces code quality, build pipeline reliability and accessibility compliance. The foundational goals of the testing roadmap have been met.
 
-#### Tier 1: Automated Quality Gates
+The following advanced testing modules were considered and included in the initial design. They remain as potential future enhancements but are not on the immediate roadmap, as the project has reached a state of high quality and stability.
 
-This tier focuses on integrating automated checks into the CI/CD pipeline to guarantee quality and prevent regressions on every commit.
+#### Tier 1: Extensive testing
 
-- ✅ **Automated Accessibility (a11y) Testing (Implemented)**
-  - **What:** A comprehensive test suite using Jest, Puppeteer, and `axe-core` that runs on every commit to programmatically enforce WCAG compliance.
-  - **How:** The suite launches a headless browser, navigates to each page of the site, and runs a full accessibility audit in both light and dark themes. The build will fail if any violations are detected.
-  - **Impact:** This moves the project's commitment to accessibility from a claim in a document to a verifiable, automated, and non-negotiable quality gate.
-
-- 🔜 **Automated Performance & Quality Auditing**
+- **Automated Performance Auditing (Planned)**
   - **What:** Integrate Google Lighthouse audits directly into the CI pipeline to enforce performance budgets.
   - **Why:** To provide objective, verifiable proof of the site's high performance and to automatically prevent any future changes from causing a performance regression.
-  - **How:** Implement the **[Lighthouse CI](https://github.com/GoogleChrome/lighthouse-ci)** GitHub Action. Budgets would be set (e.g. Performance score > 98, Accessibility = 100) and the build would fail if a commit causes a score to drop below these thresholds.
 
-#### Tier 2: Lower prio than those above ;D
+- **Visual Regression Testing (Planned)**
+  - **What:** An automated system using a tool like Playwright to detect unintended visual changes in the UI.
+  - **Why:** To prevent subtle CSS bugs or layout shifts from ever reaching production, ensuring a polished and consistent user experience.
+
+#### Tier 2: Lower prio enhancements
 
 - **Implement Automated Cache-Busting**
   - **What:** Modify the build script to generate unique filenames for CSS and JavaScript assets based on their content (e.g. `style.[hash].min.css`).
   - **Why:** To solve the browser caching problem where users might be served stale assets after a new deployment. This ensures that every user immediately receives the latest version of the site, preventing bugs and inconsistent experiences. It's a critical feature for production reliability.
   - **How:** Use a Node.js package (like `md5-file` or Node's built-in `crypto` module) to generate a content hash for each asset. The build script would then rename the output files with this hash and update the references in the final HTML files accordingly. The recent refactoring to decouple templates from build artifacts makes this significantly easier to implement.
-
-- **Visual Regression Testing**
-  - **What:** An automated system to detect unintended visual changes in the UI.
-  - **Why:** To prevent subtle CSS bugs or layout shifts from ever reaching production, ensuring a polished and consistent user experience. This is a sign of a highly mature frontend workflow.
-  - **How:** Use a tool like **[Playwright's screenshot testing](https://playwright.dev/docs/test-snapshots)**. The CI would take screenshots of key pages and compare them against a "golden" baseline set. Any pixel difference would flag the build for manual review.
 
 #### Tier 3: Potential Future Migrations
 

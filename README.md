@@ -39,7 +39,7 @@ The project was built with a focus on pragmatic and long-term value. The followi
 
 #### Development & Maintainability
 
-- **CI/CD Pipeline:** A GitHub Actions workflow automates testing, building and deploying the site to GitHub Pages on every push to `main` branch.
+- **CI/CD Pipeline:** A GitHub Actions workflow serves as a robust quality gate. On every commit to a pull request, it automatically runs a full suite of checks—including code formatting, linting and automated accessibility tests. Code can only be merged to `main` after all checks pass, ensuring that the live site is never broken. A final build and deploy cycle is then triggered upon merging.
 - **Reproducible Builds:** The CI pipeline uses `npm ci` instead of `npm install`. This is a deliberate choice to ensure that the exact dependency versions specified in the `package-lock.json` are used on every run, eliminating "works on my machine" issues and guaranteeing a stable, predictable deployment process.
 - **Jamstack Architecture:** It uses a custom Static Site Generator (`build.js`) to pre-build the entire site into highly optimized, static Markup. This approach results in superior performance, security and scalability compared to traditional server-rendered sites, allowing for efficient hosting on a global CDN like GitHub Pages. The architectural benefits [are further explained here](https://jamstack.org/why-jamstack/).
 - **Transparent Build Process:** Powered by an extensible Node.js script that provides full control over the asset pipeline without framework lock-in.
@@ -51,11 +51,9 @@ The project was built with a focus on pragmatic and long-term value. The followi
 - **Modular Build Script:** Following the Single Responsibility Principle, the build script is composed of small, single-purpose functions (e.g. `minifyJs`, `processFavicons`). This makes the build process highly readable, maintainable, and easy to extend, with a main `build()` function that acts as a clean orchestrator.
 - **Decoupled Templates for Robustness:** To improve maintainability and adhere to the principle of Separation of Concerns, templates (`.njk` files) reference source assets (`style.css`). The build script is the single source of truth responsible for asset transformation (e.g. to `style.min.css`), making the entire system robust and simplifying future enhancements like cache-busting.
 - **Automated Code Quality & Formatting:** A comprehensive quality gate is integrated into the CI/CD pipeline. Prettier enforces a consistent idiomatic code style and ESLint checks for potential bugs and logical errors.
-
-* **Comprehensive Automated Testing:** To guarantee reliability, the project is supported by a professional-grade testing suite built with Jest. This includes:
+- **Comprehensive Automated Testing:** To guarantee reliability, the project is supported by a professional-grade testing suite built with Jest. The suite programmatically enforces quality on every commit, and includes:
   - **Unit Tests:** A comprehensive suite covering the entire build pipeline to prevent regressions.
-  - **Accessibility Tests:** An automated suite using Puppeteer and `axe-core` programmatically enforces WCAG compliance across all pages and themes, turning accessibility into a non-negotiable quality gate.
-  - A full roadmap for adding automated **performance** and **visual regression** validation is in place.
+  - **Accessibility Tests:** An automated suite using Puppeteer and `axe-core` that enforces WCAG compliance across all pages and themes.
 
 #### Performance
 
@@ -101,7 +99,7 @@ The project was built with a focus on pragmatic and long-term value. The followi
 - **Asset Pipeline & Optimization:**
   - **JS/CSS/HTML Minification:** [Terser](https://terser.org/), [CleanCSS](https://github.com/clean-css/clean-css), `html-minifier`
   - **Image Optimization:** [sharp](https://sharp.pixelplumbing.com/), [SVGO](https://github.com/svg/svgo) and [Squoosh.app](https://squoosh.app/)
-  - **Markdown Parsing:** [Marked](https://marked.js.org/)
+  - **Markdown Parsing:** [markdown-it](https://github.com/markdown-it/markdown-it)
 - **Code Quality & Formatting:**
   - **JavaScript Linting:** [ESLint](https://eslint.org/)
   - **Automated Formatting:** [Prettier](https://prettier.io/)
@@ -111,13 +109,14 @@ The project was built with a focus on pragmatic and long-term value. The followi
 
 ### 5. Build & Deployment
 
-The project is automatically built and deployed via a GitHub Actions workflow. On every push to the `main` branch, the following steps are executed:
+The project uses a full Continuous Integration & Continuous Deployment (CI/CD) pipeline powered by GitHub Actions. The process is designed to ensure that the `main` branch is always stable and deployable.
 
-1.  Dependencies are installed using `npm ci` for reproducible builds.
-2.  Code quality is verified using Prettier (formatting) and ESLint (static analysis).
-3.  The automated test suite is run with Jest to validate the build pipeline's correctness.
-4.  If all checks pass, the site is built using `npm run build`.
-5.  The final build artifacts from `/dist` are deployed to GitHub Pages.
+1.  **Pull Request Validation:** On every push to a pull request branch, the full suite of quality checks is run automatically:
+    - Code formatting (`prettier`)
+    - Static analysis (`eslint`)
+    - Automated unit and accessibility tests (`jest`)
+2.  **Merge Gate:** Merging to `main` is blocked by GitHub branch protection rules unless all CI checks have passed.
+3.  **Production Deployment:** Upon a successful merge to `main`, a final workflow run is triggered, which builds the static site artifacts and deploys them to GitHub Pages.
 
 ### 6. Local Development
 
