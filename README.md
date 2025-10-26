@@ -5,6 +5,10 @@
 
 This repository contains the source code for my personal homepage and interactive CV, available at **[isaacbernat.com](https://www.isaacbernat.com)**. It serves as a public demonstration of my engineering philosophy, featuring deep-dive case studies, system designs, and a codebase built on modern best practices for performance and accessibility.
 
+### Key Highlights
+
+This portfolio is built and deployed with the same rigor as a production-grade application. It programmatically enforces quality through a full CI/CD pipeline with automated accessibility testing, is architected for elite performance using a custom asset pipeline and is designed for long-term maintainability with a clean, component-based structure.
+
 ---
 
 ### Table of Contents
