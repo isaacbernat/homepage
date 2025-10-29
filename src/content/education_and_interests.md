@@ -15,7 +15,7 @@ _Norwegian University of Science and Technology (NTNU) & Universitat Politècnic
 #### Leadership & Interests
 
 - **Community Leadership (VP & Treasurer, 2006-2010):** Co-managed a non-profit cultural association aimed at providing positive leisure alternatives for local youth. Oversaw budgets, secured public funding and organized community events, including annual LAN parties and boardgame weekends.
-- **Personal Interests:** I enjoy classical music, performing on piano, harpsichord and participating in organ masterclasses. I'm also an avid reader and fond of indie games, having developed PoCs for Thumby like a **[Simon clone](https://github.com/isaacbernat/tinymem)** and a **[Pong clone](https://github.com/isaacbernat/2pddl42ppl)**.
+- **Personal Interests:** I enjoy classical music, performing on piano, harpsichord and participating in organ masterclasses. I'm also an avid reader and fond of indie games, having developed PoCs for Thumby like a **[Simon clone](https://github.com/isaacbernat/tinymem)** and a multiplayer **[Pong clone](https://github.com/isaacbernat/2pddl42ppl)**.
 
 #### Credentials
 
