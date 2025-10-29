@@ -87,6 +87,9 @@ const THEME_CONFIGS = {
         );
         return bodyColor.trim() === '#e4e6eb'; // Matches dark theme --color-text
       });
+      // Add a small, final "breathing room" pause for the rendering engine to catch up.
+      // This is a pragmatic fix for stubborn race conditions.
+      await new Promise((resolve) => setTimeout(resolve, 100));
     },
   },
 };
