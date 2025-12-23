@@ -360,9 +360,9 @@ html[data-theme='dark'] .btn {
 }
 
 .cv-second-nav ul {
-  gap: 1 rem; /* Tighter spacing */
+  gap: 1rem; /* Tighter spacing */
   justify-content: center; /* Keep it centered like the header */
-  flex-wrap: wrap;  /* Allow wrapping on medium screens if needed */
+  flex-wrap: wrap; /* Allow wrapping on medium screens if needed */
   padding: 0;
   margin-top: 0;
 }
