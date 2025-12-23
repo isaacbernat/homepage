@@ -21,9 +21,19 @@
             </div>
         </div>
     </div>
+    <nav class="cv-second-nav" aria-label="CV Sections">
+        <ul>
+            <li><a href="#experience" class="active">Experience</a></li>
+            <li><a href="#case-studies">Case Studies</a></li>
+            <li><a href="#system-design">System Design</a></li>
+            <li><a href="#personal-open-source-projects">Projects</a></li>
+            <li><a href="#presentations">Presentations</a></li>
+            <li><a href="#education">Education</a></li>
+        </ul>
+    </nav>
 
     <div class="cv-page__content">
-        <h2 class="cv-section-title">Experience</h2>
+        <h2 class="cv-section-title" id="experience">Experience</h2>
         <div class="accordion">
             {{ experienceEntry(
                 title='Sabbatical',
@@ -63,9 +73,7 @@
                 content=content.experience_fxstreet
             ) }}
         </div>
-
-
-        <h2 class="cv-section-title">Case Studies</h2>
+        <h2 class="cv-section-title" id="case-studies">Case Studies</h2>
         {{ featuredCaseStudy(
             id='casestudy-subscription-model',
             title='Model MVP: Building a Company-Defining Success (2021)',
@@ -201,7 +209,7 @@
                 <p style="margin-top: 1.0rem;"><a href="https://github.com/isaacbernat/presentations?#optimise" target="_blank" rel="noopener noreferrer">View all presentations on GitHub &rarr;</a></p>
             </div>
         </div>
-        <h2 class="cv-section-title">Education &amp; Interests</h2>
+        <h2 class="cv-section-title" id="education">Education &amp; Interests</h2>
         <div class="accordion">
             <details>
                 <summary>

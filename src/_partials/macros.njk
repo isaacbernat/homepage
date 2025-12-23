@@ -29,7 +29,7 @@
 {% endmacro %}
 
 {% macro caseStudyCard(id, title, teaser, full_content, is_open=false) %}
-<details class="project-card" id="{{ id }}" {% if is_open %}open{% endif %}>
+<details class="project-card case-card" id="{{ id }}" {% if is_open %}open{% endif %}>
     <summary aria-label="Case study: {{ title }}">
         <span class="summary-title">{{ title }}</span>
         <span class="summary-icon"></span>

@@ -265,7 +265,6 @@ html[data-theme='dark'] .btn {
   /* Two columns on wider screens */
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 1.5rem;
-  margin-top: 1.5rem; /* Add space below featured projects */
 }
 
 .project-card {
@@ -293,6 +292,10 @@ html[data-theme='dark'] .btn {
 .project-card .project-link {
   margin-top: auto; /* Pushes link to the bottom of the card */
 }
+.case-card {
+  margin-bottom: 1.5rem;
+}
+
 .pdf-download-link {
   display: block;
   margin-top: 1rem;
@@ -354,4 +357,12 @@ html[data-theme='dark'] .btn {
 
 .details-with-top-margin {
   margin-top: 1rem;
+}
+
+.cv-second-nav ul {
+  gap: 1 rem; /* Tighter spacing */
+  justify-content: center; /* Keep it centered like the header */
+  flex-wrap: wrap;  /* Allow wrapping on medium screens if needed */
+  padding: 0;
+  margin-top: 0;
 }
