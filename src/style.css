@@ -62,7 +62,7 @@ body {
     /* Keep top color until upper third of image */ var(--gradient-bottom)
       calc(50% + 15vw),
     /* Start blending to bottom color at lower third of image */
-      var(--gradient-bottom) 100% /* Finish with bottom color */
+    var(--gradient-bottom) 100% /* Finish with bottom color */
   );
   background-repeat: no-repeat;
   background-attachment: fixed; /* Keeps gradient stationary during scroll */
