@@ -83,3 +83,49 @@ document.addEventListener('DOMContentLoaded', function () {
   mailtoLink.textContent = fullEmail;
   emailSpan.parentNode.replaceChild(mailtoLink, emailSpan);
 });
+
+window.addEventListener('load', function () {
+  const idleCallback = window.requestIdleCallback || ((cb) => setTimeout(cb, 1));
+
+  idleCallback(() => {
+    // 1. Define the asset paths (Source of Truth)
+    // These must match index.njk exactly.
+    const IMG_DATA = {
+      light: "images/keyboard-light-1920.webp 1x, images/keyboard-light-3840.webp 2x",
+      dark: "images/keyboard-dark-1920.webp 1x, images/keyboard-dark-3840.webp 2x"
+    };
+
+    // 2. Detect Environment
+    const lazyImage = document.querySelector('.main-image');
+    const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
+    const oppositeTheme = currentTheme === 'dark' ? 'light' : 'dark';
+
+    // 3. Define the preload worker
+    const preloadImage = (srcsetStr) => {
+      // Check if already in cache (imperfect check, but saves creating objects)
+      // Browsers are smart enough not to re-download if we create a duplicate Image object,
+      // but we skip the CPU work if we can.
+      const img = new Image();
+      img.srcset = srcsetStr;
+    };
+
+    // 4. Execution Logic
+    if (lazyImage) {
+      // Case A: We are on the Homepage. 
+      // Current theme image is already loaded/loading by the browser.
+      // We only need the opposite theme.
+      preloadImage(IMG_DATA[oppositeTheme]);
+    } else {
+      // Case B: We are on CV or 404.
+      // Nothing is loaded. We want the Homepage to feel instant if they go there.
+      // Priority 1: Preload the CURRENT theme (most likely destination state).
+      preloadImage(IMG_DATA[currentTheme]);
+      
+      // Priority 2: Preload the OPPOSITE theme (in case they toggle immediately).
+      // We wrap this in a timeout to let Priority 1 get a head start on the network.
+      setTimeout(() => {
+        preloadImage(IMG_DATA[oppositeTheme]);
+      }, 200);
+    }
+  });
+});
