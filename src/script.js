@@ -3,78 +3,146 @@ document.addEventListener('DOMContentLoaded', function () {
   const lazyImage = document.querySelector('.main-image');
   if (!lazyImage) return;
 
-  // --- Part 1: Fix initial blink ---
-  const initialTheme =
-    document.documentElement.getAttribute('data-theme') || 'light'; // Set by the <head> script
-  const initialPlaceholder =
-    initialTheme === 'dark'
-      ? 'images/keyboard-dark-480.webp'
-      : 'images/keyboard-light-480.webp';
-  if (lazyImage.classList.contains('lazy-load')) {
-    lazyImage.src = initialPlaceholder; // Set correct low-res placeholder ASAP for lazy-load state
-  }
+  const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
 
-  // --- Part 2: Handle the high-res load ---
-  if (lazyImage.classList.contains('lazy-load')) {
-    const sourceElement = lazyImage.previousElementSibling;
+  // Configuration
+  const lowResPath = currentTheme === 'dark' 
+    ? 'images/keyboard-dark-480.webp'
+    : 'images/keyboard-light-480.webp';
+    
+  const highResSrcset = currentTheme === 'dark' 
+    ? lazyImage.dataset.srcsetDark 
+    : lazyImage.dataset.srcsetLight;
 
-    const onImageLoad = () => {
-      // Cleanup when high-res image is loaded
-      lazyImage.classList.remove('lazy-load'); // This triggers the 2s un-blur
-      lazyImage.removeEventListener('load', onImageLoad);
-    };
-    lazyImage.addEventListener('load', onImageLoad);
+  const loader480 = new Image();
+  loader480.src = lowResPath;
 
-    updateImageSource(initialTheme, lazyImage, sourceElement); // Load the high-res images
-    if (lazyImage.complete) {
-      // cached image handler
-      onImageLoad();
-    }
-  }
+  loader480.onload = function() {  // Update DOM with 480p
+    const picture = lazyImage.closest('picture');
+    const source = picture ? picture.querySelector('source') : null;
+    
+    if (source) source.srcset = lowResPath;
+    lazyImage.src = lowResPath;
+
+    requestAnimationFrame(() => {  // Wait for paint, then fetch High-Res
+        loadHighRes(source, highResSrcset, currentTheme);
+    });
+  };
+
+  loader480.onerror = function() {  // Fallback
+    loadHighRes(null, highResSrcset, currentTheme);
+  };
 });
 
+
+function loadHighRes(sourceElement, highResSrcset, currentTheme) {
+  const lazyImage = document.querySelector('.main-image');
+  
+  const loaderHigh = new Image();
+  loaderHigh.srcset = highResSrcset;
+  
+  loaderHigh.onload = function() {
+    if (sourceElement) sourceElement.srcset = highResSrcset;  // Swap the Source (High-Res is now in DOM, but still has .lazy-load class)
+    
+    const fallbackSrc = highResSrcset.split(',')[0].split(' ')[0];
+    lazyImage.src = fallbackSrc;
+    
+    requestAnimationFrame(() => {  // Wait for the browser to accept the new source and paint it
+        lazyImage.classList.remove('lazy-load');  // Start the transition
+    });
+
+    preloadOppositeTheme(currentTheme);  // anticipate a smooth transition in the likely scenario the user changes theme
+  };
+}
+
+// --- ATOMIC THEME TOGGLER ---
+// Fixes the FOUC and rapid-click network thrashing
 document.addEventListener('DOMContentLoaded', function () {
-  // Light/dark theme handler
   const themeToggleButton = document.querySelector('.theme-toggle');
   if (!themeToggleButton) return;
 
-  themeToggleButton.addEventListener('click', function () {
-    const currentTheme = document.documentElement.getAttribute('data-theme'); // Get the current theme from the <html> tag
-    const newTheme = currentTheme === 'dark' ? 'light' : 'dark'; // Toggle the theme
-    document.documentElement.setAttribute('data-theme', newTheme); // Set the new theme on the <html> tag
-    localStorage.setItem('theme', newTheme); // Save the user's preference to localStorage
+  // Track the latest requested state
+  let latestRequestedTheme = document.documentElement.getAttribute('data-theme') || 'light';
 
-    // specific code to update the homepage's image
+  themeToggleButton.addEventListener('click', function () {
+    // 1. Calculate the target theme based on the LAST request (not necessarily the current DOM)
+    const nextTheme = latestRequestedTheme === 'dark' ? 'light' : 'dark';
+    latestRequestedTheme = nextTheme; // Update the "Desired State" immediately
+    
+    // 2. Save preference immediately (so reload persists intent)
+    localStorage.setItem('theme', nextTheme);
+
+    // 3. Prepare the assets
     const lazyImage = document.querySelector('.main-image');
-    const picture = lazyImage ? lazyImage.closest('picture') : null;
-    const sourceElement = picture ? picture.querySelector('source') : null;
-    updateImageSource(newTheme, lazyImage, sourceElement); // Load appropriate image
+    if (!lazyImage) {  // If no image (e.g. 404 page), just swap CSS instantly
+      document.documentElement.setAttribute('data-theme', nextTheme);
+      return;
+    }
+
+    const newSrcset = nextTheme === 'dark' 
+      ? lazyImage.dataset.srcsetDark 
+      : lazyImage.dataset.srcsetLight;
+
+    // 4. Create a detached loader for the NEW theme
+    const tempLoader = new Image();
+    tempLoader.srcset = newSrcset;
+
+    // 5. The "Atomic Commit" logic
+    const commitChange = () => {
+      // Only apply this change if it matches the USER'S LAST CLICK.
+      // If user clicked Light -> Dark -> Light quickly, the 'Dark' loader will finish
+      // but 'latestRequestedTheme' will be 'light'. We skip the 'Dark' update.
+      if (latestRequestedTheme === nextTheme) {
+        // A. Update CSS (Background Color)
+        document.documentElement.setAttribute('data-theme', nextTheme);
+
+        // B. Update Image (Content)
+        const picture = lazyImage.closest('picture');
+        const source = picture ? picture.querySelector('source') : null;
+        if (source) source.srcset = newSrcset;
+        lazyImage.src = newSrcset.split(',')[0].split(' ')[0];
+      }
+    };
+
+    // 6. Wait for decode, then commit
+    // Since we preloaded the opposite theme, this should be nearly instant (from cache).
+    // But wrapping it in onload ensures the browser is ready to paint, preventing FOUC.
+    if (tempLoader.complete) {
+        commitChange();
+    } else {
+        tempLoader.onload = commitChange;
+        // Safety: If image fails or takes too long, force the switch anyway after 100ms
+        // so the button doesn't feel broken.
+        setTimeout(commitChange, 100); 
+    }
   });
 });
 
-function updateImageSource(theme, imageElement, sourceElement) {
-  if (!imageElement) return;
 
-  const srcsetValue =
-    theme === 'dark' // srcset based on the theme
-      ? imageElement.dataset.srcsetDark
-      : imageElement.dataset.srcsetLight;
-  if (!srcsetValue) return;
+// --- Helper for Opposite Theme Preloading ---
+function preloadOppositeTheme(currentTheme) {
+  const idleCallback = window.requestIdleCallback || ((cb) => setTimeout(cb, 1));
+  
+  idleCallback(() => {
+    const IMG_DATA = {
+      light: "images/keyboard-light-1920.webp 1x, images/keyboard-light-3840.webp 2x",
+      dark: "images/keyboard-dark-1920.webp 1x, images/keyboard-dark-3840.webp 2x"
+    };
 
-  if (sourceElement) {
-    // <source> tag for modern browsers
-    sourceElement.srcset = srcsetValue;
-  }
+    const oppositeTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    const srcsetToPreload = IMG_DATA[oppositeTheme];
 
-  const fallbackSrc = srcsetValue.split(',')[0].split(' ')[0];
-  imageElement.src = fallbackSrc; // high-res 1x fallback on the <img> tag for older browsers
+    if (srcsetToPreload) {
+      const preloader = new Image();
+      preloader.srcset = srcsetToPreload;
+    }
+  });
 }
 
+// --- Email Obfuscation (Unchanged) ---
 document.addEventListener('DOMContentLoaded', function () {
-  // Simple email obfuscation
   const emailSpan = document.getElementById('email-link');
   if (!emailSpan) return;
-
   const user = emailSpan.getAttribute('data-user');
   const domain = emailSpan.getAttribute('data-domain');
   const fullEmail = `${user}@${domain}`;
@@ -82,50 +150,4 @@ document.addEventListener('DOMContentLoaded', function () {
   mailtoLink.href = `mailto:${fullEmail}`;
   mailtoLink.textContent = fullEmail;
   emailSpan.parentNode.replaceChild(mailtoLink, emailSpan);
-});
-
-window.addEventListener('load', function () {
-  const idleCallback = window.requestIdleCallback || ((cb) => setTimeout(cb, 1));
-
-  idleCallback(() => {
-    // 1. Define the asset paths (Source of Truth)
-    // These must match index.njk exactly.
-    const IMG_DATA = {
-      light: "images/keyboard-light-1920.webp 1x, images/keyboard-light-3840.webp 2x",
-      dark: "images/keyboard-dark-1920.webp 1x, images/keyboard-dark-3840.webp 2x"
-    };
-
-    // 2. Detect Environment
-    const lazyImage = document.querySelector('.main-image');
-    const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
-    const oppositeTheme = currentTheme === 'dark' ? 'light' : 'dark';
-
-    // 3. Define the preload worker
-    const preloadImage = (srcsetStr) => {
-      // Check if already in cache (imperfect check, but saves creating objects)
-      // Browsers are smart enough not to re-download if we create a duplicate Image object,
-      // but we skip the CPU work if we can.
-      const img = new Image();
-      img.srcset = srcsetStr;
-    };
-
-    // 4. Execution Logic
-    if (lazyImage) {
-      // Case A: We are on the Homepage. 
-      // Current theme image is already loaded/loading by the browser.
-      // We only need the opposite theme.
-      preloadImage(IMG_DATA[oppositeTheme]);
-    } else {
-      // Case B: We are on CV or 404.
-      // Nothing is loaded. We want the Homepage to feel instant if they go there.
-      // Priority 1: Preload the CURRENT theme (most likely destination state).
-      preloadImage(IMG_DATA[currentTheme]);
-      
-      // Priority 2: Preload the OPPOSITE theme (in case they toggle immediately).
-      // We wrap this in a timeout to let Priority 1 get a head start on the network.
-      setTimeout(() => {
-        preloadImage(IMG_DATA[oppositeTheme]);
-      }, 200);
-    }
-  });
 });

@@ -21,6 +21,7 @@
 
   --color-text-rgb: 51, 51, 51;
   --color-text-strong-rgb: 0, 0, 0;
+  --img-saturation: 1;
 }
 
 html[data-theme='dark'] {
@@ -33,6 +34,7 @@ html[data-theme='dark'] {
 
   --color-text-rgb: 228, 230, 235;
   --color-text-strong-rgb: 255, 255, 255;
+  --img-saturation: 0.5;
 }
 
 html {
@@ -131,7 +133,10 @@ main > picture {
   width: 100%; /* Stretch the image to 100% of the container's width */
   height: auto; /* Maintain the aspect ratio */
   display: block; /* Removes tiny space below the image */
-  transition: filter 2s ease-in-out; /* Smooth transition for the blur effect */
+  filter: saturate(var(--img-saturation)) blur(0px);
+  transform: scale(1);
+
+  transition: filter 1.5s ease-out, transform 1.5s ease-out;
   aspect-ratio: 2.88; /* 3840 / 1334; */
 
   mask-image:
@@ -171,7 +176,8 @@ main > picture {
 }
 
 .main-image.lazy-load {
-  filter: blur(2px); /* Make the low-res image blurry to hide artifacts */
+  filter: saturate(var(--img-saturation)) blur(4px);
+  transform: scale(1.05);
 }
 
 .theme-toggle {
@@ -205,10 +211,6 @@ html[data-theme='dark'] .icon-sun {
 
 html[data-theme='dark'] .icon-moon {
   display: block;
-}
-
-html[data-theme='dark'] .main-image {
-  filter: saturate(0.5);
 }
 
 noscript .main-image {
