@@ -42,7 +42,20 @@ A core principle of this project was to leverage modern Large Language Models (L
     3.  **Unnecessary Complexity:** It would introduce significant client-side complexity (e.g. state management, error handling) to solve a performance problem that doesn't exist, as the current static build is already fast.
   - **Conclusion:** The current static generation approach is the superior architecture, offering the best possible balance of performance, SEO and accessibility. This decision is a prime example of pragmatic engineering.
 
-#### 1.4. Technology Stack
+#### 1.4. Advanced Asset Delivery Strategy (Zero-Latency Theming)
+
+- **Blob URL Caching over Browser HTTP Cache:**
+  - **The Problem:** On high-latency networks (e.g. 3G), standard browser caching strategies can fail to prevent a "Flash of Unstyled Content" (FOUC) during theme toggles. Even if an image is in the disk cache, the browser often sends a "Revalidation Request" (304 Not Modified) to the server, causing a delay of several seconds before the image renders.
+  - **The Solution:** A custom "Atomic Commit" engine was implemented. It pre-fetches the alternate theme's assets into memory as **Blob URLs**.
+  - **Rationale:** Blob URLs point directly to data in the device's RAM. They have no concept of a server and thus **bypass the network stack entirely**. This guarantees a deterministic, 0ms toggle time regardless of network conditions.
+  - **Trade-off:** Slightly increased complexity in the JavaScript layer to manage memory URLs, but essential for the project's goal of "Super Smooth UI."
+
+- **Deterministic Proxy Loading:**
+  - **The Problem:** Modern browsers often ignore `<img src>` updates if a high-resolution `srcset` is available, causing race conditions where low-resolution placeholders are skipped, leading to a blank screen during loading.
+  - **The Solution:** A "Proxy Loader" pattern was implemented. The JavaScript explicitly creates a detached `Image` object for the low-res placeholder, waits for its `onload` event, paints it to the DOM, and *then* requests the high-res asset in a separate animation frame.
+  - **Rationale:** This forces the browser to respect the intended visual sequence (Blurry -> Sharp), ensuring visual stability and immediate feedback for the user.
+
+#### 1.5. Technology Stack
 
 - **Templating Engine (Nunjucks vs. Pug/Others):**
   - **Why Nunjucks was chosen:** Its syntax is a superset of HTML and is very similar to Jinja2, making it intuitive and easy to work with. It's powerful enough for this project's needs (layouts, macros, includes) without imposing a restrictive new syntax. This prioritizes clarity and reduces the learning curve.
@@ -91,6 +104,7 @@ The following advanced testing modules were considered and included in the initi
   - **What:** Modify the build script to generate unique filenames for CSS and JavaScript assets based on their content (e.g. `style.[hash].min.css`).
   - **Why:** To solve the browser caching problem where users might be served stale assets after a new deployment. This ensures that every user immediately receives the latest version of the site, preventing bugs and inconsistent experiences. It's a critical feature for production reliability.
   - **How:** Use a Node.js package (like `md5-file` or Node's built-in `crypto` module) to generate a content hash for each asset. The build script would then rename the output files with this hash and update the references in the final HTML files accordingly. The recent refactoring to decouple templates from build artifacts makes this significantly easier to implement.
+  - **Note:** Implementing this will require updating the image path logic within script.js to dynamically resolve the hashed filenames, likely by injecting a manifest object during the build process.
 
 #### Tier 3: Potential Future Migrations
 
