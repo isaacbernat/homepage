@@ -6,7 +6,7 @@
  *    sequence to ensure visual stability before the heavy asset loads.
  * 3. Scope: Runs inside an IIFE to prevent global namespace pollution.
  * 4. Privacy: Simple email obfuscation.
-*/
+ */
 
 (function () {
   'use strict';
@@ -14,16 +14,17 @@
   // --- State Management ---
   const state = {
     blobCache: { light: null, dark: null },
-    currentTheme: document.documentElement.getAttribute('data-theme') || 'light',
+    currentTheme:
+      document.documentElement.getAttribute('data-theme') || 'light',
     // Check screen density once on load to determine which asset to fetch
-    isRetina: (window.devicePixelRatio || 1) > 1.5
+    isRetina: (window.devicePixelRatio || 1) > 1.5,
   };
 
   // --- DOM Elements ---
   const elements = {
     lazyImage: document.querySelector('.main-image'),
     themeToggle: document.querySelector('.theme-toggle'),
-    emailLink: document.getElementById('email-link')
+    emailLink: document.getElementById('email-link'),
   };
 
   // --- Core Logic: Image Loader ---
@@ -33,7 +34,7 @@
       if (!dataset) return '';
       const parts = dataset.split(',');
       // If Retina and 2x exists, use it. Otherwise 1x.
-      const candidate = (state.isRetina && parts[1]) ? parts[1] : parts[0];
+      const candidate = state.isRetina && parts[1] ? parts[1] : parts[0];
       return candidate.trim().split(' ')[0];
     },
 
@@ -44,15 +45,17 @@
       }
 
       fetch(url)
-        .then(res => {
+        .then((res) => {
           if (!res.ok) throw new Error(`Failed to load ${url}`);
           return res.blob();
         })
-        .then(blob => {
+        .then((blob) => {
           state.blobCache[theme] = URL.createObjectURL(blob);
           if (callback) callback();
         })
-        .catch(err => console.warn(`[ImageManager] Blob fetch error for ${theme}:`, err));
+        .catch((err) =>
+          console.warn(`[ImageManager] Blob fetch error for ${theme}:`, err),
+        );
     },
 
     applyToDom(theme) {
@@ -66,12 +69,12 @@
       if (source) source.removeAttribute('srcset');
 
       elements.lazyImage.src = state.blobCache[theme];
-      
+
       // Ensure the browser paints the new frame before revealing
       requestAnimationFrame(() => {
         elements.lazyImage.classList.remove('lazy-load');
       });
-    }
+    },
   };
 
   // --- Initialization Sequence ---
@@ -80,16 +83,18 @@
 
     const { currentTheme } = state;
     const lazyImage = elements.lazyImage;
-    
+
     // 1. Configuration
-    const lowResPath = currentTheme === 'dark' 
-      ? 'images/keyboard-dark-480.webp' 
-      : 'images/keyboard-light-480.webp';
-      
-    const highResSrcset = currentTheme === 'dark' 
-      ? lazyImage.dataset.srcsetDark 
-      : lazyImage.dataset.srcsetLight;
-      
+    const lowResPath =
+      currentTheme === 'dark'
+        ? 'images/keyboard-dark-480.webp'
+        : 'images/keyboard-light-480.webp';
+
+    const highResSrcset =
+      currentTheme === 'dark'
+        ? lazyImage.dataset.srcsetDark
+        : lazyImage.dataset.srcsetLight;
+
     const highResUrl = ImageManager.getHighResUrl(highResSrcset);
 
     // 2. Force-Fetch 480p Placeholder
@@ -116,7 +121,8 @@
     // Fallback: If 480p fails, just let the browser handle standard srcset
     loader480.onerror = () => {
       if (lazyImage.closest('picture')?.querySelector('source')) {
-         lazyImage.closest('picture').querySelector('source').srcset = highResSrcset;
+        lazyImage.closest('picture').querySelector('source').srcset =
+          highResSrcset;
       }
       lazyImage.src = highResUrl;
     };
@@ -124,14 +130,16 @@
 
   function preloadOppositeTheme() {
     // Low Priority: Prepare the other theme for a 0ms toggle later
-    const idleCallback = window.requestIdleCallback || ((cb) => setTimeout(cb, 1));
-    
+    const idleCallback =
+      window.requestIdleCallback || ((cb) => setTimeout(cb, 1));
+
     idleCallback(() => {
       const oppositeTheme = state.currentTheme === 'dark' ? 'light' : 'dark';
-      const oppositeSrcset = oppositeTheme === 'dark' 
-        ? elements.lazyImage.dataset.srcsetDark 
-        : elements.lazyImage.dataset.srcsetLight;
-        
+      const oppositeSrcset =
+        oppositeTheme === 'dark'
+          ? elements.lazyImage.dataset.srcsetDark
+          : elements.lazyImage.dataset.srcsetLight;
+
       const url = ImageManager.getHighResUrl(oppositeSrcset);
       ImageManager.loadAndCacheBlob(oppositeTheme, url);
     });
@@ -144,7 +152,7 @@
     elements.themeToggle.addEventListener('click', () => {
       const nextTheme = state.currentTheme === 'dark' ? 'light' : 'dark';
       state.currentTheme = nextTheme;
-      
+
       // Persist intent
       localStorage.setItem('theme', nextTheme);
       document.documentElement.setAttribute('data-theme', nextTheme);
@@ -155,15 +163,16 @@
       } else {
         // Edge Case: User toggled before preload finished.
         // Fallback to standard browser loading (will have FOUC on slow networks, but functional)
-        const newSrcset = nextTheme === 'dark' 
-          ? elements.lazyImage.dataset.srcsetDark 
-          : elements.lazyImage.dataset.srcsetLight;
-          
+        const newSrcset =
+          nextTheme === 'dark'
+            ? elements.lazyImage.dataset.srcsetDark
+            : elements.lazyImage.dataset.srcsetLight;
+
         const url = ImageManager.getHighResUrl(newSrcset);
-        
+
         // Try to fetch blob ASAP
         ImageManager.loadAndCacheBlob(nextTheme, url, () => {
-           ImageManager.applyToDom(nextTheme);
+          ImageManager.applyToDom(nextTheme);
         });
       }
     });
@@ -175,7 +184,7 @@
     const user = elements.emailLink.getAttribute('data-user');
     const domain = elements.emailLink.getAttribute('data-domain');
     const fullEmail = `${user}@${domain}`;
-    
+
     const mailtoLink = document.createElement('a');
     mailtoLink.href = `mailto:${fullEmail}`;
     mailtoLink.textContent = fullEmail;

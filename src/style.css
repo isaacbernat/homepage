@@ -136,7 +136,9 @@ main > picture {
   filter: saturate(var(--img-saturation)) blur(0px);
   transform: scale(1);
 
-  transition: filter 1.5s ease-out, transform 1.5s ease-out;
+  transition:
+    filter 1.5s ease-out,
+    transform 1.5s ease-out;
   aspect-ratio: 2.88; /* 3840 / 1334; */
 
   mask-image:

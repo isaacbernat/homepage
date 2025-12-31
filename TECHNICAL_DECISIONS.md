@@ -52,7 +52,7 @@ A core principle of this project was to leverage modern Large Language Models (L
 
 - **Deterministic Proxy Loading:**
   - **The Problem:** Modern browsers often ignore `<img src>` updates if a high-resolution `srcset` is available, causing race conditions where low-resolution placeholders are skipped, leading to a blank screen during loading.
-  - **The Solution:** A "Proxy Loader" pattern was implemented. The JavaScript explicitly creates a detached `Image` object for the low-res placeholder, waits for its `onload` event, paints it to the DOM, and *then* requests the high-res asset in a separate animation frame.
+  - **The Solution:** A "Proxy Loader" pattern was implemented. The JavaScript explicitly creates a detached `Image` object for the low-res placeholder, waits for its `onload` event, paints it to the DOM, and _then_ requests the high-res asset in a separate animation frame.
   - **Rationale:** This forces the browser to respect the intended visual sequence (Blurry -> Sharp), ensuring visual stability and immediate feedback for the user.
 
 #### 1.5. Technology Stack
