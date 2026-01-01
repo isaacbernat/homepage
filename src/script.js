@@ -120,9 +120,9 @@
 
     // Fallback: If 480p fails, just let the browser handle standard srcset
     loader480.onerror = () => {
-      if (lazyImage.closest('picture')?.querySelector('source')) {
-        lazyImage.closest('picture').querySelector('source').srcset =
-          highResSrcset;
+      const source = lazyImage.closest('picture')?.querySelector('source');
+      if (source) {
+         source.srcset = highResSrcset;
       }
       lazyImage.src = highResUrl;
     };
