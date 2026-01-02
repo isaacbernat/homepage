@@ -29,6 +29,13 @@
 
   // --- Core Logic: Image Loader ---
   const ImageManager = {
+    getSrcset(theme) {
+      if (!elements.lazyImage) return '';
+      return theme === 'dark'
+        ? elements.lazyImage.dataset.srcsetDark
+        : elements.lazyImage.dataset.srcsetLight;
+    },
+
     getHighResUrl(dataset) {
       // Parse "url 1x, url 2x" format
       if (!dataset) return '';
@@ -64,10 +71,8 @@
       const picture = elements.lazyImage.closest('picture');
       const source = picture ? picture.querySelector('source') : null;
 
-      // Engineer Note: We remove the 'srcset' from the <source> tag.
-      // This stops the browser from fighting our manual Blob URL injection.
+      // remove the 'srcset' from the <source> tag to stop the browser from fighting our manual Blob URL injection.
       if (source) source.removeAttribute('srcset');
-
       elements.lazyImage.src = state.blobCache[theme];
 
       // Ensure the browser paints the new frame before revealing
@@ -90,11 +95,7 @@
         ? 'images/keyboard-dark-480.webp'
         : 'images/keyboard-light-480.webp';
 
-    const highResSrcset =
-      currentTheme === 'dark'
-        ? lazyImage.dataset.srcsetDark
-        : lazyImage.dataset.srcsetLight;
-
+    const highResSrcset = ImageManager.getSrcset(currentTheme);
     const highResUrl = ImageManager.getHighResUrl(highResSrcset);
 
     // 2. Force-Fetch 480p Placeholder
@@ -122,7 +123,7 @@
     loader480.onerror = () => {
       const source = lazyImage.closest('picture')?.querySelector('source');
       if (source) {
-         source.srcset = highResSrcset;
+        source.srcset = highResSrcset;
       }
       lazyImage.src = highResUrl;
     };
@@ -135,12 +136,10 @@
 
     idleCallback(() => {
       const oppositeTheme = state.currentTheme === 'dark' ? 'light' : 'dark';
-      const oppositeSrcset =
-        oppositeTheme === 'dark'
-          ? elements.lazyImage.dataset.srcsetDark
-          : elements.lazyImage.dataset.srcsetLight;
 
+      const oppositeSrcset = ImageManager.getSrcset(oppositeTheme);
       const url = ImageManager.getHighResUrl(oppositeSrcset);
+
       ImageManager.loadAndCacheBlob(oppositeTheme, url);
     });
   }
@@ -163,11 +162,7 @@
       } else {
         // Edge Case: User toggled before preload finished.
         // Fallback to standard browser loading (will have FOUC on slow networks, but functional)
-        const newSrcset =
-          nextTheme === 'dark'
-            ? elements.lazyImage.dataset.srcsetDark
-            : elements.lazyImage.dataset.srcsetLight;
-
+        const newSrcset = ImageManager.getSrcset(nextTheme);
         const url = ImageManager.getHighResUrl(newSrcset);
 
         // Try to fetch blob ASAP
