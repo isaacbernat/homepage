@@ -77,6 +77,10 @@ A core principle of this project was to leverage modern Large Language Models (L
 This project moves beyond simply _claiming_ quality to _programmatically proving and enforcing_ it through a comprehensive, automated testing suite built with Jest.
 
 - **Unit-Tested Build Pipeline:** The foundation of the testing suite is a robust set of unit tests for the critical build pipeline (`build.js`). This treats the build process as first-class, mission-critical code.
+- **Browser-Based Verification (Playwright):** Unit tests cannot verify how the browser interacts with the network cache or renders pixels. Playwright was introduced to mathematically prove complex architectural claims, such as the "Zero-Latency" blob strategy. **Implemented Scenarios:**
+  - **Offline Resilience:** Verifies the theme toggler works without network access.
+  - **Network Interception:** Proves that assets are served from the Disk Cache or Memory (Blob) rather than re-fetched.
+  - **Responsive Behavior:** Validates that Retina devices receive 4K assets while standard displays receive 1080p.
 - **Resilient Browser-Testing Infrastructure:** To enable reliable end-to-end and accessibility testing, a **secure, custom-built test server** was created. This is not just a simple file server, it includes critical production-readiness features like **directory traversal protection**, health checks and automatic port finding to prevent CI conflicts. This robust foundation ensures that browser-based tests are stable and deterministic.
 - **A Living Roadmap:** The testing suite is designed to be extensible, with a clear roadmap to incorporate automated accessibility, performance and visual regression testing directly into the CI/CD quality gates. The full plan can be reviewed in the project's [design documents](./.kiro/specs/automated-testing-suite/design.md).
 

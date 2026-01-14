@@ -56,9 +56,10 @@ The project was built with a focus on pragmatic and long-term value. The followi
 - **Modular Build Script:** Following the Single Responsibility Principle, the build script is composed of small, single-purpose functions (e.g. `minifyJs`, `processFavicons`). This makes the build process highly readable, maintainable, and easy to extend, with a main `build()` function that acts as a clean orchestrator.
 - **Decoupled Templates for Robustness:** To improve maintainability and adhere to the principle of Separation of Concerns, templates (`.njk` files) reference source assets (`style.css`). The build script is the single source of truth responsible for asset transformation (e.g. to `style.min.css`), making the entire system robust and simplifying future enhancements like cache-busting.
 - **Automated Code Quality & Formatting:** A comprehensive quality gate is integrated into the CI/CD pipeline. Prettier enforces a consistent idiomatic code style and ESLint checks for potential bugs and logical errors.
-- **Comprehensive Automated Testing:** To guarantee reliability, the project is supported by a professional-grade testing suite built with Jest. The suite programmatically enforces quality on every commit, and includes:
-  - **Unit Tests:** A comprehensive suite covering the entire build pipeline to prevent regressions.
-  - **Accessibility Tests:** An automated suite using Puppeteer and `axe-core` that enforces WCAG compliance across all pages and themes.
+- **Comprehensive Automated Testing:** To guarantee reliability, the project is supported by a multi-layered testing strategy that enforces quality on every commit:
+  - **Unit Tests (Jest):** Verifies the build pipeline logic and file transformations.
+  - **Accessibility Tests (Axe-Core):** An automated suite that enforces WCAG compliance across all pages and themes.
+  - **End-to-End Tests (Playwright):** Verifies critical user-facing behaviors in a real browser environment, including Offline Resilience, Network Caching strategies, and Responsive Asset delivery.
 
 #### Performance
 
@@ -67,7 +68,8 @@ The project was built with a focus on pragmatic and long-term value. The followi
 - **Asset Minification:** All JS, CSS and HTML files are minified at build time to reduce file size.
 - **Responsive, Modern Images:** The `<picture>` element serves next-gen `.webp` images with responsive `srcset` attributes. The standard `<img>` tag is included as a robust fallback for older browsers.
 - **Image Optimization:** Initial images were optimized with Squoosh.app to a compressed `.webp` format. The build process uses `sharp` and `svgo` for automated optimization of favicons.
-- **Atomic Theme Toggling (Zero-Latencey):** Implements a custom "Atomic Commit" strategy for theming. The engine pre-fetches the alternate theme's assets into memory using **Blob URLs**, bypassing the browser's HTTP cache revalidation. This guarantees a 0ms, flicker-free transition between Light and Dark modes, even on high-latency (3G) networks where standard caching fails.
+- **Atomic Theme Toggling (Zero-Latency):** Implements a custom "Atomic Commit" strategy for theming. The engine pre-fetches the alternate theme's assets into memory using **Blob URLs**, bypassing the browser's HTTP cache revalidation. This guarantees a 0ms, flicker-free transition between Light and Dark modes, even on high-latency (3G) networks where standard caching fails.
+- **Native Lazy Loading:** Non-critical images (like those in the cv#presentations section) utilize `loading="lazy"` and `decoding="async"` to prioritize the loading of critical resources and ensure smooth main-thread performance.
 - **Deterministic Progressive Loading:** Instead of relying on standard browser heuristics, a custom "Proxy Loader" orchestrates the critical render path. It forces the download and paint of a 4kb placeholder (LQIP 480p) before attempting to fetch heavy 4k assets, ensuring visual stability (e.g. prevent layout shift) and immediate feedback on all connection speeds.
 - **Cinematic Asset Transitions:** Utilizes `requestAnimationFrame` to synchronize DOM updates with the browser's paint cycle, allowing for hardware-accelerated CSS transitions (blur/scale) that hide compression artifacts during the upgrade from low-res to high-res images.
 - **"No-Flicker" Theme Script:** A critical, render-blocking inline script sets the theme before CSS is applied, preventing a "Flash of Unstyled Content" (FOUC).
@@ -111,6 +113,7 @@ The project was built with a focus on pragmatic and long-term value. The followi
   - **Automated Formatting:** [Prettier](https://prettier.io/)
 - **Testing Framework:**
   - **Unit & Integration Testing:** [Jest](https://jestjs.io/)
+  - **E2E/Browser Testing:** [Playwright](https://playwright.dev/) and [Puppeteer](https://pptr.dev/)
 - **CI/CD & Deployment:** [GitHub Actions](https://github.com/features/actions)
 
 ### 5. Build & Deployment
