@@ -10,7 +10,12 @@ export default [
   js.configs.recommended,
 
   {
-    files: ['build.js', 'aggregate_code.js', 'jest.config.js'],
+    files: [
+      'build.js',
+      'aggregate_code.js',
+      'jest.config.js',
+      'playwright.config.js',
+    ],
     languageOptions: {
       globals: {
         ...globals.node,
@@ -28,21 +33,32 @@ export default [
   },
 
   {
-    files: ['tests/**/*.test.js'],
+    files: ['tests/**/*.js'],
     languageOptions: {
       globals: {
+        ...globals.node,
+        ...globals.jest,
+        console: 'readonly',
+      },
+    },
+  },
+
+  {
+    files: ['tests/accessibility/**/*.js', 'tests/accessibility/**/*.test.js'],
+    languageOptions: {
+      globals: {
+        ...globals.node,
+        ...globals.browser,
         ...globals.jest,
       },
     },
   },
 
   {
-    files: ['tests/**/*.js'],
+    files: ['tests/e2e/**/*.js', 'tests/e2e/**/*.spec.js'],
     languageOptions: {
       globals: {
         ...globals.node,
-        ...globals.jest,
-        ...globals.browser,
       },
     },
   },

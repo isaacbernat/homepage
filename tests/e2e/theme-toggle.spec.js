@@ -62,5 +62,3 @@ test.describe('Atomic Theme Toggling', () => {
     expect(naturalWidth).toBeGreaterThan(0);
   });
 });
-
-  
