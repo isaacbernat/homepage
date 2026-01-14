@@ -56,9 +56,10 @@ The project was built with a focus on pragmatic and long-term value. The followi
 - **Modular Build Script:** Following the Single Responsibility Principle, the build script is composed of small, single-purpose functions (e.g. `minifyJs`, `processFavicons`). This makes the build process highly readable, maintainable, and easy to extend, with a main `build()` function that acts as a clean orchestrator.
 - **Decoupled Templates for Robustness:** To improve maintainability and adhere to the principle of Separation of Concerns, templates (`.njk` files) reference source assets (`style.css`). The build script is the single source of truth responsible for asset transformation (e.g. to `style.min.css`), making the entire system robust and simplifying future enhancements like cache-busting.
 - **Automated Code Quality & Formatting:** A comprehensive quality gate is integrated into the CI/CD pipeline. Prettier enforces a consistent idiomatic code style and ESLint checks for potential bugs and logical errors.
-- **Comprehensive Automated Testing:** To guarantee reliability, the project is supported by a professional-grade testing suite built with Jest. The suite programmatically enforces quality on every commit, and includes:
-  - **Unit Tests:** A comprehensive suite covering the entire build pipeline to prevent regressions.
-  - **Accessibility Tests:** An automated suite using Puppeteer and `axe-core` that enforces WCAG compliance across all pages and themes.
+- **Comprehensive Automated Testing:** To guarantee reliability, the project is supported by a multi-layered testing strategy that enforces quality on every commit:
+    - **Unit Tests (Jest):** Verifies the build pipeline logic and file transformations.
+    - **Accessibility Tests (Axe-Core):** An automated suite that enforces WCAG compliance across all pages and themes.
+    - **End-to-End Tests (Playwright):** Verifies critical user-facing behaviors in a real browser environment, including Offline Resilience, Network Caching strategies, and Responsive Asset delivery.
 
 #### Performance
 
@@ -112,6 +113,7 @@ The project was built with a focus on pragmatic and long-term value. The followi
   - **Automated Formatting:** [Prettier](https://prettier.io/)
 - **Testing Framework:**
   - **Unit & Integration Testing:** [Jest](https://jestjs.io/)
+  - **E2E/Browser Testing:** [Playwright](https://playwright.dev/) and [Puppeteer](https://pptr.dev/)
 - **CI/CD & Deployment:** [GitHub Actions](https://github.com/features/actions)
 
 ### 5. Build & Deployment
