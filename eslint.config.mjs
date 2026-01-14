@@ -37,28 +37,26 @@ export default [
     languageOptions: {
       globals: {
         ...globals.node,
-        ...globals.jest,
         console: 'readonly',
       },
     },
   },
 
   {
-    files: ['tests/accessibility/**/*.js', 'tests/accessibility/**/*.test.js'],
+    files: ['tests/**/*.js'],
+    ignores: ['tests/e2e/**'],
     languageOptions: {
       globals: {
-        ...globals.node,
-        ...globals.browser,
         ...globals.jest,
       },
     },
   },
 
   {
-    files: ['tests/e2e/**/*.js', 'tests/e2e/**/*.spec.js'],
+    files: ['tests/accessibility/**/*.js'],
     languageOptions: {
       globals: {
-        ...globals.node,
+        ...globals.browser,
       },
     },
   },
