@@ -166,7 +166,7 @@
       } else {
         // Edge Case: User toggled before preload finished.
         // Fallback to standard browser loading (will have FOUC on slow networks, but functional)
-        const newSrcset = ImageManager.getSrcset(nextTheme);
+        const newSrcset = ASSETS[nextTheme].high;
         const url = ImageManager.getHighResUrl(newSrcset);
 
         // Try to fetch blob ASAP
