@@ -1,5 +1,4 @@
-This portfolio site itself is a testament to my engineering philosophy. It's a static site built without a heavy framework, using a custom Node.js script for a fully controlled and transparent build process.
+A custom-built, zero-framework static site generator powered by **Node.js**.
 
-- **Architecture:** Employs a "headless" approach, with all narrative content authored in Markdown for easy maintenance. The build process features parallelized tasks and per-page CSS loading to keep the homepage's render path exceptionally fast.
-- **Discipline:** The entire Git history follows the **Conventional Commits** specification, ensuring a clean, readable and automated changelog.
-- **Quality:** Focuses on performance, accessibility (WCAG compliant) and maintainability, as detailed in the project's README.
+- **Architecture:** Employs a headless Markdown approach with parallelized build tasks and per-page CSS loading for an exceptionally fast render path.
+- **Discipline:** Enforces strict **Conventional Commits** for an automated changelog and maintains WCAG-compliant accessibility and performance standards.

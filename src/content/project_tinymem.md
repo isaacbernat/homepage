@@ -1,4 +1,1 @@
-A Simon-inspired memory game for the Thumby, a keychain-sized programmable console.
-
-- **Technology:** Written in under 50 lines of **MicroPython**, this project demonstrates resource-constrained development, making use of the device's audio, sprites and input buttons.
-- **Purpose:** Served as a proof of concept for a complete, playable game with a tiny code footprint. It was the subject of a presentation at PyDayBCN 2023.
+A hardware-constrained memory game for the Thumby microcontroller, serving as the technical foundation for my **PyDayBCN 2023 presentation**. Written in under 50 lines of **MicroPython**, it demonstrates extreme resource-constrained development across audio, sprite rendering and I/O.
