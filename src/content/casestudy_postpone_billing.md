@@ -30,13 +30,24 @@ To accelerate the launch, I identified the critical path, which was blocked not 
 
 A crucial part of the experiment design, which I insisted upon, was to ensure the integrity of our results. A significant portion of the "unexpired hours" liability came from users who had canceled months or even years prior. Including the one-time financial gain from expiring these historical hours in the A/B test would have massively inflated our short-term metrics and given us a misleading, irreproducible result. Therefore, I designed the backend logic to **only apply the new expiration policy to users who canceled _after_ the experiment start date**, ensuring we were measuring the sustainable, long-term impact of the change.
 
-### **Deep Dive: A High-Stakes Decision Based on Incomplete Data**
+### **Technical Deep Dive: The Pragmatism of KISS**
 
-Three weeks into the A/B test, the results looked disastrous. Our primary metrics were negative. The data showed a significant drop in immediate Gross Margin (GMV) and there was immense pressure from stakeholders to kill the experiment.
+While the business logic seemed straightforward, safely mutating the state of active subscriptions required extreme pragmatism to avoid runaway architectural complexity. I focused on three core engineering decisions:
 
-This was the project's critical moment.
+- **Preventing "Cycle Drift" (Pushing Back on Product):**
+Product initially requested that postponed billing dates be calculated exactly 28 days from the *previously scheduled* charge. I actively pushed back. In a real-world billing engine, payment retries (dunning) often take hours or days to succeed. If we anchored to the theoretical date, every retry delay would permanently shrink the user's next cycle. I architected the system to anchor the new 28-day cycle to the *actual successful charge timestamp*, preventing cycle drift and proactively eliminating a massive wave of future Customer Support tickets. 
 
-I dug into the data and formulated a strong counter-hypothesis: the metrics were negative _because the feature was working_. Users were postponing payments, which naturally created a short-term dip in cash flow. The crucial missing piece of data was the long-term impact on retention. Based on early engagement signals showing "postpone" users were far more active than "pause" users, I made the high-stakes call not to kill the experiment, but to **"freeze" it**. This effectively stopped new users from entering, but allowed us to continue tracking the existing cohorts over a longer time horizon.
+- **The "Grace Period" Architecture (Business Logic > Async Complexity):**
+To mitigate user frustration upon cancellation, we needed a 48-to-72 hour grace period before permanently expiring hours. A junior approach would involve building a complex, asynchronous "temporary deletion" state machine. Instead, I leaned into KISS (Keep It Simple, Stupid). Knowing that our Finance team ran their massive ETL reporting jobs days into the new month, I opted to hard-expire the hours immediately in the database, but built a targeted REST endpoint for Customer Support. If a user complained within the window, CS could click a button to instantly restore the hours. We achieved the exact same business goal with zero asynchronous complexity or background worker risks.
+
+- **Enforcing Rules via Lean State:**
+We needed to restrict users to one postponement per cycle. Instead of creating new relational tables or complex locking, I simply evaluated the existing `last_postponed` timestamp against the `last_charged` timestamp. If `last_postponed > last_charged`, the request was rejected. It was lightweight, infinitely scalable, and bulletproof.
+
+### **Product Deep Dive: The "Freeze" Decision**
+
+Three weeks into the A/B test, the results looked disastrous. The data showed a significant drop in immediate Gross Margin (GMV) and there was immense pressure from stakeholders to kill the experiment. 
+
+I dug into the data and formulated a strong counter-hypothesis: the metrics were negative _because the feature was working_. Users were postponing payments, which naturally created  short-term dip in cash flow. The crucial missing piece of data was the long-term impact on retention. Based on early engagement signals showing "postpone" users were far more active than "pause" users, I made the high-stakes call not to kill the experiment, but to **"freeze" it**. This stopped new users from entering, but allowed us to track the existing cohorts over a longer time horizon.
 
 ### **The Results: The Most Impactful Experiment of the Year**
 
