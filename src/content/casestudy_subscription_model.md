@@ -55,15 +55,19 @@ This rapid approach enabled a sophisticated testing strategy. Instead of a singl
 
 ### **Deep Dive: The Critical Architectural Decision**
 
-The most critical technical decision was how to safely integrate this high-risk system into our large, existing Python/Django monolith. I evaluated three options: deep integration (fast but risky), an isolated microservice (safe but slow) and the chosen hybrid path: a **logically isolated module**.
+When dealing with recurring payments, 100% idempotency and correctness are vastly more important than millisecond latency. A single race condition resulting in double-billing destroys user trust and creates massive financial liability.
 
-This approach offered the best balance of speed and safety. To de-risk it, I implemented several safeguards:
+Instead of over-engineering a complex event-driven "Saga" pattern, I evaluated the trade-offs and architected a highly resilient, **idempotent cron-driven state machine** implemented as a logically isolated module within our legacy Python/Django monolith.
 
-- **Centralized "Kill Switch":** All subscription entry points were guarded by a single, dynamically controlled feature flag. This allowed us to instantly disable the entire feature for all users without a new deployment.
-- **Data Isolation:** We created new, dedicated tables for subscription data instead of adding columns to critical core tables, ensuring clean separation and preventing performance degradation for non-subscribers.
-- **Code Isolation:** All new code was developed within a distinct `subscriptions` module/directory, making it clear to other teams that this code was experimental and should not be depended upon.
+To de-risk the execution and guarantee financial data integrity at scale, I engineered several core safeguards:
 
-The modular design proved its worth, allowing for both rapid validation and sustainable scalability. After the successful MVP, we were able to easily add major new features like plan upgrades/downgrades, pauses, hour top-ups and our "breakage" policy for unused hours.
+- **Strict Database-Level Locking:** The most significant technical risk was race conditions occurring between our scheduled hourly renewal cron jobs and asynchronous payment webhooks (Braintree). I implemented strict row-level database locking during state transitions. This guaranteed that even if a network timeout occurred, a worker crashed, or a webhook fired simultaneously, a user could never be double-charged.
+
+- **Idempotent State Schema & Custom Cohort Tracking:** I designed the dedicated subscription tables with strict state constraints (e.g. tracking `next_charge_time`). Because our internal A/B testing platform couldn't handle overlapping, multi-cycle long-term experiments, I engineered a custom `experiment_cohort` schema. This allowed the billing engine to run multiple parallel feature permutations safely, with clear historical financial data traceability and without corrupting active subscriptions.
+
+- **Blast-Radius Isolation:** All new billing code was built in a strictly bounded context with its own database tables, preventing performance degradation for non-subscribers. Furthermore, all entry points were guarded by a centralized "kill switch" feature flag, allowing us to instantly halt the renewal engine without requiring a rollback deployment if an anomaly was detected.
+
+This pragmatic, highly resilient architecture proved its worth. It allowed rapid validation and was easily scaled to process over 200k automated renewals per month with near-zero maintenance overhead. It provided a solid foundation to seamlessly add complex features like plan upgrades/downgrades, top-ups, pauses, variable billing cycles, breakage policies... in future iterations.
 
 ### **The Results: A Company-Defining Success**
 
