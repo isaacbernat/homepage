@@ -47,7 +47,7 @@ While the business logic seemed straightforward, safely mutating the state of ac
 
 Three weeks into the A/B test, the results looked disastrous. The data showed a significant drop in immediate Gross Margin (GMV) and there was immense pressure from stakeholders to kill the experiment.
 
-I dug into the data and formulated a strong counter-hypothesis: the metrics were negative _because the feature was working_. Users were postponing payments, which naturally created short-term dip in cash flow. The crucial missing piece of data was the long-term impact on retention. Based on early engagement signals showing "postpone" users were far more active than "pause" users, I made the high-stakes call not to kill the experiment, but to **"freeze" it**. This stopped new users from entering, but allowed us to track the existing cohorts over a longer time horizon.
+I dug into the data and formulated a strong counter-hypothesis: the metrics were negative _because the feature was working_. Users were postponing payments, which naturally created a short-term dip in cash flow. The crucial missing piece of data was the long-term impact on retention. Based on early engagement signals showing "postpone" users were far more active than "pause" users, I made the high-stakes call not to kill the experiment, but to **"freeze" it**. This stopped new users from entering, but allowed us to track the existing cohorts over a longer time horizon.
 
 ### **The Results: The Most Impactful Experiment of the Year**
 

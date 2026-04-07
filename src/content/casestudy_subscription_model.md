@@ -67,7 +67,7 @@ To de-risk the execution and guarantee financial data integrity at scale, I engi
 
 - **Blast-Radius Isolation:** All new billing code was built in a strictly bounded context with its own database tables, preventing performance degradation for non-subscribers. Furthermore, all entry points were guarded by a centralized "kill switch" feature flag, allowing us to instantly halt the renewal engine without requiring a rollback deployment if an anomaly was detected.
 
-This pragmatic, highly resilient architecture proved its worth. It allowed rapid validation and was easily scaled to process over 200k automated renewals per month with near-zero maintenance overhead. It provided a solid foundation to seamlessly add complex features like plan upgrades/downgrades, top-ups, pauses, variable billing cycles, breakage policies... in future iterations.
+This pragmatic, highly resilient architecture proved its worth. It allowed rapid validation and was easily scaled to process over 200k automated renewals per month with near-zero maintenance overhead. It provided a solid foundation to seamlessly add complex features like plan upgrades/downgrades, top-ups, pauses, variable billing cycles, and breakage policies in future iterations.
 
 ### **The Results: A Company-Defining Success**
 
