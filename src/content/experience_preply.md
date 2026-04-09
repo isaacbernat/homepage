@@ -10,7 +10,7 @@ As a Staff Engineer, I operated beyond my immediate team to shape the technical 
 
 - **Engineering Velocity & Cost Optimization:** Championed an engineering-wide CI/CD optimization initiative. Identified a severe Jenkins queue bottleneck and drove an on-demand testing workflow for Draft PRs, reducing automated-test AWS EC2 infrastructure costs by **80% ($31k/year)** and saving hundreds of collective engineering hours per month in the process. ([Read the Full Case Study](#casestudy-ci-savings))
 
-- **Strategic Foresight & Technical Translation:** Acted as the technical DRI for cross-functional initiatives. Prevented an estimated **10,000+ hours** of wasted engineering by advocating against a high-risk monolithic launch ("Subs Direct"), successfully partnering with Product to pivot the organization to a phased rollout strategy that preserved financial data integrity.
+- **Strategic Foresight & Technical Translation:** Acted as the technical DRI for cross-functional initiatives. Advocated against a high-risk monolithic launch strategy ("Subs Direct"), ultimately guiding a cross-functional pivot to an iterative release model, saving an estimated 6 months of engineering effort.
 
 ### Senior Backend Engineer
 
