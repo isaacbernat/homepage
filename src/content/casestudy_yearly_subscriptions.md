@@ -28,6 +28,6 @@ This taught me to insist on a clear, data-backed validation of the **entire valu
 
 #### **Learning 2: The True Meaning of YAGNI**
 
-My attempt to build a "future-proof" system was a direct violation of the "You Ain't Gonna Need It" principle. The extra effort and complexity I added not only went unused but also made the initial build slower and riskier. This experience gave me a deep, practical appreciation for building the absolute simplest thing that can test a hypothesis. It's not about being lazy; it's about being efficient and focusing all engineering effort on delivering immediate, measurable value.
+My attempt to build a "future-proof" system was a direct violation of the "You Ain't Gonna Need It" principle. The extra effort and complexity I added not only went unused but also made the initial build slower and riskier. This experience gave me a deep, practical appreciation for building the absolute simplest thing that can test a hypothesis. It's not about being lazy, it's about being efficient and focusing all engineering effort on delivering immediate, measurable value.
 
 This project, more than any success, shaped my pragmatic engineering philosophy and my focus on rigorous, upfront validation.

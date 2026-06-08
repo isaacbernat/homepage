@@ -55,6 +55,7 @@ My hypothesis was proven correct. The long-term data showed a dramatic turnaroun
 
 - **Financial Impact:** It delivered a **+34% Gross Margin increase** within the experiment group, contributing to a **+3% global GM lift** for the entire company.
 - **Retention Impact:** It drove a **+4.4% increase in the subscription renewal rate** and a **+15% increase in plan upgrades.**
-- **User Trust:** To mitigate the risk of the new policy feeling unfair, I worked with the CRM team to implement clear, proactive email warnings and built a 24-hour "grace period" into the backend logic to give Customer Support a window to easily reverse accidental cancellations. As a result, we saw no significant spike in user complaints related to the new policy.
+
+- **User Trust:** To mitigate the risk of the new policy feeling unfair, I worked with the CRM team to implement clear, proactive email warnings and built a 72 hour grace period into the backend logic to give Customer Support a window to easily reverse accidental cancellations. As a result, we saw no significant spike in user complaints related to the new policy.
 
 This project became a new model for the company on how to analyze complex, long-term experiments and reinforced the value of making data-informed decisions, even when the initial signals are noisy and negative.

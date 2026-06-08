@@ -33,6 +33,6 @@ The post-mortem produced several critical, long-lasting improvements:
 
 - **Improved Tooling:** We filed and prioritized tickets to add clearer copy, UX warnings and a "confirmation" step to our internal experimentation framework to prevent this specific type of misconfiguration from ever happening again.
 - **A New Engineering Rule:** We established a new, mandatory process: any high-risk feature being tested in the production environment **must** have a dedicated monitoring dashboard built and active _before_ the test begins.
-- **A Foundational Personal Learning:** I had personally made the trade-off to deprioritize the monitoring and observability tickets for the MVP to meet a tight deadline. This incident was a powerful, firsthand lesson that **observability is not a "nice-to-have" feature; it is a core, non-negotiable requirement** for any critical system. This principle has fundamentally shaped how I approach every project I've led since.
+- **A Foundational Personal Learning:** I had personally made the trade-off to deprioritize the monitoring and observability tickets for the MVP to meet a tight deadline. This incident was a powerful, firsthand lesson that **observability is not a "nice-to-have" feature, it is a core, non-negotiable requirement** for any critical system. This principle has fundamentally shaped how I approach every project I've led since.
 
 This incident, born from a personal mistake, became a catalyst for improving our tools, our processes and my own engineering philosophy.
