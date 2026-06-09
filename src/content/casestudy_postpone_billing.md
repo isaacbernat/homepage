@@ -21,7 +21,7 @@ As the epic lead for this company-wide initiative, I was responsible for more th
 
 We proposed a bold, two-part solution to be tested in a single A/B experiment:
 
-1.  **A More Flexible "Postpone" Feature:** We replaced the rigid "pause" with a new "Change Renewal Date" feature. This allowed users to postpone their next billing date by up to 20 days, once per cycle, _without_ losing access to their lessons or having their scheduled classes canceled.
+1.  **A More Flexible "Postpone" Feature:** We replaced the rigid "pause" with a new "Change Renewal Date" feature. This allowed users to postpone their next billing date by up to 20 days (almost 3 weeks, 70% of a cycle), once per cycle, _without_ losing access to their lessons or having their scheduled classes canceled.
 2.  **A Policy to Expire Hours on Cancellation:** To create a clearer distinction and align with standard subscription practices, we implemented a policy where any unused hours would expire at the end of the billing cycle upon cancellation.
 
 To accelerate the launch, I identified the critical path, which was blocked not just by technical tasks but by dependencies on our CRM, Financial Data and Frontend teams. I personally championed the project with these teams, negotiating to get our dependencies prioritized even when they fell outside their quarterly goals. This cross-functional leadership, combined with developing key backend components in parallel with ongoing user research, was instrumental in launching the full experiment **four weeks ahead of our official schedule** (2 sprints).
@@ -32,20 +32,20 @@ A crucial part of the experiment design, which I insisted upon, was to ensure th
 
 ### **Technical Deep Dive: The Pragmatism of KISS**
 
-While the business logic seemed straightforward, safely mutating the state of active subscriptions required extreme pragmatism to avoid runaway architectural complexity. I focused on three core engineering decisions:
+Safely mutating the state of active subscriptions and balances, required extreme pragmatism to avoid runaway asynchronous complexity. I prioritized three core technical choices:
 
-- **Preventing "Cycle Drift" (Pushing Back on Product):**
-  Product initially requested that postponed billing dates be calculated exactly 28 days from the _previously scheduled_ charge. I actively pushed back. In a real-world billing engine, payment retries (dunning) often take hours or days to succeed. If we anchored to the theoretical date, every retry delay would permanently shrink the user's next cycle. I architected the system to anchor the new 28-day cycle to the _actual successful charge timestamp_, preventing cycle drift and proactively eliminating a massive wave of future Customer Support tickets.
+- **Protecting ARR (Annual Recurring Revenue) by Eliminating "Cycle Drift":**
+  Product initially requested that renewal billing dates were dynamically recalculated from the _timestamp of the actual successful charge_ (so that users would always have at least 28 full days to use their tutoring hours). I pushed back. In real-world billing engines, payment retries (dunning) can take days to resolve. I demonstrated to the product team that if a user’s payment drifted by an average of just half day per cycle due to bank retries or cron job issues, the platform would lose an entire billing cycle per user per year, reducing our ARR from 13 cycles to 12 (>7.6%). Furthermore, cumulative drift creates scheduling anomalies. Eventually, users' tutoring hours wouldn't reset in time for their fixed weekly lessons, forcing them into higher friction workarounds like our "top up hours" or "renew subscription now" features (which were designed to accommodate other user cases). I architected the system to anchor to a fixed Billing Anchor Date independent of transient payment delays, keeping the schedule 100% predictable. For edge cases where a user completely abandoned payment past our dunning window, the subscription was terminated. Any future reactivation would establish a fresh anchor date.
 
-- **The "Grace Period" Architecture (Business Logic > Async Complexity):**
-  To mitigate user frustration upon cancellation, we needed a 48-to-72 hour grace period before permanently expiring hours. A junior approach would involve building a complex, asynchronous "temporary deletion" state machine. Instead, I leaned into KISS (Keep It Simple, Stupid). Knowing that our Finance team ran their massive ETL reporting jobs days into the new month, I opted to hard-expire the hours immediately in the database, but built a targeted REST endpoint for Customer Support. If a user complained within the window, CS could click a button to instantly restore the hours. We achieved the exact same business goal with zero asynchronous complexity or background worker risks.
+- **The "Grace Period" Architecture (Operational Simplicity):**
+  To prevent immediate user disruption when a payment failed, we needed a mechanism to handle a 48-to-72 hour grace period before hard expiring tutoring hours. Rather than prematurely building a complex, asynchronous state machine with background workers to manage "temporary expiration" states, I opted for a lean approach for our V1 launch. I implemented database expiration at the end of the 28 days, after the first retry failure, but built an authenticated, secure REST endpoint exposed via our Internal Admin Panel. If a user experienced a legitimate banking delay, settled their invoice shortly after expiration and contacted Customer Support, they could instantly reverse the hours breakage with a single click. This pragmatic trade-off allowed us to ship the core billing engine weeks ahead of schedule, using internal tools to handle the low volume anomaly path, since this pragmatic approach capitalizes on user compliance (most accepted the expiration as their fault and would not contact Customer Support).
 
 - **Enforcing Rules via Lean State:**
-  We needed to restrict users to one postponement per cycle. Instead of creating new relational tables or complex locking, I simply evaluated the existing `last_postponed` timestamp against the `last_charged` timestamp. If `last_postponed > last_charged`, the request was rejected. It was lightweight, infinitely scalable, and bulletproof.
+  We limited users to one postponement per cycle. Instead of introducing new relational tables, complex state tracking or locks, I wrote a lightweight evaluation comparing the `last_postponed` timestamp against the `last_charged` timestamp. If `last_postponed > last_charged`, the request was rejected. It was stateless, infinitely scalable and bulletproof.
 
 ### **Product Deep Dive: The "Freeze" Decision**
 
-Three weeks into the A/B test, the results looked disastrous. The data showed a significant drop in immediate Gross Margin (GMV) and there was immense pressure from stakeholders to kill the experiment.
+Three weeks into the A/B test, the results looked disastrous. The data showed a significant drop in Gross Margin (GM) and there was immense pressure from stakeholders to kill the experiment.
 
 I dug into the data and formulated a strong counter-hypothesis: the metrics were negative _because the feature was working_. Users were postponing payments, which naturally created a short-term dip in cash flow. The crucial missing piece of data was the long-term impact on retention. Based on early engagement signals showing "postpone" users were far more active than "pause" users, I made the high-stakes call not to kill the experiment, but to **"freeze" it**. This stopped new users from entering, but allowed us to track the existing cohorts over a longer time horizon.
 
@@ -55,7 +55,6 @@ My hypothesis was proven correct. The long-term data showed a dramatic turnaroun
 
 - **Financial Impact:** It delivered a **+34% Gross Margin increase** within the experiment group, contributing to a **+3% global GM lift** for the entire company.
 - **Retention Impact:** It drove a **+4.4% increase in the subscription renewal rate** and a **+15% increase in plan upgrades.**
-
-- **User Trust:** To mitigate the risk of the new policy feeling unfair, I worked with the CRM team to implement clear, proactive email warnings and built a 72 hour grace period into the backend logic to give Customer Support a window to easily reverse accidental cancellations. As a result, we saw no significant spike in user complaints related to the new policy.
+- **User Trust & Friction Control**: To mitigate the risk of the new policy alienate users facing legitimate card failures, I collaborated with the CRM team to trigger proactive "Dunning Warning" emails the moment a charge failed. Combined with the internal Customer Support restoration tooling, we successfully protected tutor schedules and platform ARR without causing a spike in customer support tickets or user churn.
 
 This project became a new model for the company on how to analyze complex, long-term experiments and reinforced the value of making data-informed decisions, even when the initial signals are noisy and negative.
